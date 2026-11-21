@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -35,28 +36,67 @@ def clean(text: str) -> str:
     return text.strip()
 
 
-def ocr_pdf(path: Path, lang: str = "pol") -> str:
-    if not shutil.which("tesseract"):
-        raise IngestError("PDF wygląda na skan, a tesseract nie jest zainstalowany (apt install tesseract-ocr tesseract-ocr-pol).")
+def _tesseract() -> str | None:
+    """Tesseract CLI: TESSERACT_CMD from .env (Windows install outside PATH) or `tesseract` on PATH."""
+    cmd = os.environ.get("TESSERACT_CMD", "").strip()
+    if cmd and Path(cmd).is_file():
+        return cmd
+    return shutil.which("tesseract")
+
+
+def _tesseract_langs(cmd: str) -> set[str]:
     try:
-        import pypdfium2 as pdfium
-    except ImportError as e:
-        raise IngestError("Do OCR potrzebny jest pypdfium2 (pip install pypdfium2).") from e
+        r = subprocess.run([cmd, "--list-langs"], capture_output=True, text=True, timeout=30)
+    except (OSError, subprocess.SubprocessError):
+        return set()
+    lines = (r.stdout + "\n" + r.stderr).splitlines()
+    return {ln.strip() for ln in lines if ln.strip() and " " not in ln.strip() and not ln.strip().endswith(":")}
+
+
+def ocr_unavailable(lang: str = "pol") -> str | None:
+    """None when OCR can run, otherwise the reason (shown to the clerk)."""
+    cmd = _tesseract()
+    if not cmd:
+        return "Tesseract nie jest zainstalowany (Windows: winget install UB-Mannheim.TesseractOCR i TESSERACT_CMD w .env)."
+    if lang not in _tesseract_langs(cmd):
+        return f"Tesseract nie ma języka „{lang}” (doinstaluj dane języka polskiego)."
+    try:
+        import pypdfium2  # noqa: F401
+    except ImportError:
+        return "Do OCR potrzebny jest pypdfium2 (pip install pypdfium2)."
+    return None
+
+
+def ocr_pages(path: Path, pages: list[int], lang: str = "pol") -> dict[int, str]:
+    """OCR of selected pages (0-based) → {page: text}."""
+    reason = ocr_unavailable(lang)
+    if reason:
+        raise IngestError(reason)
+    import pypdfium2 as pdfium
+    cmd = _tesseract()
     pdf = pdfium.PdfDocument(str(path))
-    out = []
+    out = {}
     with tempfile.TemporaryDirectory() as td:
-        for i in range(len(pdf)):
+        for i in pages:
             img = pdf[i].render(scale=2).to_pil()  # ok. 144 dpi × 2
             png = Path(td) / f"p{i}.png"
             img.save(png)
-            r = subprocess.run(["tesseract", str(png), "-", "-l", lang], capture_output=True, text=True, timeout=120)
+            r = subprocess.run([cmd, str(png), "-", "-l", lang], capture_output=True, text=True, timeout=120)
             if r.returncode != 0:
                 raise IngestError(f"tesseract: {r.stderr.strip()[:200]}")
-            out.append(r.stdout)
-    return "\n\n".join(out)
+            out[i] = r.stdout
+    return out
+
+
+def ocr_pdf(path: Path, lang: str = "pol") -> str:
+    from pypdf import PdfReader
+    n = len(PdfReader(str(path)).pages)
+    texts = ocr_pages(path, list(range(n)), lang)
+    return "\n\n".join(texts[i] for i in range(n))
 
 
 def read_pdf(path: Path, ocr: str = "auto") -> tuple[str, dict]:
+    """Text layer per page; pages without one (scans) go through OCR one by one, so a mixed PDF keeps every page."""
     from pypdf import PdfReader
     try:
         reader = PdfReader(str(path))
@@ -74,24 +114,114 @@ def read_pdf(path: Path, ocr: str = "auto") -> tuple[str, dict]:
     except Exception:
         pages = [(p.extract_text() or "") for p in reader.pages]
     meta = {"pages": len(pages), "ocr": False}
-    weak = sum(1 for t in pages if len(t.strip()) < MIN_CHARS_PER_PAGE)
-    if ocr == "always" or (ocr == "auto" and pages and weak / len(pages) > 0.5):
-        meta["ocr"] = True
-        return ocr_pdf(path), meta
-    return "\n\n".join(pages), meta
+    weak = [i for i, t in enumerate(pages) if len(t.strip()) < MIN_CHARS_PER_PAGE]
+    targets = list(range(len(pages))) if ocr == "always" else (weak if ocr == "auto" else [])
+    if targets:
+        reason = ocr_unavailable()
+        readable = [i for i in range(len(pages)) if i not in weak]
+        if reason and (ocr == "always" or not readable):
+            raise IngestError(f"PDF wygląda na skan, a OCR nie działa: {reason}")
+        if reason:  # część stron ma tekst: oddaj go i nazwij strony, których nie odczytano
+            meta["unread_pages"] = [i + 1 for i in weak]
+            meta["ocr_problem"] = reason
+        else:
+            for i, t in ocr_pages(path, targets).items():
+                if ocr == "always" or len(t.strip()) > len(pages[i].strip()):
+                    pages[i] = t
+            meta["ocr"] = True
+            meta["ocr_pages"] = [i + 1 for i in targets]
+    return "\n\n".join(t for t in pages if t.strip()), meta
+
+
+W_NS = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
+MC_FALLBACK = "{http://schemas.openxmlformats.org/markup-compatibility/2006}Fallback"
+_SKIP = {W_NS + "pPr", W_NS + "rPr", W_NS + "delText", W_NS + "instrText", MC_FALLBACK}
+
+
+def _docx_blocks(container) -> list[str]:
+    """Paragraphs and tables of a body, cell, header or text box, in document order."""
+    out: list[str] = []
+    for el in container:
+        if el.tag == W_NS + "p":
+            out.extend(_docx_paragraph(el))
+        elif el.tag == W_NS + "tbl":
+            out.extend(_docx_table(el))
+        elif el.tag in (W_NS + "sdt", W_NS + "customXml"):  # pola formularza, kontrolki treści
+            inner = el.find(W_NS + "sdtContent")
+            out.extend(_docx_blocks(inner if inner is not None else el))
+    return out
+
+
+def _docx_paragraph(p) -> list[str]:
+    parts: list[str] = []
+    boxes: list[str] = []  # ramki tekstowe zakotwiczone w akapicie idą zaraz po nim
+
+    def walk(el):
+        for c in el:
+            if c.tag in _SKIP:
+                continue
+            if c.tag == W_NS + "txbxContent":
+                boxes.extend(_docx_blocks(c))
+                continue
+            if c.tag == W_NS + "t":
+                parts.append(c.text or "")
+            elif c.tag == W_NS + "tab":
+                parts.append("\t")
+            elif c.tag in (W_NS + "br", W_NS + "cr"):
+                parts.append("\n")
+            elif c.tag == W_NS + "noBreakHyphen":
+                parts.append("-")
+            walk(c)
+
+    walk(p)
+    return ["".join(parts)] + boxes
+
+
+def _docx_table(tbl) -> list[str]:
+    rows = []
+    wrapped = [r for s in tbl.findall(W_NS + "sdt") for c in s.findall(W_NS + "sdtContent") for r in c.findall(W_NS + "tr")]
+    for tr in tbl.findall(W_NS + "tr") + wrapped:
+        cells = []
+        for tc in tr.findall(W_NS + "tc"):
+            pr = tc.find(W_NS + "tcPr")
+            vm = pr.find(W_NS + "vMerge") if pr is not None else None
+            if vm is not None and vm.get(W_NS + "val") in (None, "continue"):
+                continue  # scalone w pionie: treść jest w komórce powyżej
+            cells.append("\n".join(t for t in _docx_blocks(tc) if t.strip()).strip())
+        if not any(cells):
+            continue
+        if len(cells) > 1 and re.fullmatch(r"\(?\d{1,3}[.)]?|[a-zA-Z][.)]", cells[0]):  # „1.” | pytanie → „1. pytanie”
+            cells = [f"{cells[0]} {cells[1]}"] + cells[2:]
+        rows.append(" | ".join(cells))
+    return rows
 
 
 def read_docx(path: Path) -> tuple[str, dict]:
-    import docx
+    """Body in document order (tables where they stand, merged cells once, text boxes, content controls),
+    plus headers, footers, footnotes and endnotes – the requester's address often sits in the letterhead."""
     try:
-        d = docx.Document(str(path))
-    except Exception as e:
+        with zipfile.ZipFile(path) as z:
+            names = set(z.namelist())
+            body_root = ET.fromstring(z.read("word/document.xml"))
+
+            def part(pattern: str) -> list[str]:
+                lines: list[str] = []
+                for n in sorted(x for x in names if re.fullmatch(pattern, x)):
+                    root = ET.fromstring(z.read(n))
+                    items = root.findall(W_NS + "footnote") + root.findall(W_NS + "endnote") or [root]
+                    for it in items:
+                        lines += [t for t in _docx_blocks(it) if t.strip() and t not in lines]
+                return lines
+
+            headers, footers = part(r"word/header\d*\.xml"), part(r"word/footer\d*\.xml")
+            notes = part(r"word/footnotes\.xml") + part(r"word/endnotes\.xml")
+    except (zipfile.BadZipFile, KeyError, ET.ParseError, OSError) as e:
         raise IngestError(f"Nie da się otworzyć DOCX: {e}") from e
-    parts = [p.text for p in d.paragraphs]
-    for t in d.tables:
-        for row in t.rows:
-            parts.append(" | ".join(c.text.strip() for c in row.cells))
-    return "\n".join(parts), {"paragraphs": len(d.paragraphs), "tables": len(d.tables)}
+    body = body_root.find(W_NS + "body")
+    lines = _docx_blocks(body if body is not None else body_root)
+    text = "\n".join(headers + lines + notes + footers)
+    return text, {"paragraphs": sum(1 for _ in body_root.iter(W_NS + "p")), "tables": sum(1 for _ in body_root.iter(W_NS + "tbl")),
+                  "header_lines": len(headers), "footer_lines": len(footers), "note_lines": len(notes)}
 
 
 def read_odt(path: Path) -> tuple[str, dict]:
@@ -149,6 +279,13 @@ def read_any(path: Path, ocr: str = "auto") -> dict:
     if q < 0.5:  # próg z danych UMB: rękopis 0.36, pisma 0.78–0.90
         warn = ("Niska jakość tekstu (prawdopodobnie rękopis lub słaby skan): wpisz treść wniosku ręcznie "
                 "albo użyj modelu z obsługą obrazu. Nie przekazuj tego tekstu dalej bez sprawdzenia.")
+    if meta.get("unread_pages"):
+        nums = meta["unread_pages"]
+        pages = (f"Strona {nums[0]} to skan bez warstwy tekstu i nie została odczytana" if len(nums) == 1 else
+                 f"Strony {', '.join(map(str, nums))} to skany bez warstwy tekstu i nie zostały odczytane")
+        miss = (f"{pages}: {meta.get('ocr_problem', '')} "
+                "Uzupełnij ich treść ręcznie przed dalszą pracą.")
+        warn = f"{miss} {warn}" if warn else miss
     return {"file": path.name, "sha256": hashlib.sha256(path.read_bytes()).hexdigest()[:16], "chars": len(text), **meta,
             "quality": q, "warning": warn, "text": text, "security": _security(path, text)}
 

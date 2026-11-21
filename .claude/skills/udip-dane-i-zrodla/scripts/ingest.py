@@ -54,7 +54,9 @@ def _selftest() -> int:
         fails += not ok
         print(f"{'OK ' if ok else 'BŁĄD'} archiwum: {n} sprawy, para wniosek+odpowiedź połączona, data {a.get('date')}")
         # OCR: PDF z obrazem tekstu (render strony → obraz → nowy PDF bez warstwy tekstu)
-        if shutil.which("tesseract"):
+        from udip.ingest import ocr_unavailable
+        why = ocr_unavailable()
+        if why is None:
             import pypdfium2 as pdfium
             img = pdfium.PdfDocument(str(td / "a_odpowiedz.pdf"))[0].render(scale=3).to_pil().convert("RGB")
             img.save(td / "skan.pdf")
@@ -63,7 +65,7 @@ def _selftest() -> int:
             fails += not ok
             print(f"{'OK ' if ok else 'BŁĄD'} skan.pdf przez OCR: {d['text'][:70]!r}")
         else:
-            print("POMINIĘTO test OCR: brak tesseract")
+            print(f"POMINIĘTO test OCR: {why}")
         try:
             read_any(td / "b.doc") if (td / "b.doc").write_text("x") else None
         except IngestError as e:
