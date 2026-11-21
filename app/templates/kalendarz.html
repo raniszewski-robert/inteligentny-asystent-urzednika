@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block page_class %} page-wide{% endblock %}
+{% block content %}
+<div class="row-between">
+  <h1>Kalendarz wniosków</h1>
+  <div class="row">
+    <form method="get" action="/kalendarz" class="field-inline">
+      <label for="rok">Rok</label>
+      <select id="rok" name="rok" onchange="this.form.submit()">
+        <option value="wszystkie"{% if year is none %} selected{% endif %}>wszystkie</option>
+        {% for y in years %}<option value="{{ y }}"{% if y == year %} selected{% endif %}>{{ y }}</option>{% endfor %}
+      </select>
+      <noscript><button type="submit">Pokaż</button></noscript>
+    </form>
+    <a class="btn" href="/kalendarz/eksport.csv?rok={{ year or 'wszystkie' }}">Eksport CSV</a>
+    <a class="btn" href="/kalendarz/eksport.ics?rok={{ year or 'wszystkie' }}">Eksport ICS</a>
+    <a class="btn btn-primary" href="/wniosek/nowy">Nowy wniosek</a>
+  </div>
+</div>
+
+{% if import_error %}<div class="note note-err">{{ import_error }}</div>{% endif %}
+{% if import_result %}
+<div class="note {% if import_result.issues %}note-warn{% else %}note-ok{% endif %}">
+  <p><b>Import {{ import_result.file }}:</b> dodano {{ import_result.added|length }}{% if import_result.replaced %}, zastąpiono {{ import_result.replaced|length }}{% endif %}{% if import_result.skipped %}, pominięto {{ import_result.skipped|length }} (numer już jest w rejestrze){% endif %}{% if import_result.demo %}, daty przesunięte (demo){% endif %}.</p>
+  {% if import_result.issues %}
+  <p>Niespójności w arkuszu: {{ import_result.issues|length }}</p>
+  <ul>{% for i in import_result.issues %}<li>{{ i }}</li>{% endfor %}</ul>
+  {% endif %}
+</div>
+{% endif %}
+
+{% if any_demo %}
+<div class="note note-warn row-between">
+  <span>Tryb demonstracyjny: daty wpływu spraw oznaczonych „demo” są przesunięte względem {{ today|dmy }}.</span>
+  <form method="post" action="/kalendarz/demo"><input type="hidden" name="akcja" value="usun"><button type="submit">Usuń sprawy demo</button></form>
+</div>
+{% endif %}
+
+{% include "kalendarz_tabela.html" %}
+
+<details class="panel">
+  <summary>Import arkusza i dane demonstracyjne</summary>
+  <div class="cols-even mt3">
+    <form method="post" action="/kalendarz/import" enctype="multipart/form-data">
+      <h3>Import kalendarium (XLSX)</h3>
+      <div class="field"><label for="plik">Arkusz w układzie UMB</label><input id="plik" name="plik" type="file" accept=".xlsx,.xlsm" required></div>
+      <div class="field-inline"><input id="demo" name="demo" type="checkbox" value="1"><label for="demo">Przesuń daty (demo)</label></div>
+      <p><button type="submit" class="btn-primary">Importuj</button></p>
+    </form>
+    <form method="post" action="/kalendarz/demo">
+      <h3>Dane demonstracyjne</h3>
+      <p>10 spraw z kalendarium UMB z datami przesuniętymi względem {{ today|dmy }}. Zastępuje sprawy o tych samych numerach.</p>
+      <input type="hidden" name="akcja" value="wczytaj">
+      <button type="submit">Wczytaj sprawy demo</button>
+    </form>
+  </div>
+</details>
+{% endblock %}

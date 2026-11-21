@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ rec.id }}</h1>
+<section class="panel">
+  <p class="case-subject">{{ rec.title }}</p>
+  <dl class="facts">
+    <div><dt>Data</dt><dd>{{ rec.date|dmy or "–" }}</dd></div>
+    <div><dt>Wydziały</dt><dd>{% for d in rec.departments or [] %}{{ d }} {{ names.get(d, "") }}{% if not loop.last %}; {% endif %}{% else %}–{% endfor %}</dd></div>
+    {% if in_register %}<div><dt>W kalendarzu</dt><dd><a href="/sprawy/{{ in_register.id }}">otwórz sprawę</a></dd></div>{% endif %}
+  </dl>
+</section>
+<div class="cols-even">
+  <section class="panel"><h2>Wniosek</h2><div class="pre">{{ rec.request_text or "Brak treści wniosku." }}</div></section>
+  <section class="panel"><h2>Odpowiedź</h2><div class="pre">{{ rec.response_text or "Brak treści odpowiedzi." }}</div></section>
+</div>
+{% endblock %}

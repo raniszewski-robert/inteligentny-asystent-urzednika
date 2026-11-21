@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+{% block content %}
+<link rel="stylesheet" href="/static/b2.css">
+{% if mode == "upload" %}
+<h1>Anonimizacja dokumentu</h1>
+{% if error %}<p class="note note-err">{{ error }}</p>{% endif %}
+<form class="panel" method="post" action="/anonimizacja" enctype="multipart/form-data">
+  <div class="field">
+    <label for="plik">Plik (TXT, DOCX, ODT, PDF)</label>
+    <input type="file" id="plik" name="plik" accept=".txt,.md,.eml,.docx,.odt,.pdf">
+  </div>
+  <div class="field">
+    <label for="tekst">Albo wklej tekst</label>
+    <textarea id="tekst" name="tekst"></textarea>
+  </div>
+  <div class="field">
+    <label for="jawne">Osoby pełniące funkcje publiczne, jedna w wierszu</label>
+    <textarea id="jawne" name="jawne" class="short">{{ keep }}</textarea>
+    <span class="muted small">Ich dane dostaną ramkę do decyzji zamiast propozycji zaczernienia (art. 5 ust. 2 UDIP).</span>
+  </div>
+  <button type="submit" class="btn-primary">Wykryj dane osobowe</button>
+</form>
+<p class="muted small">Serwer zapisuje tylko odczytany tekst i decyzje. Plik źródłowy jest usuwany zaraz po odczycie.</p>
+{% else %}
+
+<div class="row-between">
+  <h1>{{ heading }}</h1>
+  <div class="row">
+    {% if mode == "sprawa" %}
+    <a href="/sprawy/{{ case.id }}">Wróć do sprawy</a>
+    <a class="btn" href="/sprawy/{{ case.id }}/projekt?wersja={{ draft.version }}">Projekt pisma, wersja {{ draft.version }}</a>
+    {% else %}
+    <a href="/anonimizacja">Inny dokument</a>
+    {% endif %}
+  </div>
+</div>
+{% if message %}<p class="note note-ok">{{ message }}</p>{% endif %}
+{% if error %}<p class="note note-err">{{ error }}</p>{% endif %}
+{% for w in warnings %}<p class="note note-warn">{{ w }}</p>{% endfor %}
+
+<form method="post" action="{{ action_url }}" id="anon-form">
+<input type="hidden" name="powrot" value="{{ action_url }}">
+<div class="cols">
+  <div>
+    <p class="sp-legend" aria-label="Legenda">
+      <span><mark class="sp sp-suggested">szary</mark> propozycja</span>
+      <span><mark class="sp sp-review">ramka</mark> do decyzji</span>
+      <span><mark class="sp sp-accepted">czarny</mark> zaczernione</span>
+      <span><mark class="sp sp-rejected">podkreślenie</mark> jawne</span>
+    </p>
+    <div class="doc" id="doc">{{ marked }}</div>
+    <div class="actions">
+      <button type="button" id="mark-selection" hidden disabled>Zaczernij zaznaczony tekst</button>
+    </div>
+    <details class="panel">
+      <summary>Popraw treść dokumentu</summary>
+      <div class="field">
+        <label for="edited">Treść</label>
+        <textarea id="edited" name="edited" class="letter-text">
+{{ text }}</textarea>
+      </div>
+      <p class="muted small">Po zmianie treści asystent wykryje fragmenty od nowa i zachowa podjęte decyzje.</p>
+    </details>
+  </div>
+
+  <aside>
+    <section class="panel" aria-labelledby="h-dec">
+      <h2 id="h-dec">Decyzje</h2>
+      <p>Bez decyzji: <b id="undecided-count">{{ undecided }}</b> z {{ spans|length }}</p>
+      <div class="actions">
+        <button type="submit" name="action" value="zapisz">Zapisz decyzje</button>
+        <button type="submit" name="action" value="akceptuj">Zaczernij wszystkie propozycje</button>
+        <button type="submit" name="action" value="wszystkie">Zaczernij wszystkie bez decyzji</button>
+        {% if llm_on %}<button type="submit" name="action" value="model" id="btn-model">Sprawdź modelem</button>{% endif %}
+      </div>
+      {% if llm_count %}<p class="small" id="badge-llm"><mark class="sp sp-review sp-llm">fioletowa ramka</mark> {{ llm_count }} fragm. wskazał model; każdy wymaga decyzji urzędnika.</p>{% endif %}
+      {% if spans %}
+      <div class="table-wrap">
+      <table class="span-table">
+        <thead><tr><th>Fragment</th><th>Decyzja</th></tr></thead>
+        <tbody>
+        {% for s in spans %}
+          <tr data-row="{{ s.id }}">
+            <td class="frag"><span title="{{ s.reason }}">{{ s.text }}</span>
+              <div class="muted small">{{ type_label(s.type) }}{% if s.addressee %}, <span class="tag">adresat</span>{% endif %}{% if s.source == "llm" %}, <span class="tag tag-llm">model</span>{% endif %}{% if s.reason and s.reason.startswith("Wyuczone") %}, <span class="tag tag-learned" title="{{ s.reason }}">wyuczone</span>{% endif %}</div></td>
+            <td>
+              <label class="visually-hidden" for="st_{{ s.id }}">Decyzja dla: {{ s.text }}</label>
+              <select id="st_{{ s.id }}" name="st_{{ s.id }}" data-id="{{ s.id }}">
+                {% if s.status in ("suggested", "review") %}<option value="{{ s.status }}" selected>bez decyzji</option>
+                {% elif s.type != "RECZNIE" %}<option value="{{ s.orig }}">bez decyzji</option>{% endif %}
+                <option value="accepted"{% if s.status == "accepted" %} selected{% endif %}>zaczernij</option>
+                <option value="rejected"{% if s.status == "rejected" %} selected{% endif %}>zostaw jawne</option>
+              </select>
+              <div class="remember small">
+                {% if s.type != "RECZNIE" %}<button type="submit" class="btn-link" formaction="/pamiec" name="pamiec" value="allow:{{ s.id }}">Zapamiętaj jako wyjątek</button>{% endif %}
+                <button type="submit" class="btn-link" formaction="/pamiec" name="pamiec" value="redact:{{ s.id }}">Zapamiętaj do zaczerniania</button>
+                {% if s.type == "RECZNIE" %}<button type="submit" class="btn-link" formaction="/pamiec" name="pamiec" value="tajemnica:{{ s.id }}">Zapamiętaj jako tajemnicę przedsiębiorcy</button>{% endif %}
+              </div>
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+      </div>
+      {% else %}
+      <p class="muted">Nie wykryto danych osobowych. Zaznacz w tekście to, co trzeba zaczernić.</p>
+      {% endif %}
+      <div class="field">
+        <label for="manual">Dodatkowe fragmenty do zaczernienia, jeden w wierszu</label>
+        <textarea id="manual" name="manual" class="short">{{ manual }}</textarea>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="h-fin">
+      <h2 id="h-fin">Wersje końcowe</h2>
+      {% if finalized %}
+      <div class="exports">
+        {% for v, label in versions.items() %}
+        <span>{{ label }}</span>
+        <a class="btn" href="{{ base }}/eksport/{{ v }}.docx" download>DOCX</a>
+        <a class="btn" href="{{ base }}/eksport/{{ v }}.txt" download>TXT</a>
+        {% endfor %}
+      </div>
+      {% for v, a in audits.items() %}
+      {% if a.ok %}<p class="note note-ok small audit-badge">{{ versions[v] }}: kontrola pliku DOCX bez trafień ({{ a.parts }} części XML sprawdzonych, metadane usunięte).</p>
+      {% else %}<p class="note note-err small audit-badge">{{ versions[v] }}: kontrola pliku DOCX znalazła {{ a.hits|length }} trafień – eksport zablokowany.</p>{% endif %}
+      {% endfor %}
+      {% if mode == "sprawa" %}
+        {% if sent %}
+        <p class="note note-ok">Odpowiedź wysłana, pismo jest w archiwum.</p>
+        {% else %}
+        <div class="actions"><button type="submit" name="action" value="wyslano">Oznacz jako wysłane i dodaj do archiwum</button></div>
+        {% endif %}
+      {% endif %}
+      {% else %}
+      <p>Pliki DOCX i TXT będą dostępne po zatwierdzeniu, gdy każdy fragment ma decyzję.</p>
+      {% endif %}
+      <div class="actions"><button type="submit" name="action" value="zatwierdz" class="btn-primary">Zatwierdź anonimizację</button></div>
+      {% if mode == "plik" %}
+      <div class="actions"><button type="submit" name="action" value="usun">Usuń dokument z serwera</button></div>
+      {% endif %}
+    </section>
+  </aside>
+</div>
+</form>
+<script src="/static/redaction.js" defer></script>
+{% endif %}
+{% endblock %}

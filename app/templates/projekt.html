@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+{% block content %}
+<link rel="stylesheet" href="/static/b2.css">
+<div class="row-between">
+  <h1>Projekt pisma {{ case.number }}</h1>
+  <div class="row">
+    <a href="/sprawy/{{ case.id }}">Wróć do sprawy</a>
+    <a class="btn" href="/sprawy/{{ case.id }}/anonimizacja">Anonimizacja</a>
+  </div>
+</div>
+{% if saved %}<p class="note note-ok">Zapisano wersję {{ saved }}.</p>{% endif %}
+{% if unchanged %}<p class="note">Tekst się nie zmienił, nowa wersja nie powstała.</p>{% endif %}
+{% if error %}<p class="note note-err">{{ error }}</p>{% endif %}
+
+<div class="cols">
+<div>
+  <form class="panel" method="post" action="/sprawy/{{ case.id }}/projekt" id="type-form">
+    <h2>Rodzaj pisma</h2>
+    <div class="field">
+      <label for="ltype">Rodzaj</label>
+      <select id="ltype" name="ltype">
+        {% for k, label in ltypes.items() %}<option value="{{ k }}"{% if k == params.ltype %} selected{% endif %}>{{ label }}</option>{% endfor %}
+      </select>
+    </div>
+    <div class="fields">
+      {% for name, (label, types) in type_fields.items() %}
+      <div class="field" data-types="{{ types|join(' ') }}">
+        <label for="f-{{ name }}">{{ label }}</label>
+        {% if name == "until" %}
+        <input type="date" id="f-{{ name }}" name="{{ name }}" value="{{ params[name] }}">
+        {% else %}
+        <input type="text" id="f-{{ name }}" name="{{ name }}" value="{{ params[name] }}">
+        {% endif %}
+      </div>
+      {% endfor %}
+      <div class="field">
+        <label for="f-scope">Zakres wniosku</label>
+        <input type="text" id="f-scope" name="scope" value="{{ params.scope }}" placeholder="z treści wniosku">
+      </div>
+      <div class="field">
+        <label for="f-sign">Podpis</label>
+        <input type="text" id="f-sign" name="sign" value="{{ params.sign }}">
+      </div>
+    </div>
+    <button type="submit" name="action" value="generuj" class="btn-primary">Generuj nową wersję</button>
+    {% if llm_on %}<button type="submit" name="mode" value="llm" id="btn-model">Generuj z modelem</button>{% endif %}
+  </form>
+
+  <form class="panel" method="post" action="/sprawy/{{ case.id }}/projekt" id="letter-form">
+    <h2>Treść pisma, wersja {{ draft.version }}</h2>
+    <div id="ad-editor" class="ad-editor" hidden></div>
+    <div class="field">
+      <label for="letter-text">Tekst pisma</label>
+      <textarea id="letter-text" name="text" class="letter-text" spellcheck="true">
+{{ draft.text }}</textarea>
+    </div>
+    <input type="hidden" name="base_version" value="{{ draft.version }}">
+    <button type="submit" name="action" value="zapisz" class="btn-primary">Zapisz jako nową wersję</button>
+  </form>
+</div>
+
+<aside>
+  <section class="panel" aria-labelledby="h-check">
+    <h2 id="h-check">Kontrola projektu</h2>
+    {% for w in report.warnings %}<p class="note note-err">{{ w }}</p>{% endfor %}
+    {% if report.gaps %}
+    <p class="note note-err">Brak odpowiedzi wydziału na: {% for g in report.gaps %}Ad {{ g }}{% if not loop.last %}, {% endif %}{% endfor %}. Uzupełnij przed wysyłką.</p>
+    {% endif %}
+    {% if num_bad %}
+    <div class="note note-err">Liczby, których nie ma w odpowiedziach wydziałów:
+      <ul>{% for n in num_bad %}<li>{{ n }}</li>{% endfor %}</ul></div>
+    {% elif answers and draft.ltype == "udostepnienie" %}
+    <p class="note note-ok">Kontrola liczb: każda liczba w piśmie występuje w odpowiedziach wydziałów.</p>
+    {% endif %}
+    {% if report.omitted_numbers_template or report.omitted_numbers %}
+    <div class="note note-warn">Liczby z odpowiedzi wydziałów, których nie ma w piśmie:
+      <ul>{% for n in (report.omitted_numbers_template or report.omitted_numbers) %}<li>{{ n }}</li>{% endfor %}</ul></div>
+    {% endif %}
+    {% if report.unassigned %}
+    <div class="note note-warn" id="unassigned">Zdania bez przypisania – wybierz Ad. Nie ma ich w piśmie, dopóki nie wskażesz pytania.
+      <ul>
+      {% for u in report.unassigned %}
+        <li>„{{ u.sentence }}” <span class="small muted">({{ u.source }}, zdanie {{ u.index + 1 }}{% if u.reason %}; {{ u.reason }}{% endif %})</span>
+          <form method="post" action="/sprawy/{{ case.id }}/projekt/przypisz" class="field-inline">
+            <input type="hidden" name="zdanie" value="{{ u.source }}#{{ u.index }}">
+            <input type="hidden" name="base_version" value="{{ draft.version }}">
+            <label for="ad-{{ loop.index }}">Pytanie</label>
+            <select id="ad-{{ loop.index }}" name="ad">
+              {% for q in questions %}<option value="{{ loop.index }}"{% if u.candidates and loop.index == u.candidates[0] %} selected{% endif %}>Ad {{ loop.index }}{% if loop.index in u.candidates %} (pasuje){% endif %}</option>{% endfor %}
+              <option value="0">pomiń zdanie</option>
+            </select>
+            <button type="submit" class="btn-small">Przypisz</button>
+          </form>
+        </li>
+      {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+    {% if report.uncertain_assignment %}
+    <div class="note note-warn">Do sprawdzenia:
+      <ul>
+      {% for u in report.uncertain_assignment %}
+        {% if u.sentence %}
+        {% set other = u.candidates|reject("equalto", u.assigned_to)|list %}
+        <li>Zdanie „{{ u.sentence }}” ({{ u.source }}) trafiło do Ad {{ u.assigned_to }}{% if other %}, pasuje też do: {% for c in other %}Ad {{ c }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}.</li>
+        {% else %}
+        <li>Ad {{ u.question }}: odpowiedź od {{ u.answer_from|join(', ') }}, pytanie pasuje do {{ u.expected_department|join(', ') }}. Czy brakuje odpowiedzi tej komórki?</li>
+        {% endif %}
+      {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+    {% if report.mode_used == "llm" %}<p class="note note-ok" id="badge-llm">Akapity „Ad” zredagował model. Kontrola liczb: zgodne z odpowiedziami wydziałów.</p>
+    {% elif report.llm_rejected %}<p class="note note-err" id="badge-llm">Odrzucono akapity modelu: {{ report.llm_rejected }}. W piśmie są akapity z szablonu.</p>{% endif %}
+    {% if report.llm_error %}<p class="note note-warn">Model niedostępny, akapity z szablonu: {{ report.llm_error }}</p>{% endif %}
+    {% if report.internal_notes %}
+    <div class="note">Notatki dla urzędnika (nie trafiają do pisma):
+      <ul>{% for n in report.internal_notes %}<li>{{ n }}</li>{% endfor %}</ul></div>
+    {% endif %}
+    {% if draft.spans %}
+    <p><a href="/sprawy/{{ case.id }}/anonimizacja">Dane osobowe do decyzji: {{ undecided }} z {{ draft.spans|length }}</a></p>
+    {% endif %}
+  </section>
+
+  {% if questions %}
+  <section class="panel" aria-labelledby="h-q">
+    <h2 id="h-q">Pytania z wniosku</h2>
+    <ol class="q-list">{% for q in questions %}<li>{{ q }}</li>{% endfor %}</ol>
+  </section>
+  {% endif %}
+
+  <section class="panel" aria-labelledby="h-a">
+    <h2 id="h-a">Odpowiedzi wydziałów</h2>
+    {% for name, body in answers %}
+    <details><summary>{{ name }}</summary><div class="excerpt">{{ body }}</div></details>
+    {% else %}
+    <p class="muted">Brak wgranych odpowiedzi. Dodaj je na stronie sprawy.</p>
+    {% endfor %}
+  </section>
+
+  <section class="panel" aria-labelledby="h-v">
+    <h2 id="h-v">Wersje</h2>
+    <table>
+      <thead><tr><th class="num">Wersja</th><th>Rodzaj</th><th>Zapisano</th></tr></thead>
+      <tbody>
+      {% for v in versions|reverse %}
+        <tr{% if v.version == draft.version %} class="current"{% endif %}>
+          <td class="num">{% if v.version == draft.version %}{{ v.version }}{% else %}<a href="/sprawy/{{ case.id }}/projekt?wersja={{ v.version }}">{{ v.version }}</a>{% endif %}</td>
+          <td>{{ ltypes.get(v.ltype, v.ltype) }}</td>
+          <td class="nowrap">{{ v.created_at|dmy }} {{ (v.created_at or '')[11:16] }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </section>
+</aside>
+</div>
+<script src="/static/ad_editor.js" defer></script>
+{% endblock %}

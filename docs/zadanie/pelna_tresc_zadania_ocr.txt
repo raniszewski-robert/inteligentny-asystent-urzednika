@@ -1,0 +1,274 @@
+WYZWANIE HACKATHON:
+
+Inteligentny asystent urzędnika
+
+Generator odpowiedzi na UDIP z kalendarzem
+(organizerem) wniosków
+
+Każdego dnia do urzędów trafiają dziesiątki wniosków o Dostęp do Informacji Publicznej od
+mieszkańców, aktywistów i dziennikarzy. Choć prawo to jest ważną częścią demokracji, dla
+urzędników oznacza ono setki godzin spędzonych na ręcznym przeszukiwaniu archiwów,
+weryfikacji stron BIP i pisaniu od nowa powtarzalnych pism.
+
+Czas na zmianę! Zadaniem uczestników Hacknation jest stworzenie prostej i bezpiecznej
+aplikacji, która skróci czas przygotowania odpowiedzi z kilku dni do zaledwie paru minut,
+ułatwiając codzienną pracę w urzędzie.
+
+1. Bydgoszcz — Miasto Otwarte na Innowacje i Cyfrową Administrację
+
+Witamy w Bydgoszczy — jednym z największych miast w Polsce. Bydgoszcz to nie tylko silny
+ośrodek gospodarczy, akademicki i medyczny, ale także polska stolica NATO.
+
+Chcemy, aby nasz urząd działał sprawnie i nowocześnie. Każdego dnia obsługujemy wiele
+Spraw oraz zapytań od mieszkańców. Poszukujemy prostych narzędzi, które wesprą
+urzędników w powtarzalnych czynnościach i usprawnią przygotowywanie pism.
+
+Liczymy na Waszą pomysłowość w zakresie bezpiecznych rozwiązań sztucznej inteligencji,
+automatycznego przeszukiwania baz wiedzy oraz ochrony danych. Wierzymy, że
+nowoczesne narzędzia pozwolą nam szybciej i sprawniej odpowiadać na wnioski obywateli.
+
+2. Wyzwanie
+
+Wyzwanie na Hacknation jest jasne: należy stworzyć narzędzie wspierające urzędników
+przy obsłudze wniosków o Dostęp do Informacji Publicznej w Urzędzie Miasta Bydgoszczy.
+W skrócie — kalendarz wniosków z terminami, z modułem generowania odpowiedzi oraz
+modułem anonimizacji danych.
+
+Wasz prototyp musi spełniać następujące kluczowe założenia:
+
+1. Model Al i środowisko: Na potrzeby wyzwania (podczas Hacknation) można
+korzystać z otwartego Al, jednak docelowy program będzie musiał działać na
+zamkniętym modelu bez dostępu do Internetu, z możliwością uczenia się na bazie
+wprowadzanych danych. (ustawy, aktualizacje ustaw, wnioski, odpowiedz itd.)
+
+2. Wgrywanie plików / dokumentów: Dane wejściowe będą wprowadzane ręcznie
+przez urzędnika obsługującego wnioski (poprzez wgranie pliku w formacie np. PDF
+lub Word).
+
+3. Kalendarz wniosków: program musi zawierać tabelę zintegrowaną z kalendarzem,
+gdzie lista wniosków będzie uporządkowana od najstarszych do najnowszych, z
+uwzględnieniem ilości dni na wysłanie odpowiedzi do wnioskodawcy. Wnioski, na
+które należy odpowiedzieć w danym dniu i dniu poprzedzającym mogą być
+odpowiednio podświetlone. Można również dodać funkcje: odpowiedź w
+przygotowaniu, kwerenda (czyli dodatkowy czas na przygotowanie odpowiedzi),
+odpowiedź wysłana, inicjały osoby obsługującej wniosek, liczba porządkowa, nr
+wniosku, okienko na skrócony opis tematu wniosku, data wpływu, termin
+odpowiedzi, data udzielenia odpowiedzi. Możliwość wyboru danego roku z
+wnioskami.
+
+4. Anonimizacja: projekt powinien zawierać moduł, który będzie sugerował które dane w
+gotowej odpowiedzi na wniosek powinny być anonimowe, np. Podświetlając dany obszar
+tekstu a szaro, a po akceptacji urzędnika na czarno. Program zaproponuje, a następnie
+automatycznie zanonimizuje wszelkie nadmiarowe dane (np. dane osobowe).
+Automatyzacja: Automatyzacja rutynowych, powtarzalnych czynności.
+Przeszukiwanie archiwum: Przeszukiwanie bazy archiwalnych odpowiedzi w celu
+łatwego znalezienia podobnych wniosków z przeszłości.
+
+6. Wskazywanie ścieżki: Podpowiedzi dla urzędnika w zakresie najlepszej możliwej
+ścieżki pozyskania odpowiedzi z konkretnych wydziałów urzędu.
+
+7. Przygotowanie projektu odpowiedzi: Po wgraniu plików przez urzędnika odpowiedzi
+z wydziałów, program przygotuje projekt pisma, który urzędnik następnie sprawdzi
+(aby wykluczyć błędy i halucynacje Al).
+
+9. Brak automatycznej wysyłki: Program nie będzie niczego samodzielnie wysyłał — ani
+do wydziałów, ani na zewnątrz.
+
+10. Kompleksowe wsparcie: Program ma nie tylko wspierać decyzje, ale też generować
+projekty odpowiedzi, anonimizować dane oraz dzięki kalendarzowi wniosków
+
+wspierać urzędników w terminowym udzielaniu odpowiedzi.
+
+11. Brak integracji: Nie ma potrzeby integracji z żadnym innym systemem urzędowym
+(w tym z systemem SIDAS).
+
+12. Narzędzie pomocnicze: Program służy wyłącznie jako narzędzie wsparcia —
+ostateczną decyzję zawsze podejmuje urzędnik.
+
+Uproszczona instrukcja działania narzędzia:
+
+10.
+
+11.
+
+Narzędzie „uczy się” przez wgranie aktualnych ustaw, archiwalnych
+odpowiedzi na wnioski, zarządzeń itp.
+
+Urzędnik wygrywa plik (PDF lub Word) z wnioskiem o informację
+publiczną
+
+Narzędzie analizuje wniosek, pokazuje listę podobnych wniosków,
+które wpłynęły w ostatnim roku
+
+Narzędzie wyświetla listę propozycji wydziałów do których urzędnik
+wyśle prośbę o przygotowanie odpowiedzi (lista wydziałów UMB:
+https://bip.um.bydgoszcz.pl/artykuly/198/wydzialy , biura:
+https://bip.um.bydgoszcz.pl/artykuly/1158/biura )
+
+Wniosek zostaje umieszczony na liście wniosków, urzędnik akceptuje
+wprowadzone dane (termin, inicjały, daty, numer wniosku itd.)
+(poza narzędziem) Z wydziałów spływają odpowiedzi, urzędnik
+wgrywa je do narzędzia, po otwarciu danej sprawy / wniosku
+
+Na podstawie wgranych odpowiedzi narzędzie przygotowuje szablon
+odpowiedzi, z zaznaczonymi polami do potencjalnej anonimizacji
+Urzędnik akceptuje anonimizację lub odznacza tekst do ukrycia.
+Narzędzie generuje odpowiedź w pliku doc / txt
+
+Urzędnik sprawdza odpowiedź pod względem merytorycznym,
+nanosi poprawki.
+
+Narzędzie na każdym kroku aktualizuje status danej sprawy np. A)
+brak działań, b) zapytania wysłane do wydziałów, c) kwerenda + ilość
+dni, d) przygotowana odpowiedź, e) odpowiedź wysłana do
+wnioskodawcy
+
+
+Nie narzucamy konkretnej technologii ani formatu — liczymy na Waszą kreatywność
+i innowacyjne myślenie, które zaskoczy nas oraz urzędników, otwierając zupełnie nowy
+wymiar cyfrowej administracji.
+
+Czas, by Bydgoszcz wyznaczyła nowe standardy GovTech w Polsce!
+
+3. Oczekiwany rezultat
+
+Oczekujemy innowacyjnego, w pełni funkcjonalnego prototypu cyfrowego, który przekształci
+proces obsługi wniosków UDIP w Urzędzie Miasta Bydgoszczy w szybki, półautomatyczny i
+bezpieczny proces wspierany przez sztuczną inteligencję lub inną technologię.
+
+Główną grupą docelową są urzędnicy obsługujący wnioski UDIP, dla których system ma
+stanowić wygodnego asystenta w codziennej pracy. Finalnie, rozwiązanie ma usprawnić
+funkcjonowanie całego urzędu oraz podnieść jakość obsługi mieszkańców.
+
+Korzyści dla Bydgoszczy to znaczna oszczędność czasu pracy urzędników, odciążenie
+pracowników od rutynowych zadań, dbałość o ochronę danych osobowych oraz
+pozycjonowanie miasta jako centrum innowacji. Nie narzucamy technologii — liczy się
+kreatywność i efekt zaskoczenia.
+
+4. Wymagania formalne - zasady udziału i prezentacja projektu
+
+Uczestnicy (zespoły), które podejmą się wyzwania Hacknation, muszą przygotować i pokazać
+swoje rozwiązanie w dwóch głównych formach:
+
+a) Prezentacja prototypu: W ramach prezentacji prototypu, prosimy o stworzenie
+maksymalnie 3-minutowego filmu, w którym projekt zostanie zaprezentowany.
+b) Prezentacja — maksymalnie 10 slajdów.
+
+Co musi znaleźć się w Waszej prezentacji:
+
+1. Początek: Nazwa Waszego projektu i kto jest w zespole.
+2. Co rozwiązujecie: Opis, jaki problem rozwiązujecie (jak Wasz program przyspiesza
+pracę urzędnika i chroni dane osobowe) i dlaczego ten pomysł jest ważny.
+
+3. Pomysł: Dokładny opis, jak działa Wasze rozwiązanie (jak wyszukuje archiwalne
+sprawy i anonimizuje dane, jak działa kalendarz wniosków) i jakiej technologii używa.
+4. Jak to działa: Krótki film lub prezentacja, które pokaże, że Wasz prototyp działa w
+praktyce (wgrywanie pliku PDF/Word, przetwarzanie i generowanie projektu
+odpowiedzi).
+Dla kogo: Kto ma z tego korzystać — urzędnicy JST.
+Przyszłość: Pomysł na to, jak to rozwiązanie mogłoby działać na stałe w Urzędzie
+Miasta Bydgoszczy.
+Narzędzia: Lista głównych programów i narzędzi, których użyliście.
+Informacja, czy prototyp będzie działał w zamkniętym systemie, bez dostępu do
+Internetu i dużych modeli językowych, ze wskazaniem propozycji konkretnego
+modelu, który może działać w zamkniętym środowisku.
+
+Najwyżej ocenione zostaną te zespoły, których rozwiązania są zupełnie nowe, bardzo
+pomysłowe, bezpieczne i mają szansę na prawdziwe użycie w Bydgoszczy.
+
+5. Wymagania techniczne
+
+Ważne jest, aby Wasz pomysł nie tylko dobrze wyglądał, ale był też możliwy do zrobienia w
+krótkim czasie trwania Hacknation.
+
+Wymagania techniczne i realność wykonania: Wasze rozwiązanie musi być łatwe w użyciu
+dla każdego urzędnika. Prototyp powinien sprawnie przyjąć wczytany plik (PDF lub Word),
+przeszukać lokalną bazę, podpowiedzieć właściwy wydział, a po wpisaniu danych
+wygenerować projekt odpowiedzi i zanonimizować dane. Kalendarz wniosków powinien
+wyświetlić 10 wniosków testowych od najstarszego do najnowszego i podświetlić kolorem
+wnioski, na które należy udzielić odpowiedzi w pierwszej kolejności.
+
+Nie musicie używać trudnych technologii, ale Wasz prototyp musi być stabilny i dobrze
+działać. Pamiętajcie, że ma to być projekt do pokazania, a nie tylko plan. Ocenimy, czy
+realnie możecie to stworzyć w czasie trwania konkursu i czy technika, której używacie, jest
+dostępna i nie kosztuje zbyt wiele.
+
+Bezpieczeństwo i wdrażalność (przyszłe użycie): Podczas tworzenia rozwiązania na
+Hacknation, ze względu na korzystanie z testowych wniosków, które nie będą zawierały
+rzeczywistych danych, dozwolone jest użycie otwartego Al, ale koncepcja musi uwzględniać,
+że docelowo w urzędzie aplikacja będzie działać w pełni lokalnie, bez dostępu do Internetu,
+zapewniając pełne bezpieczeństwo danych osobowych.
+
+Projekt musi być bezpieczny — nie może narażać użytkowników ani miasta na wycieki
+danych. Musi być też gotowy do wdrożenia, czyli dać się łatwo zainstalować i uruchomić w
+Bydgoszczy. Musi być skalowalny, czyli powinien działać dobrze nie tylko dla pojedynczych
+spraw, ale dla setek archiwalnych dokumentów. Myślenie o tym, jak Bydgoszcz mogłaby
+używać Waszego rozwiązania przez lata, jest bardzo ważne.
+
+6. Sposób testowania i/lub walidacji. Jak Jury sprawdzi Wasz projekt?
+
+Sprawdzenie Prototypu Jury samo sprawdzi, jak działa Wasz prototyp w praktyce:
+
+1. Wgra przykładowy plik wniosku (PDF lub Word) i sprawdzi, czy program poprawnie
+odnajduje podobne sprawy w archiwum.
+
+2. Sprawdzi, czy po podaniu odpowiedzi z wydziału program poprawnie układa projekt
+pisma.
+
+3. Przeprowadzi test anonimizacji — wprowadzi plik zawierający dane osobowe i
+sprawdzi, czy program skutecznie je ukrywa.
+
+4. Zobaczy, czy rozwiązanie jest łatwe w obsłudze, czy działa stabilnie i czy faktycznie
+pomaga urzędnikom. W tym momencie sprawdzi również realność techniczną
+projektu — czy da się go użyć w prawdziwym świecie
+
+5. Jury sprawdzi sposób ułożenia listy wniosków w kalendarzu i zaprojektowane
+rozwiązania, m.in. w jaki sposób narzędzie wskaże wnioski, które wymagają
+odpowiedzi w terminie wysyłki i jak oznacza wnioski na danym etapie obróbki przez
+urzędnika.
+
+6. Jury oceni sposób i łatwość wgrywania danych, aktualizacji ustaw, archiwalnych
+odpowiedzi.
+
+Aby ułatwić Wam pracę nad projektem, zapewniamy dostęp do niezbędnych materiałów i
+danych testowych:
+
+e Przykładowe testowe materiały: wzory pytań (wniosków UDIP) oraz odpowiedzi,
+robocza wizualizacja tabeli / kalendarium wniosków - będą dostępne pod kodem QR
+w dniu rozpoczęcia Hacknation. Przekażą je mentorzy.
+
+e Na miejscu będą dostępni mentorzy z UMB z zakresu komunikacji oraz procedur
+urzędowych.
+
+e Potencjalne źródła danych i serwisy miejskie:
+e -- Biuletyn Informacji Publicznej UM Bydgoszczy
+Link do ustawy KPA:
+https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=wdu19600300168
+e. Link do ustawy UDIP:
+https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=<wdu20011121198
+
+Dzięki tym materiałom będziecie mogli skupić się na innowacyjnym kodowaniu i tworzeniu,
+zamiast na szukaniu podstawowych informacji.
+
+8. Kryteria oceny
+
+Przykładowe kryteria: * Związek z wyzwaniem (zgodność z założeniami) — 30% *
+Bezpieczeństwo i skuteczna anonimizacja danych — 20% « Łatwość obsługi i użyteczność dla
+urzędnika — 20% e Kompletność i jakość działającego prototypu — 30%
+
+9. Dodatkowe uwagi / kontekst wdrożeniowy
+
+Miasto Bydgoszcz informuje, że najciekawsze i najbardziej obiecujące rozwiązania, które
+powstaną podczas Hacknation, zostaną rozważone do wdrożenia i dalszego rozwoju.
+
+10. Kontakt
+
+Podczas realizacji wyzwania, do dyspozycji uczestników będą:
+
+« Pracownik Biura Komunikacji Społecznej
+« Pracownik Biura Rady Miasta Bydgoszczy
+
+Ekspertów będzie można spotkać na stoisku Bydgoszczy lub skontaktować się z nimi na
+dedykowanym kanale Discord.
+
+

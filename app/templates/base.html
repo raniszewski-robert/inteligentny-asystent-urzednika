@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}{{ title or "Asystent UDIP" }}{% endblock %} – Asystent UDIP</title>
+<link rel="stylesheet" href="/static/fonts/lato.css">
+<link rel="stylesheet" href="/static/app.css">
+<script src="/static/htmx.min.js" defer></script>
+</head>
+<body>
+<header class="top">
+  <div class="top-inner">
+    <a class="org" href="/kalendarz">Urząd Miasta Bydgoszczy · Biuro Komunikacji Społecznej</a>
+    <form class="clerk" method="post" action="/urzednik">
+      <label for="urzednik">Urzędnik</label>
+      <select id="urzednik" name="urzednik" onchange="this.form.submit()">
+        {% for c in clerks %}<option value="{{ c }}"{% if c == clerk %} selected{% endif %}>{{ c }}</option>{% endfor %}
+      </select>
+      <noscript><button type="submit">Zmień</button></noscript>
+    </form>
+  </div>
+  <nav class="nav" aria-label="Główne">
+    {% for path, label in nav %}<a href="{{ path }}"{% if path == active %} aria-current="page"{% endif %}>{{ label }}</a>{% endfor %}
+  </nav>
+</header>
+<main class="page{% block page_class %}{% endblock %}">
+{% block content %}{% endblock %}
+</main>
+<footer class="foot">Narzędzie pomocnicze. Decyzję w sprawie podejmuje urzędnik.</footer>
+</body>
+</html>

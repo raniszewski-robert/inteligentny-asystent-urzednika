@@ -1,0 +1,10 @@
+# Słowa sygnalizujące dane z listy UMB „Dane podlegające anonimizacji” (data-partner/umb), których nie da się wykryć wzorcem.
+# Format: KATEGORIA<TAB>wyrażenie regularne. Zdanie z trafieniem dostaje status „review” (decyzja urzędnika).
+ZDROWIE	\b(chor\w+|diagnoz\w*|niepełnospraw\w*|orzeczeni\w+ o niepełnospraw\w*|hospitaliz\w*|leczeni\w*|nałog\w*|uzależni\w*|alkoholik\w*|szpital\w*)
+POMOC_SPOLECZNA	\b(zasiłk\w*|MOPS|pomoc\w* społeczn\w*|świadczeni\w* (z pomocy|rodzinn)\w*|bezdomn\w+ (osob|mężczyzn|kobiet)\w*)
+KARALNOSC	\b(karan\w*|skazan\w*|wyrok\w*|wykroczeni\w*|mandat\w* (dla|wobec)|postępowani\w* karn\w*)
+POGLADY	\b(wyznani\w*|religi\w*|przynależn\w* (partyjn|związkow)\w*|członk\w* (partii|związku))
+SYTUACJA_RODZINNA	\b(rozwod\w*|rozwiedz\w*|wdow\w*|stan\w* cywiln\w*|(syn|córk|dzieck)\w* (pana|pani)|liczb\w* dzieci)
+MAJATEK	\b(zadłużeni\w*|dług(?:i|u|ów|iem|ami)\b|zaległoś\w*|dochod\w*|wynagrodzeni\w* (pana|pani)|egzekucj\w*|komornik\w*)
+URODZENIE	\b(ur\.|urodzon\w*)\s+(dnia\s+)?\d
+DZIALKA	\b(działk\w*|dz\.)\s*(ewid\w*\.?\s*)?(nr\s*)?\d+(/\d+)?

@@ -1,0 +1,11 @@
+.env
+.cache/
+__pycache__/
+*.pyc
+/tmp/
+wynik/
+*.log
+# Oryginały UMB w pełnym rozmiarze trzymamy poza repo (skany 11–14 MB)
+data-partner/umb/oryginaly/
+.venv/
+var/

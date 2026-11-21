@@ -1,0 +1,58 @@
+Dane podlegające anonimizacji
+
+
+Imię i nazwisko osoby fizycznej (niepełniącej funkcji publicznej)
+
+Numer PESEL
+
+Numer i seria dowodu osobistego lub innego dokumentu tożsamości
+
+Numer NIP osoby fizycznej nieprowadzącej działalności gospodarczej
+
+Data i miejsce urodzenia
+
+Adres zamieszkania, zameldowania lub korespondencyjny osoby fizycznej
+
+Prywatny numer telefonu
+
+Prywatny adres poczty elektronicznej (e-mail)
+
+Numer rachunku bankowego osoby fizycznej
+
+Własnoręczny podpis (parafka) osoby niepełniącej funkcji publicznej
+
+Wizerunek osoby fizycznej niepełniącej funkcji publicznej
+
+Stan cywilny i sytuacja rodzinna (np. liczba dzieci, imiona rodziców)
+
+Dane dotyczące stanu zdrowia, niepełnosprawności lub nałogów
+
+Dane o sytuacji majątkowej, dochodach i zadłużeniu osoby fizycznej
+
+Informacje o korzystaniu ze świadczeń pomocy społecznej
+
+Dane dotyczące poglądów politycznych, przekonań religijnych lub światopoglądowych
+
+Informacje o przynależności związkowej lub partyjnej
+
+Dane o pochodzeniu rasowym lub etnicznym
+
+Dane o orientacji seksualnej
+
+Informacje o karalności, wyrokach skazujących i naruszeniach prawa
+
+Numer księgi wieczystej (jeśli pozwala na bezpośrednią identyfikację konkretnej osoby fizycznej)
+
+Numer działki ewidencyjnej (w sytuacjach, gdy umożliwia łatwe ustalenie tożsamości prywatnego właściciela)
+
+Numer rejestracyjny pojazdu prywatnego
+
+Tajemnica przedsiębiorstwa (dane techniczne, technologiczne, organizacyjne lub handlowe firmy)
+
+Tajemnica skarbowa (indywidualne dane podatników)
+
+Tajemnica bankowa i ubezpieczeniowa
+
+Dane objęte tajemnicą ustawowo chronioną (np. tajemnica zawodowa, lekarska, adwokacka)
+
+Informacje niejawne (klauzule poufności)

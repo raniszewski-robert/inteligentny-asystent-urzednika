@@ -1,0 +1,7 @@
+# Domeny skrzynek instytucji publicznych: adresy w nich nie są anonimizowane.
+# Uwaga: imienne skrzynki pracowników (jan.kowalski@um...) też zostają jawne – to dane służbowe (art. 5 ust. 2 UDIP); zmień, jeśli UMB postanowi inaczej.
+um.bydgoszcz.pl
+bydgoszcz.pl
+zdmikp.bydgoszcz.pl
+gov.pl
+wkz.gov.pl

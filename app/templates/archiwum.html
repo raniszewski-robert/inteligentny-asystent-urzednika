@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Archiwum i przepisy</h1>
+
+<form class="panel" method="get" action="/archiwum">
+  <div class="search-row">
+    <div class="field grow"><label for="q">Szukaj w sprawach i przepisach</label><input id="q" name="q" type="search" value="{{ q }}"></div>
+    <div class="field"><label for="rok">Rok</label>
+      <select id="rok" name="rok"><option value="">wszystkie</option>{% for y in years %}<option value="{{ y }}"{% if y == rok %} selected{% endif %}>{{ y }}</option>{% endfor %}</select></div>
+    <div class="field"><label for="wydzial">Wydział</label>
+      <select id="wydzial" name="wydzial" class="dep-select"><option value="">wszystkie</option>{% for d in departments %}<option value="{{ d.id }}"{% if d.id == wydzial %} selected{% endif %}>{{ d.id }} {{ d.name }}</option>{% endfor %}</select></div>
+    <div class="field"><button type="submit" class="btn-primary">Szukaj</button></div>
+  </div>
+  <p class="small muted">Sprawy w archiwum: {{ n_cases }}. Akty: {{ laws|length }} ({{ n_chunks }} fragmentów).</p>
+</form>
+
+{% if added %}<div class="note note-ok">Dodano do archiwum: {{ added|join(", ") }}.{% if q %}{% endif %}</div>{% endif %}
+{% if import_error %}<div class="note note-err">{{ import_error }}</div>{% endif %}
+{% if law_error %}<div class="note note-err">{{ law_error }}</div>{% endif %}
+{% if law_added %}<div class="note note-ok">Dodano akt „{{ law_added.title }}”: {{ law_added.chunks }} fragmentów do wyszukiwania.{% if law_added.warning %} {{ law_added.warning }}{% endif %}</div>{% endif %}
+
+{% if q and law_hits %}
+<section class="panel">
+  <h2>Przepisy</h2>
+  <ol class="hits">
+  {% for h in law_hits %}
+    <li><a href="/archiwum/przepis/{{ h.law_id }}#p{{ h.para }}">{{ h.title }}</a>
+      <div class="excerpt">{{ h.text[:600] }}{% if h.text|length > 600 %}…{% endif %}</div></li>
+  {% endfor %}
+  </ol>
+</section>
+{% endif %}
+
+<section class="panel">
+  <h2>{% if q %}Sprawy{% else %}Sprawy w archiwum{% endif %}</h2>
+  {% if cases %}
+  <table>
+    <thead><tr><th>Sprawa</th><th>Data</th><th>Temat</th><th>Wydziały</th>{% if q %}<th>Wspólne słowa</th>{% endif %}</tr></thead>
+    <tbody>
+    {% for s in cases %}
+    <tr>
+      <td class="nowrap"><a href="/archiwum/sprawa/{{ s.id|urlq }}">{{ s.id }}</a>{% if s.id in added %}<div><span class="tag tag-demo">nowa</span></div>{% endif %}</td>
+      <td class="nowrap">{{ s.date|dmy }}</td>
+      <td>{{ s.title }}</td>
+      <td>{{ (s.departments or [])|join(", ") }}</td>
+      {% if q %}<td class="small">{{ s.matched_terms|join(", ") }}</td>{% endif %}
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p>{% if q %}Brak spraw dla „{{ q }}”{% if rok or wydzial %} przy wybranych filtrach{% endif %}.{% else %}Archiwum jest puste.{% endif %}</p>
+  {% endif %}
+</section>
+
+<div class="cols-even">
+  <form class="panel" method="post" action="/archiwum/import" enctype="multipart/form-data">
+    <h2>Dodaj sprawę</h2>
+    <div class="fields">
+      <div class="field"><label for="a-id">Numer sprawy</label><input id="a-id" name="id" type="text" placeholder="BKS.IV.1431.12.2025"></div>
+      <div class="field"><label for="a-date">Data</label><input id="a-date" name="date" type="date"></div>
+    </div>
+    <div class="field"><label for="a-title">Temat</label><input id="a-title" name="title" type="text"></div>
+    <div class="field"><label for="a-deps">Wydziały</label><input id="a-deps" name="departments" type="text" placeholder="WGK, SCHRONISKO"></div>
+    <div class="fields">
+      <div class="field"><label for="a-req">Wniosek (plik)</label><input id="a-req" name="request_file" type="file" accept=".pdf,.docx,.odt,.txt"></div>
+      <div class="field"><label for="a-resp">Odpowiedź (plik)</label><input id="a-resp" name="response_file" type="file" accept=".pdf,.docx,.odt,.txt"></div>
+    </div>
+    <div class="field"><label for="a-rt">albo treść wniosku</label><textarea id="a-rt" name="request_text" rows="4" class="short"></textarea></div>
+    <div class="field"><label for="a-st">albo treść odpowiedzi</label><textarea id="a-st" name="response_text" rows="4" class="short"></textarea></div>
+    <button type="submit">Dodaj do archiwum</button>
+  </form>
+
+  <div>
+    <form class="panel" method="post" action="/archiwum/import" enctype="multipart/form-data">
+      <h2>Import wielu spraw</h2>
+      <div class="field"><label for="pliki">Pliki par wniosek–odpowiedź</label>
+        <input id="pliki" name="pliki" type="file" multiple accept=".pdf,.docx,.odt,.txt,.json"></div>
+      <p class="small muted">Nazwy plików: <code>&lt;numer&gt;_wniosek.pdf</code> i <code>&lt;numer&gt;_odpowiedz.pdf</code>; opcjonalnie <code>meta.json</code> z wydziałami.</p>
+      <button type="submit">Importuj</button>
+    </form>
+
+    <form class="panel" method="post" action="/archiwum/przepisy" enctype="multipart/form-data">
+      <h2>Przepisy i zarządzenia</h2>
+      <div class="field"><label for="l-title">Tytuł</label><input id="l-title" name="title" type="text" placeholder="Zarządzenie Prezydenta Miasta Bydgoszczy w sprawie UDIP"></div>
+      <div class="field"><label for="l-file">Plik aktu (PDF, DOCX, ODT, TXT)</label><input id="l-file" name="plik" type="file" accept=".pdf,.docx,.odt,.txt" required></div>
+      <button type="submit">Dodaj akt</button>
+      {% if laws %}
+      <ul class="mt3">{% for l in laws %}<li><a href="/archiwum/przepis/{{ l.id }}">{{ l.title }}</a> <span class="small muted">{{ l.filename }}</span></li>{% endfor %}</ul>
+      {% endif %}
+    </form>
+
+    <form class="panel" method="post" action="/archiwum/pamiec/reset" id="pamiec">
+      <h2>Pamięć instytucjonalna</h2>
+      {% if memory_message %}<p class="note note-ok">{{ memory_message }}</p>{% endif %}
+      <table>
+        <tbody>
+          <tr><td>Wyjątki od anonimizacji</td><td class="num">{{ memory.pii_allow }}</td></tr>
+          <tr><td>Fragmenty do zaczerniania</td><td class="num">{{ memory.pii_redact }}</td></tr>
+          <tr><td>Korekty wydziałów</td><td class="num">{{ memory.routing }}</td></tr>
+          <tr><td>Przepisy w podpowiedziach</td><td class="num">{{ memory.laws }} ({{ memory.legal_chunks }} fragm.)</td></tr>
+        </tbody>
+      </table>
+      <div class="field"><label for="rodzaj">Zapomnij</label>
+        <select id="rodzaj" name="rodzaj">
+          <option value="pii">decyzje o danych osobowych</option>
+          <option value="routing">korekty wydziałów</option>
+          <option value="legal">przepisy w podpowiedziach</option>
+          <option value="all">całą pamięć</option>
+        </select></div>
+      <button type="submit">Wyczyść</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

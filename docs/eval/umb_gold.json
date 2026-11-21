@@ -1,0 +1,18 @@
+{
+  "_note": "Ręczna złota miara dla 10 spraw UMB (data-partner/umb/archiwum_umb.jsonl), lane C, 2026-11-21. questions = liczba odrębnych pytań/żądań policzona ręcznie z tekstu wniosku; questions_ok = akceptowalne liczby, gdy podział jest niejednoznaczny. departments = wydziały z pisma BKS (ZEWN-* = podmiot spoza Urzędu, pomijany w routingu). ad_anchors (tylko 543.2026) = fraza z akapitu „Ad n” prawdziwego pisma BKS, która musi trafić do akapitu n projektu; „a|b” = wystarczy jedna z fraz.",
+  "cases": {
+    "BKS.IV.1431.293.2025": {"questions": 5, "questions_ok": [5], "departments": ["WGK", "SCHRONISKO"]},
+    "BKS.IV.1431.307.2025": {"questions": 2, "questions_ok": [2], "departments": ["WE"]},
+    "BKS.IV.1431.15.2026": {"questions": 2, "questions_ok": [2], "departments": ["ZEWN-WKZ"]},
+    "BKS.IV.1431.16.2026": {"questions": 1, "questions_ok": [1], "departments": ["WSO"]},
+    "BKS.IV.1431.17.2026": {"questions": 9, "questions_ok": [9], "departments": ["ZDMiKP"]},
+    "BKS.IV.1431.18.2026": {"questions": 1, "questions_ok": [1], "departments": ["WGO"]},
+    "BKS.IV.1431.509.2026": {"questions": 6, "questions_ok": [5, 6], "departments": ["WAB"],
+                             "note": "4 dokumenty + pytanie o uzgodnienie projektu bulwarów + pytanie, po czyjej stronie przebudowa (warunkowe, bywa liczone z poprzednim)"},
+    "BKS.IV.1431.543.2026": {"questions": 5, "questions_ok": [5], "departments": ["WGK", "SCHRONISKO"],
+                             "ad_anchors": {"1": ["nie zawierało umów|nie udzielał"], "2": ["Schronisk"], "3": ["839 psom", "560 kotom"],
+                                            "4": ["3.143.761,14"], "5": ["1/2022/SZ"]}},
+    "BKS.IV.1431.590.2026": {"questions": 1, "questions_ok": [1], "departments": ["WIM"]},
+    "BKS.IV.1431.599.2026": {"questions": 2, "questions_ok": [2], "departments": ["WE"]}
+  }
+}

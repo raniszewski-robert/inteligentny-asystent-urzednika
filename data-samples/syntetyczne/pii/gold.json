@@ -1,0 +1,1082 @@
+[
+  {
+    "file": "testy/wniosek_01.txt",
+    "spans": [
+      {
+        "start": 26,
+        "end": 41,
+        "type": "OSOBA",
+        "text": "Piotr Kozłowski"
+      },
+      {
+        "start": 42,
+        "end": 61,
+        "type": "ADRES",
+        "text": "ul. Szubińska 83/40"
+      },
+      {
+        "start": 62,
+        "end": 78,
+        "type": "KOD_MIEJSC",
+        "text": "85-017 Bydgoszcz"
+      },
+      {
+        "start": 87,
+        "end": 112,
+        "type": "EMAIL",
+        "text": "p.kozlowski54@example.com"
+      },
+      {
+        "start": 678,
+        "end": 693,
+        "type": "OSOBA",
+        "text": "Piotr Kozłowski"
+      }
+    ]
+  },
+  {
+    "file": "testy/odp_wydzialu_01.txt",
+    "spans": [
+      {
+        "start": 290,
+        "end": 308,
+        "type": "OSOBA",
+        "text": "Joanna Lewandowska",
+        "note": "pracownik merytoryczny – decyzja urzędnika (art. 5 ust. 2)"
+      }
+    ]
+  },
+  {
+    "file": "testy/wniosek_02.txt",
+    "spans": [
+      {
+        "start": 26,
+        "end": 44,
+        "type": "OSOBA",
+        "text": "Katarzyna Kowalska"
+      },
+      {
+        "start": 45,
+        "end": 64,
+        "type": "ADRES",
+        "text": "ul. Fordońska 45/19"
+      },
+      {
+        "start": 65,
+        "end": 81,
+        "type": "KOD_MIEJSC",
+        "text": "85-088 Bydgoszcz"
+      },
+      {
+        "start": 87,
+        "end": 98,
+        "type": "TELEFON",
+        "text": "519 974 742"
+      },
+      {
+        "start": 513,
+        "end": 531,
+        "type": "OSOBA",
+        "text": "Katarzyna Kowalska"
+      }
+    ]
+  },
+  {
+    "file": "testy/odp_wydzialu_02.txt",
+    "spans": [
+      {
+        "start": 262,
+        "end": 279,
+        "type": "OSOBA",
+        "text": "Natalia Dąbrowska",
+        "note": "pracownik merytoryczny – decyzja urzędnika (art. 5 ust. 2)"
+      }
+    ]
+  },
+  {
+    "file": "testy/wniosek_03.txt",
+    "spans": [
+      {
+        "start": 26,
+        "end": 40,
+        "type": "OSOBA",
+        "text": "Zofia Krawczyk"
+      },
+      {
+        "start": 41,
+        "end": 59,
+        "type": "ADRES",
+        "text": "ul. Toruńska 73/21"
+      },
+      {
+        "start": 60,
+        "end": 76,
+        "type": "KOD_MIEJSC",
+        "text": "85-046 Bydgoszcz"
+      },
+      {
+        "start": 85,
+        "end": 109,
+        "type": "EMAIL",
+        "text": "z.krawczyk13@example.com"
+      },
+      {
+        "start": 115,
+        "end": 126,
+        "type": "TELEFON",
+        "text": "713 637 434"
+      },
+      {
+        "start": 559,
+        "end": 573,
+        "type": "OSOBA",
+        "text": "Zofia Krawczyk"
+      },
+      {
+        "start": 581,
+        "end": 592,
+        "type": "PESEL",
+        "text": "96090154619"
+      }
+    ]
+  },
+  {
+    "file": "testy/odp_wydzialu_03.txt",
+    "spans": [
+      {
+        "start": 290,
+        "end": 304,
+        "type": "OSOBA",
+        "text": "Adam Dąbrowski",
+        "note": "pracownik merytoryczny – decyzja urzędnika (art. 5 ust. 2)"
+      }
+    ]
+  },
+  {
+    "file": "testy/wniosek_04.txt",
+    "spans": [
+      {
+        "start": 26,
+        "end": 46,
+        "type": "OSOBA",
+        "text": "Magdalena Wiśniewska"
+      },
+      {
+        "start": 47,
+        "end": 68,
+        "type": "ADRES",
+        "text": "ul. Grunwaldzka 54/14"
+      },
+      {
+        "start": 69,
+        "end": 85,
+        "type": "KOD_MIEJSC",
+        "text": "85-061 Bydgoszcz"
+      },
+      {
+        "start": 94,
+        "end": 120,
+        "type": "EMAIL",
+        "text": "m.wisniewska34@example.com"
+      },
+      {
+        "start": 126,
+        "end": 137,
+        "type": "TELEFON",
+        "text": "514 760 452"
+      },
+      {
+        "start": 564,
+        "end": 584,
+        "type": "OSOBA",
+        "text": "Magdalena Wiśniewska"
+      }
+    ]
+  },
+  {
+    "file": "testy/odp_wydzialu_04.txt",
+    "spans": [
+      {
+        "start": 297,
+        "end": 308,
+        "type": "OSOBA",
+        "text": "Zofia Mazur",
+        "note": "pracownik merytoryczny – decyzja urzędnika (art. 5 ust. 2)"
+      }
+    ]
+  },
+  {
+    "file": "testy/wniosek_05.txt",
+    "spans": [
+      {
+        "start": 26,
+        "end": 45,
+        "type": "OSOBA",
+        "text": "Agnieszka Jankowska"
+      },
+      {
+        "start": 46,
+        "end": 67,
+        "type": "ADRES",
+        "text": "ul. Grunwaldzka 67/26"
+      },
+      {
+        "start": 68,
+        "end": 84,
+        "type": "KOD_MIEJSC",
+        "text": "85-011 Bydgoszcz"
+      },
+      {
+        "start": 93,
+        "end": 118,
+        "type": "EMAIL",
+        "text": "a.jankowska84@example.com"
+      },
+      {
+        "start": 628,
+        "end": 647,
+        "type": "OSOBA",
+        "text": "Agnieszka Jankowska"
+      }
+    ]
+  },
+  {
+    "file": "testy/odp_wydzialu_05.txt",
+    "spans": [
+      {
+        "start": 266,
+        "end": 286,
+        "type": "OSOBA",
+        "text": "Magdalena Piotrowska",
+        "note": "pracownik merytoryczny – decyzja urzędnika (art. 5 ust. 2)"
+      }
+    ]
+  },
+  {
+    "file": "testy/wniosek_06.txt",
+    "spans": [
+      {
+        "start": 26,
+        "end": 47,
+        "type": "OSOBA",
+        "text": "Krzysztof Lewandowski"
+      },
+      {
+        "start": 48,
+        "end": 66,
+        "type": "ADRES",
+        "text": "ul. Nakielska 98/8"
+      },
+      {
+        "start": 67,
+        "end": 83,
+        "type": "KOD_MIEJSC",
+        "text": "85-054 Bydgoszcz"
+      },
+      {
+        "start": 92,
+        "end": 119,
+        "type": "EMAIL",
+        "text": "k.lewandowski66@example.com"
+      },
+      {
+        "start": 564,
+        "end": 585,
+        "type": "OSOBA",
+        "text": "Krzysztof Lewandowski"
+      }
+    ]
+  },
+  {
+    "file": "testy/odp_wydzialu_06.txt",
+    "spans": [
+      {
+        "start": 308,
+        "end": 327,
+        "type": "OSOBA",
+        "text": "Justyna Lewandowska",
+        "note": "pracownik merytoryczny – decyzja urzędnika (art. 5 ust. 2)"
+      }
+    ]
+  },
+  {
+    "file": "testy/wniosek_07.txt",
+    "spans": [
+      {
+        "start": 26,
+        "end": 41,
+        "type": "OSOBA",
+        "text": "Łukasz Kowalski"
+      },
+      {
+        "start": 42,
+        "end": 61,
+        "type": "ADRES",
+        "text": "ul. Fordońska 87/24"
+      },
+      {
+        "start": 62,
+        "end": 78,
+        "type": "KOD_MIEJSC",
+        "text": "85-096 Bydgoszcz"
+      },
+      {
+        "start": 87,
+        "end": 111,
+        "type": "EMAIL",
+        "text": "l.kowalski81@example.com"
+      },
+      {
+        "start": 117,
+        "end": 128,
+        "type": "TELEFON",
+        "text": "738 881 729"
+      },
+      {
+        "start": 552,
+        "end": 567,
+        "type": "OSOBA",
+        "text": "Łukasz Kowalski"
+      }
+    ]
+  },
+  {
+    "file": "testy/odp_wydzialu_07.txt",
+    "spans": [
+      {
+        "start": 267,
+        "end": 284,
+        "type": "OSOBA",
+        "text": "Andrzej Dąbrowski",
+        "note": "pracownik merytoryczny – decyzja urzędnika (art. 5 ust. 2)"
+      }
+    ]
+  },
+  {
+    "file": "testy/wniosek_08.txt",
+    "spans": [
+      {
+        "start": 26,
+        "end": 36,
+        "type": "OSOBA",
+        "text": "Anna Mazur"
+      },
+      {
+        "start": 37,
+        "end": 56,
+        "type": "ADRES",
+        "text": "ul. Szubińska 47/19"
+      },
+      {
+        "start": 57,
+        "end": 73,
+        "type": "KOD_MIEJSC",
+        "text": "85-095 Bydgoszcz"
+      },
+      {
+        "start": 496,
+        "end": 506,
+        "type": "OSOBA",
+        "text": "Anna Mazur"
+      }
+    ]
+  },
+  {
+    "file": "testy/odp_wydzialu_08.txt",
+    "spans": [
+      {
+        "start": 279,
+        "end": 295,
+        "type": "OSOBA",
+        "text": "Andrzej Kowalski",
+        "note": "pracownik merytoryczny – decyzja urzędnika (art. 5 ust. 2)"
+      }
+    ]
+  },
+  {
+    "file": "testy/wniosek_09.txt",
+    "spans": [
+      {
+        "start": 26,
+        "end": 45,
+        "type": "OSOBA",
+        "text": "Katarzyna Kozłowska"
+      },
+      {
+        "start": 46,
+        "end": 64,
+        "type": "ADRES",
+        "text": "ul. Dworcowa 57/11"
+      },
+      {
+        "start": 65,
+        "end": 81,
+        "type": "KOD_MIEJSC",
+        "text": "85-051 Bydgoszcz"
+      },
+      {
+        "start": 90,
+        "end": 115,
+        "type": "EMAIL",
+        "text": "k.kozlowska18@example.com"
+      },
+      {
+        "start": 121,
+        "end": 132,
+        "type": "TELEFON",
+        "text": "527 309 885"
+      },
+      {
+        "start": 628,
+        "end": 647,
+        "type": "OSOBA",
+        "text": "Katarzyna Kozłowska"
+      }
+    ]
+  },
+  {
+    "file": "testy/odp_wydzialu_09.txt",
+    "spans": [
+      {
+        "start": 239,
+        "end": 253,
+        "type": "OSOBA",
+        "text": "Monika Woźniak",
+        "note": "pracownik merytoryczny – decyzja urzędnika (art. 5 ust. 2)"
+      }
+    ]
+  },
+  {
+    "file": "testy/wniosek_10.txt",
+    "spans": [
+      {
+        "start": 26,
+        "end": 43,
+        "type": "OSOBA",
+        "text": "Justyna Dąbrowska"
+      },
+      {
+        "start": 44,
+        "end": 70,
+        "type": "ADRES",
+        "text": "ul. Wojska Polskiego 18/29"
+      },
+      {
+        "start": 71,
+        "end": 87,
+        "type": "KOD_MIEJSC",
+        "text": "85-050 Bydgoszcz"
+      },
+      {
+        "start": 515,
+        "end": 532,
+        "type": "OSOBA",
+        "text": "Justyna Dąbrowska"
+      },
+      {
+        "start": 540,
+        "end": 551,
+        "type": "PESEL",
+        "text": "70020453131"
+      }
+    ]
+  },
+  {
+    "file": "testy/odp_wydzialu_10.txt",
+    "spans": [
+      {
+        "start": 267,
+        "end": 284,
+        "type": "OSOBA",
+        "text": "Andrzej Jankowski",
+        "note": "pracownik merytoryczny – decyzja urzędnika (art. 5 ust. 2)"
+      }
+    ]
+  },
+  {
+    "file": "testy/wniosek_11.txt",
+    "spans": [
+      {
+        "start": 26,
+        "end": 42,
+        "type": "OSOBA",
+        "text": "Joanna Zielińska"
+      },
+      {
+        "start": 43,
+        "end": 62,
+        "type": "ADRES",
+        "text": "ul. Fordońska 99/36"
+      },
+      {
+        "start": 63,
+        "end": 79,
+        "type": "KOD_MIEJSC",
+        "text": "85-032 Bydgoszcz"
+      },
+      {
+        "start": 85,
+        "end": 96,
+        "type": "TELEFON",
+        "text": "745 217 331"
+      },
+      {
+        "start": 478,
+        "end": 494,
+        "type": "OSOBA",
+        "text": "Joanna Zielińska"
+      }
+    ]
+  },
+  {
+    "file": "testy/odp_wydzialu_11.txt",
+    "spans": [
+      {
+        "start": 275,
+        "end": 289,
+        "type": "OSOBA",
+        "text": "Paweł Kamiński",
+        "note": "pracownik merytoryczny – decyzja urzędnika (art. 5 ust. 2)"
+      }
+    ]
+  },
+  {
+    "file": "testy/wniosek_12.txt",
+    "spans": [
+      {
+        "start": 26,
+        "end": 42,
+        "type": "OSOBA",
+        "text": "Zofia Wiśniewska"
+      },
+      {
+        "start": 43,
+        "end": 64,
+        "type": "ADRES",
+        "text": "ul. Grunwaldzka 98/14"
+      },
+      {
+        "start": 65,
+        "end": 81,
+        "type": "KOD_MIEJSC",
+        "text": "85-099 Bydgoszcz"
+      },
+      {
+        "start": 90,
+        "end": 116,
+        "type": "EMAIL",
+        "text": "z.wisniewska66@example.com"
+      },
+      {
+        "start": 122,
+        "end": 133,
+        "type": "TELEFON",
+        "text": "551 752 396"
+      },
+      {
+        "start": 517,
+        "end": 533,
+        "type": "OSOBA",
+        "text": "Zofia Wiśniewska"
+      }
+    ]
+  },
+  {
+    "file": "testy/odp_wydzialu_12.txt",
+    "spans": [
+      {
+        "start": 255,
+        "end": 271,
+        "type": "OSOBA",
+        "text": "Paweł Wiśniewski",
+        "note": "pracownik merytoryczny – decyzja urzędnika (art. 5 ust. 2)"
+      }
+    ]
+  },
+  {
+    "file": "testy/wniosek_13.txt",
+    "spans": [
+      {
+        "start": 26,
+        "end": 40,
+        "type": "OSOBA",
+        "text": "Adam Zieliński"
+      },
+      {
+        "start": 41,
+        "end": 62,
+        "type": "ADRES",
+        "text": "ul. Grunwaldzka 31/23"
+      },
+      {
+        "start": 63,
+        "end": 79,
+        "type": "KOD_MIEJSC",
+        "text": "85-019 Bydgoszcz"
+      },
+      {
+        "start": 88,
+        "end": 113,
+        "type": "EMAIL",
+        "text": "a.zielinski96@example.com"
+      },
+      {
+        "start": 611,
+        "end": 625,
+        "type": "OSOBA",
+        "text": "Adam Zieliński"
+      },
+      {
+        "start": 633,
+        "end": 644,
+        "type": "PESEL",
+        "text": "03271295085"
+      }
+    ]
+  },
+  {
+    "file": "testy/odp_wydzialu_13.txt",
+    "spans": [
+      {
+        "start": 247,
+        "end": 261,
+        "type": "OSOBA",
+        "text": "Anna Zielińska",
+        "note": "pracownik merytoryczny – decyzja urzędnika (art. 5 ust. 2)"
+      }
+    ]
+  },
+  {
+    "file": "testy/wniosek_14.txt",
+    "spans": [
+      {
+        "start": 26,
+        "end": 42,
+        "type": "OSOBA",
+        "text": "Andrzej Krawczyk"
+      },
+      {
+        "start": 43,
+        "end": 62,
+        "type": "ADRES",
+        "text": "ul. Fordońska 90/11"
+      },
+      {
+        "start": 63,
+        "end": 79,
+        "type": "KOD_MIEJSC",
+        "text": "85-076 Bydgoszcz"
+      },
+      {
+        "start": 85,
+        "end": 96,
+        "type": "TELEFON",
+        "text": "636 634 649"
+      },
+      {
+        "start": 510,
+        "end": 526,
+        "type": "OSOBA",
+        "text": "Andrzej Krawczyk"
+      }
+    ]
+  },
+  {
+    "file": "testy/odp_wydzialu_14.txt",
+    "spans": [
+      {
+        "start": 274,
+        "end": 291,
+        "type": "OSOBA",
+        "text": "Justyna Zielińska",
+        "note": "pracownik merytoryczny – decyzja urzędnika (art. 5 ust. 2)"
+      }
+    ]
+  },
+  {
+    "file": "testy/wniosek_15.txt",
+    "spans": [
+      {
+        "start": 26,
+        "end": 46,
+        "type": "OSOBA",
+        "text": "Krzysztof Piotrowski"
+      },
+      {
+        "start": 47,
+        "end": 68,
+        "type": "ADRES",
+        "text": "ul. Jagiellońska 92/1"
+      },
+      {
+        "start": 69,
+        "end": 85,
+        "type": "KOD_MIEJSC",
+        "text": "85-026 Bydgoszcz"
+      },
+      {
+        "start": 94,
+        "end": 120,
+        "type": "EMAIL",
+        "text": "k.piotrowski89@example.com"
+      },
+      {
+        "start": 126,
+        "end": 137,
+        "type": "TELEFON",
+        "text": "717 217 731"
+      },
+      {
+        "start": 543,
+        "end": 563,
+        "type": "OSOBA",
+        "text": "Krzysztof Piotrowski"
+      }
+    ]
+  },
+  {
+    "file": "testy/odp_wydzialu_15.txt",
+    "spans": [
+      {
+        "start": 257,
+        "end": 272,
+        "type": "OSOBA",
+        "text": "Paweł Dąbrowski",
+        "note": "pracownik merytoryczny – decyzja urzędnika (art. 5 ust. 2)"
+      }
+    ]
+  },
+  {
+    "file": "testy/wniosek_16.txt",
+    "spans": [
+      {
+        "start": 26,
+        "end": 42,
+        "type": "OSOBA",
+        "text": "Zofia Piotrowska"
+      },
+      {
+        "start": 43,
+        "end": 62,
+        "type": "ADRES",
+        "text": "ul. Fordońska 77/35"
+      },
+      {
+        "start": 63,
+        "end": 79,
+        "type": "KOD_MIEJSC",
+        "text": "85-034 Bydgoszcz"
+      },
+      {
+        "start": 85,
+        "end": 96,
+        "type": "TELEFON",
+        "text": "737 146 876"
+      },
+      {
+        "start": 489,
+        "end": 505,
+        "type": "OSOBA",
+        "text": "Zofia Piotrowska"
+      },
+      {
+        "start": 513,
+        "end": 524,
+        "type": "PESEL",
+        "text": "85080701821"
+      }
+    ]
+  },
+  {
+    "file": "testy/odp_wydzialu_16.txt",
+    "spans": [
+      {
+        "start": 243,
+        "end": 260,
+        "type": "OSOBA",
+        "text": "Andrzej Zieliński",
+        "note": "pracownik merytoryczny – decyzja urzędnika (art. 5 ust. 2)"
+      }
+    ]
+  },
+  {
+    "file": "pii/doc_01.txt",
+    "spans": [
+      {
+        "start": 43,
+        "end": 59,
+        "type": "OSOBA",
+        "text": "Monika Dąbrowska"
+      },
+      {
+        "start": 66,
+        "end": 81,
+        "type": "ADRES",
+        "text": "ul. Dworcowa 88"
+      },
+      {
+        "start": 89,
+        "end": 100,
+        "type": "PESEL",
+        "text": "98070253730"
+      },
+      {
+        "start": 138,
+        "end": 153,
+        "type": "TELEFON",
+        "text": "+48 783 322 893"
+      },
+      {
+        "start": 176,
+        "end": 189,
+        "type": "OSOBA",
+        "text": "Rafał Woźniak"
+      }
+    ]
+  },
+  {
+    "file": "pii/doc_02.txt",
+    "spans": [
+      {
+        "start": 43,
+        "end": 58,
+        "type": "OSOBA",
+        "text": "Maria Zielińska"
+      },
+      {
+        "start": 65,
+        "end": 81,
+        "type": "ADRES",
+        "text": "ul. Fordońska 44"
+      },
+      {
+        "start": 89,
+        "end": 100,
+        "type": "PESEL",
+        "text": "65102691345"
+      },
+      {
+        "start": 138,
+        "end": 153,
+        "type": "TELEFON",
+        "text": "+48 742 433 807"
+      },
+      {
+        "start": 176,
+        "end": 186,
+        "type": "OSOBA",
+        "text": "Anna Mazur"
+      }
+    ]
+  },
+  {
+    "file": "pii/doc_03.txt",
+    "spans": [
+      {
+        "start": 43,
+        "end": 57,
+        "type": "OSOBA",
+        "text": "Marek Kowalski"
+      },
+      {
+        "start": 64,
+        "end": 82,
+        "type": "ADRES",
+        "text": "ul. Grunwaldzka 50"
+      },
+      {
+        "start": 90,
+        "end": 101,
+        "type": "PESEL",
+        "text": "82011907853"
+      },
+      {
+        "start": 139,
+        "end": 154,
+        "type": "TELEFON",
+        "text": "+48 580 557 578"
+      },
+      {
+        "start": 177,
+        "end": 198,
+        "type": "OSOBA",
+        "text": "Magdalena Lewandowska"
+      }
+    ]
+  },
+  {
+    "file": "pii/doc_04.txt",
+    "spans": [
+      {
+        "start": 43,
+        "end": 59,
+        "type": "OSOBA",
+        "text": "Krzysztof Wójcik"
+      },
+      {
+        "start": 66,
+        "end": 83,
+        "type": "ADRES",
+        "text": "ul. Grunwaldzka 2"
+      },
+      {
+        "start": 91,
+        "end": 102,
+        "type": "PESEL",
+        "text": "81050869014"
+      },
+      {
+        "start": 140,
+        "end": 155,
+        "type": "TELEFON",
+        "text": "+48 636 310 222"
+      },
+      {
+        "start": 178,
+        "end": 191,
+        "type": "OSOBA",
+        "text": "Justyna Mazur"
+      }
+    ]
+  },
+  {
+    "file": "pii/doc_05.txt",
+    "spans": [
+      {
+        "start": 43,
+        "end": 58,
+        "type": "OSOBA",
+        "text": "Maria Szymańska"
+      },
+      {
+        "start": 65,
+        "end": 81,
+        "type": "ADRES",
+        "text": "ul. Fordońska 43"
+      },
+      {
+        "start": 89,
+        "end": 100,
+        "type": "PESEL",
+        "text": "55052222319"
+      },
+      {
+        "start": 138,
+        "end": 153,
+        "type": "TELEFON",
+        "text": "+48 552 428 253"
+      },
+      {
+        "start": 176,
+        "end": 192,
+        "type": "OSOBA",
+        "text": "Michał Jankowski"
+      }
+    ]
+  },
+  {
+    "file": "pii/doc_06.txt",
+    "spans": [
+      {
+        "start": 43,
+        "end": 60,
+        "type": "OSOBA",
+        "text": "Magdalena Woźniak"
+      },
+      {
+        "start": 67,
+        "end": 82,
+        "type": "ADRES",
+        "text": "ul. Nakielska 3"
+      },
+      {
+        "start": 90,
+        "end": 101,
+        "type": "PESEL",
+        "text": "97062225252"
+      },
+      {
+        "start": 139,
+        "end": 154,
+        "type": "TELEFON",
+        "text": "+48 686 675 793"
+      },
+      {
+        "start": 177,
+        "end": 192,
+        "type": "OSOBA",
+        "text": "Piotr Dąbrowski"
+      }
+    ]
+  },
+  {
+    "file": "pii/doc_07.txt",
+    "spans": [
+      {
+        "start": 43,
+        "end": 61,
+        "type": "OSOBA",
+        "text": "Wojciech Zieliński"
+      },
+      {
+        "start": 68,
+        "end": 86,
+        "type": "ADRES",
+        "text": "ul. Grunwaldzka 29"
+      },
+      {
+        "start": 94,
+        "end": 105,
+        "type": "PESEL",
+        "text": "84102531846"
+      },
+      {
+        "start": 143,
+        "end": 158,
+        "type": "TELEFON",
+        "text": "+48 580 701 710"
+      },
+      {
+        "start": 181,
+        "end": 196,
+        "type": "OSOBA",
+        "text": "Andrzej Woźniak"
+      }
+    ]
+  },
+  {
+    "file": "pii/doc_08.txt",
+    "spans": [
+      {
+        "start": 43,
+        "end": 61,
+        "type": "OSOBA",
+        "text": "Katarzyna Kamińska"
+      },
+      {
+        "start": 68,
+        "end": 82,
+        "type": "ADRES",
+        "text": "ul. Gdańska 50"
+      },
+      {
+        "start": 90,
+        "end": 101,
+        "type": "PESEL",
+        "text": "55081181733"
+      },
+      {
+        "start": 139,
+        "end": 154,
+        "type": "TELEFON",
+        "text": "+48 524 222 504"
+      },
+      {
+        "start": 177,
+        "end": 194,
+        "type": "OSOBA",
+        "text": "Andrzej Szymański"
+      }
+    ]
+  }
+]

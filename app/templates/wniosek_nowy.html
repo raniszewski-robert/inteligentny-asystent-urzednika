@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Nowy wniosek</h1>
+{% if error %}<div class="note note-err">{{ error }}</div>{% endif %}
+
+{% if not analysis %}
+<form class="panel" method="post" action="/wniosek/nowy" enctype="multipart/form-data">
+  <div class="field"><label for="plik">Plik wniosku (PDF, DOCX, ODT, TXT)</label>
+    <input id="plik" name="plik" type="file" accept=".pdf,.docx,.odt,.txt"></div>
+  <div class="field"><label for="tekst">albo treść wniosku</label>
+    <textarea id="tekst" name="tekst" rows="10">{{ text or "" }}</textarea></div>
+  <button type="submit" name="akcja" value="analizuj" class="btn-primary">Analizuj</button>
+</form>
+{% else %}
+<form method="post" action="/wniosek/nowy">
+<input type="hidden" name="plik_nazwa" value="{{ doc.file or '' }}">
+<input type="hidden" name="plik_zapis" value="{{ doc.stored or '' }}">
+<input type="hidden" name="jakosc" value="{{ doc.quality if doc.quality is not none else '' }}">
+<div class="cols">
+<div>
+  <section class="panel">
+    <h2><label for="tekst">Treść wniosku</label>{% if doc.file %} <span class="muted small">{{ doc.file }}</span>{% endif %}</h2>
+    {% if doc.warning %}
+    <div class="note note-warn" id="ostrzezenie-jakosc">
+      <p><b>Tekst do wpisania ręcznie.</b> {{ doc.warning }}</p>
+      <p>Jakość odczytu: {{ ("%.2f"|format(doc.quality)).replace(".", ",") }}.</p>
+    </div>
+    {% endif %}
+    {% if security_lines %}
+    <div class="note note-warn" id="kontrola-bezpieczenstwa">
+      <p><b>Kontrola bezpieczeństwa pliku</b></p>
+      <ul>{% for line in security_lines %}<li>{{ line }}</li>{% endfor %}</ul>
+      <p class="small">Czy te fragmenty należą do wniosku, decydujesz Ty.</p>
+    </div>
+    {% endif %}
+    <div class="field"><textarea id="tekst" name="tekst" rows="12"{% if doc.warning %} autofocus{% endif %}>{{ text }}</textarea></div>
+    <button type="submit" name="akcja" value="analizuj">Analizuj ponownie</button>
+  </section>
+
+  <section class="panel">
+    <h2>Pytania i wydziały</h2>
+    {% if analysis.questions %}
+    <ol class="questions">
+    {% for q in analysis.questions %}
+      <li>
+        <p>{{ q.text }}</p>
+        {% if q.routing %}
+        <fieldset class="routing">
+          <legend class="small muted">Wydział</legend>
+          {% for r in q.routing %}
+          <div class="field-inline">
+            <input type="checkbox" id="dep-{{ q.no }}-{{ r.department }}" name="dep_{{ q.no }}" value="{{ r.department }}"{% if r.department in chosen.get(q.no, []) %} checked{% endif %}>
+            <label for="dep-{{ q.no }}-{{ r.department }}"><b>{{ r.department }}</b> {{ r.name }}</label>
+            <span class="small muted">{{ (r.share * 100)|round|int }}%{% if r.reasons %}: {{ r.reasons|join("; ") }}{% endif %}</span>
+          </div>
+          {% endfor %}
+        </fieldset>
+        {% else %}
+        <p class="small muted">Brak propozycji wydziału. Wskaż wydział w sprawie.</p>
+        {% endif %}
+      </li>
+    {% endfor %}
+    </ol>
+    {% else %}
+    <p>Nie wyodrębniono pytań. Sprawdź treść wniosku.</p>
+    {% endif %}
+  </section>
+
+  <section class="panel">
+    <h2>Podobne sprawy</h2>
+    {% if analysis.similar_cases %}
+    <table>
+      <thead><tr><th>Sprawa</th><th>Data</th><th>Temat</th><th>Wydziały</th></tr></thead>
+      <tbody>
+      {% for s in analysis.similar_cases %}
+      <tr>
+        <td class="nowrap"><a href="/archiwum/sprawa/{{ s.id|urlq }}">{{ s.id }}</a>{% if s.older_than_window %}<div><span class="tag">starsza niż rok</span></div>{% endif %}</td>
+        <td class="nowrap">{{ s.date|dmy }}</td>
+        <td>{{ s.title }}
+          {% if s.response_excerpt %}<details><summary class="small">Fragment odpowiedzi</summary><div class="excerpt">{{ s.response_excerpt }}</div></details>{% endif %}</td>
+        <td>{{ s.departments|join(", ") }}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p>Brak podobnych spraw w archiwum.</p>
+    {% endif %}
+  </section>
+</div>
+
+<div>
+  <section class="panel">
+    <h2>Kwalifikacja</h2>
+    {% if analysis.llm_used %}<p class="note note-ok small" id="badge-analiza">Analiza: reguły i model ({{ analysis.provider }}).</p>{% endif %}
+    <p>Tryb: <b>{{ analysis.mode }}</b></p>
+    <p>Forma udostępnienia: {{ analysis.requested_form }}</p>
+    {% if analysis.summary %}<p>Streszczenie (model): {{ analysis.summary }}</p>{% endif %}
+    {% for fl in analysis.flags %}<div class="note note-warn">{{ fl.message }}{% if fl.source == "llm" %} <span class="small muted">(model)</span>{% endif %}</div>{% endfor %}
+    {% if analysis.routing_plan %}
+    <h3>Plan zapytań</h3>
+    <ul>{% for p in analysis.routing_plan %}<li><b>{{ p.department }}</b> {{ p.name }}: pytania {{ p.questions|join(", ") }}</li>{% endfor %}</ul>
+    {% endif %}
+    {% if legal %}
+    <h3>Przepisy z bazy wiedzy</h3>
+    <ul id="przepisy-baza">{% for h in legal %}<li><b>{{ h.ref or "fragment" }}</b> {{ h.law_title }}{% if h.new %} <span class="tag tag-demo">nowo dodany akt prawny</span>{% endif %}
+      <div class="excerpt small">{{ h.text[:300] }}{% if h.text|length > 300 %}…{% endif %}</div></li>{% endfor %}</ul>
+    {% endif %}
+    <p class="small muted">{{ analysis.disclaimer }}</p>
+  </section>
+
+  <section class="panel">
+    <h2>Rejestracja</h2>
+    <div class="field"><label for="number">Numer sprawy</label><input id="number" name="number" type="text" value="{{ form.number }}" required></div>
+    <div class="field"><label for="received">Data wpływu</label><input id="received" name="received" type="date" value="{{ form.received }}" required></div>
+    <div class="field"><label for="initials">Osoba prowadząca</label><input id="initials" name="initials" type="text" value="{{ form.initials }}"></div>
+    <div class="field"><label for="applicant_label">Wnioskodawca</label><input id="applicant_label" name="applicant_label" type="text" value="{{ form.applicant_label }}"></div>
+    <div class="field"><label for="summary">Skrócony opis</label><textarea id="summary" name="summary" rows="3" class="short">{{ form.summary }}</textarea></div>
+    <fieldset class="field">
+      <legend>Status</legend>
+      <div class="field-inline"><input type="radio" id="st-a" name="status" value="a_brak_dzialan"{% if form.status != "b_zapytania_wyslane" %} checked{% endif %}><label for="st-a">a) brak działań</label></div>
+      <div class="field-inline"><input type="radio" id="st-b" name="status" value="b_zapytania_wyslane"{% if form.status == "b_zapytania_wyslane" %} checked{% endif %}><label for="st-b">b) zapytania wysłane do wydziałów</label></div>
+    </fieldset>
+    <button type="submit" name="akcja" value="zapisz" class="btn-primary">Zapisz w kalendarzu</button>
+  </section>
+</div>
+</div>
+</form>
+{% endif %}
+{% endblock %}

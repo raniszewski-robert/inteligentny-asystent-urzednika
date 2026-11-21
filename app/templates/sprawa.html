@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ case.number }}{% if case.is_demo %} <span class="tag tag-demo">demo</span>{% endif %}</h1>
+{% if error %}<div class="note note-err">{{ error }}</div>{% endif %}
+
+<section class="panel case-head u-{{ row.urgency }}">
+  <p class="case-subject">{{ case.summary }}</p>
+  <dl class="facts">
+    <div><dt>Wnioskodawca</dt><dd>{{ case.applicant_label or "–" }}</dd></div>
+    <div><dt>Data wpływu</dt><dd>{{ case.received|dmy }}</dd></div>
+    <div><dt>Termin ustawowy</dt><dd>{{ row.due|dmy }}</dd></div>
+    <div><dt>Termin bezpieczny</dt><dd>{{ row.due_safe|dmy }}</dd></div>
+    <div><dt>Pozostało dni rob.</dt><dd>{% if row.working_days_left != "" %}{{ row.working_days_left }}, {% endif %}{{ row.urgency_label }}</dd></div>
+    <div><dt>Status</dt><dd>{{ row.status_label }}{% if row.extension %} {{ row.extension }}{% endif %}</dd></div>
+    <div><dt>Osoba prowadząca</dt><dd>{{ case.initials or "–" }}</dd></div>
+    {% if case.answered %}<div><dt>Data odpowiedzi</dt><dd>{{ case.answered|dmy }}</dd></div>{% endif %}
+  </dl>
+  {% for w in row.warnings %}<div class="note note-warn">{{ w }}</div>{% endfor %}
+</section>
+
+<div class="cols">
+<div>
+  <section class="panel">
+    <h2>Pytania i wydziały</h2>
+    {% if questions %}
+    <ol class="questions">
+      {% for q in questions %}
+      <li><p>{{ q.text }}</p>
+        <p>{% for d, n in q.departments %}<b>{{ d }}</b> {{ n }}{% if not loop.last %}; {% endif %}{% else %}<span class="muted">wydział nie wskazany</span>{% endfor %}</p>
+        {% if q.alternatives %}<p class="small muted">Inne propozycje: {% for r in q.alternatives %}{{ r.department }}{% if not loop.last %}, {% endif %}{% endfor %}</p>{% endif %}
+      </li>
+      {% endfor %}
+    </ol>
+    {% if analysis.llm_used %}<p class="note note-ok small" id="badge-analiza">Analiza: reguły i model ({{ analysis.provider }}).{% if analysis.summary %} Streszczenie: {{ analysis.summary }}{% endif %}</p>{% endif %}
+    {% for fl in analysis.flags or [] %}<div class="note note-warn">{{ fl.message }}{% if fl.source == "llm" %} <span class="small muted">(model)</span>{% endif %}</div>{% endfor %}
+    {% else %}
+      {% if case.departments %}<p>Wydziały: {% for d in case.departments %}<b>{{ d }}</b> {{ names.get(d, "") }}{% if not loop.last %}; {% endif %}{% endfor %}</p>{% endif %}
+      {% if can_analyze %}
+      <form method="post" action="/sprawy/{{ case.id }}/analiza">
+        <p>Sprawa nie ma jeszcze analizy wniosku{% if request_source == "archive" %} (treść wniosku z archiwum UMB){% endif %}.</p>
+        <button type="submit" class="btn-primary">Analizuj wniosek</button>
+      </form>
+      {% else %}
+      <p class="muted">Brak treści wniosku w sprawie.</p>
+      {% endif %}
+    {% endif %}
+  </section>
+
+  {% if dispatches %}
+  <section class="panel" id="przekazanie">
+    <h2>Przekazanie do wydziału</h2>
+    {% for d in dispatches %}
+    <div class="dispatch">
+      <h3>{{ d.department }} {{ d.name }}</h3>
+      <p>Pytania: {% for q in d.questions %}Ad {{ q.no }}{% if not loop.last %}, {% endif %}{% else %}<span class="muted">brak przypisanych pytań</span>{% endfor %}. Termin dla wydziału: {{ d.sub_deadline|dmy }} (termin ustawowy {{ d.legal_due|dmy }}).</p>
+      {% if d.sent %}<p class="note note-ok small">Oznaczono jako wysłane {{ d.sent.sent_at|dmy }}, termin {{ d.sent.sub_deadline|dmy }}.</p>{% endif %}
+      <div class="field"><label for="msg-{{ d.department }}">Treść wiadomości do skopiowania</label>
+        <textarea id="msg-{{ d.department }}" class="excerpt" rows="8" readonly>{{ d.message }}</textarea></div>
+      <form method="post" action="/sprawy/{{ case.id }}/przekazane" class="field-inline">
+        <input type="hidden" name="department" value="{{ d.department }}">
+        <a href="/sprawy/{{ case.id }}/przekazanie/{{ d.department|urlq }}.docx">Formularz odpowiedzi (DOCX)</a>
+        <button type="submit" class="btn-small">{% if d.sent %}Oznacz ponowne wysłanie{% else %}Oznacz jako wysłane{% endif %}</button>
+      </form>
+    </div>
+    {% endfor %}
+  </section>
+  {% endif %}
+
+  <section class="panel">
+    <h2>Podobne sprawy</h2>
+    {% if analysis.similar_cases %}
+    <table>
+      <thead><tr><th>Sprawa</th><th>Data</th><th>Temat</th><th>Wydziały</th></tr></thead>
+      <tbody>
+      {% for s in analysis.similar_cases %}
+      <tr>
+        <td class="nowrap"><a href="/archiwum/sprawa/{{ s.id|urlq }}">{{ s.id }}</a>{% if s.older_than_window %}<div><span class="tag">starsza niż rok</span></div>{% endif %}</td>
+        <td class="nowrap">{{ s.date|dmy }}</td>
+        <td>{{ s.title }}</td>
+        <td>{{ s.departments|join(", ") }}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% elif analysis %}
+    <p>Brak podobnych spraw w archiwum.</p>
+    {% else %}
+    <p class="muted">Pojawią się po analizie wniosku.</p>
+    {% endif %}
+  </section>
+
+  <section class="panel" id="odpowiedzi">
+    <h2>Odpowiedzi wydziałów</h2>
+    {% if upload_report %}
+    <div class="note {% if upload_report|selectattr('error')|list %}note-warn{% else %}note-ok{% endif %}">
+      <ul>{% for u in upload_report %}<li>{{ u.file }}: {% if u.error %}{{ u.error }}{% elif u.department %}wydział {{ u.department }}{% if u.auto %} (rozpoznany){% endif %}{% else %}wydziału nie rozpoznano, wskaż go poniżej{% endif %}{% if u.warning %}. {{ u.warning }}{% endif %}</li>{% endfor %}</ul>
+    </div>
+    {% endif %}
+    {% if answers %}
+    <table class="answers">
+      <thead><tr><th>Plik</th><th>Wydział</th><th>Dodano</th></tr></thead>
+      <tbody>
+      {% for d in answers %}
+      <tr>
+        <td><details><summary>{{ d.filename }}</summary><div class="excerpt">{{ d.text }}</div></details></td>
+        <td>
+          <form method="post" action="/sprawy/{{ case.id }}/dokumenty/{{ d.id }}/wydzial" class="field-inline">
+            <select name="department" class="dep-select" aria-label="Wydział dla {{ d.filename }}" onchange="this.form.submit()">
+              <option value="">nie wskazano</option>
+              {% for dep in departments %}<option value="{{ dep.id }}"{% if dep.id == d.department %} selected{% endif %}>{{ dep.id }} {{ dep.name }}</option>{% endfor %}
+            </select>
+            <noscript><button type="submit" class="btn-small">Zapisz</button></noscript>
+          </form>
+        </td>
+        <td class="nowrap">{{ d.created_at|dmy }}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p class="muted">Brak odpowiedzi wydziałów.</p>
+    {% endif %}
+    <form method="post" action="/sprawy/{{ case.id }}/odpowiedzi" enctype="multipart/form-data" class="mt3">
+      <div class="fields">
+        <div class="field"><label for="pliki">Pliki odpowiedzi (PDF, DOCX, ODT, TXT)</label><input id="pliki" name="pliki" type="file" multiple accept=".pdf,.docx,.odt,.txt" required></div>
+        <div class="field"><label for="department">Wydział</label>
+          <select id="department" name="department">
+            <option value="">rozpoznaj z pliku</option>
+            {% for dep in departments %}<option value="{{ dep.id }}">{{ dep.id }} {{ dep.name }}</option>{% endfor %}
+          </select></div>
+      </div>
+      <button type="submit">Dodaj odpowiedzi</button>
+    </form>
+  </section>
+</div>
+
+<div>
+  <section class="panel">
+    <h2>Status</h2>
+    <form method="post" action="/sprawy/{{ case.id }}/status">
+      <input type="hidden" name="widok" value="sprawa">
+      <div class="field"><label for="status">Status sprawy</label>
+        <select id="status" name="status">{% for k, v in statuses.items() %}<option value="{{ k }}"{% if k == case.status %} selected{% endif %}>{{ v }}</option>{% endfor %}</select></div>
+      <div class="field"><label for="extension_days">Przedłużenie (kwerenda), dni</label>
+        <input id="extension_days" name="extension_days" type="number" min="0" max="366" value="{{ case.extension_days if case.extension_days is not none else '' }}"></div>
+      <div class="field"><label for="note">Notatka</label><input id="note" name="note" type="text"></div>
+      <button type="submit">Zapisz status</button>
+    </form>
+  </section>
+
+  <section class="panel">
+    <h2>Projekt pisma</h2>
+    <form method="get" action="/sprawy/{{ case.id }}/projekt">
+      <div class="field"><label for="ltype">Rodzaj pisma</label>
+        <select id="ltype" name="ltype">{% for k, label in letter_types %}<option value="{{ k }}">{{ label }}</option>{% endfor %}</select></div>
+      <button type="submit" class="btn-primary">Generuj projekt</button>
+    </form>
+    {% if drafts %}
+    <h3>Zapisane wersje</h3>
+    <ul>{% for d in drafts %}<li><a href="/sprawy/{{ case.id }}/projekt?wersja={{ d.version }}">wersja {{ d.version }}</a>, {{ d.ltype }}, {{ d.created_at|dmy }}</li>{% endfor %}</ul>
+    {% endif %}
+  </section>
+
+  <section class="panel">
+    <h2>Dokumenty</h2>
+    {% if request_docs or other_docs %}
+    <ul>
+      {% for d in request_docs %}<li><details><summary>Wniosek: {{ d.filename }}</summary><div class="excerpt">{{ d.text }}</div></details></li>{% endfor %}
+      {% for d in other_docs %}<li>{{ d.kind }}: {{ d.filename }}</li>{% endfor %}
+    </ul>
+    {% else %}
+    <p class="muted">Brak dokumentów.</p>
+    {% endif %}
+  </section>
+
+  <section class="panel">
+    <h2>Historia</h2>
+    {% if history %}
+    <table>
+      <thead><tr><th>Kiedy</th><th>Zmiana</th><th>Kto</th></tr></thead>
+      <tbody>
+      {% for h in history %}
+      <tr><td class="nowrap">{{ h.at|dmy }} {{ h.at[11:16] }}</td>
+        <td>{{ statuses.get(h.from_status, h.from_status or "–") }} → {{ statuses.get(h.to_status, h.to_status) }}{% if h.note %}<div class="small muted">{{ h.note }}</div>{% endif %}</td>
+        <td>{{ h.by }}</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p class="muted">Bez zmian statusu.</p>
+    {% endif %}
+  </section>
+</div>
+</div>
+{% endblock %}

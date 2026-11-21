@@ -1,0 +1,1 @@
+Źródło: https://github.com/felipebasurto/unslop-ui (commit 32279de, 20.11.2026), licencja MIT (LICENSE obok). Skopiowane 21.11.2026 bez zmian. Wywołanie: /unslop-ui <plik|katalog> [--surface] (skill nie uruchamia się sam: disable-model-invocation).

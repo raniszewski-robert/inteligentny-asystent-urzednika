@@ -1,0 +1,125 @@
+{
+  "requests": [
+    {
+      "number": "BKS.IV.1431.293.2025",
+      "received": "2025-06-12",
+      "summary": "Opieka i odławianie bezdomnych zwierzat.",
+      "initials": "Pracownik 1",
+      "status": "e_odpowiedz_wyslana",
+      "departments": [
+        "WGK",
+        "SCHRONISKO"
+      ],
+      "notes": "Antoni Ptak Stowarzyszenie Obrony Zwierzątek",
+      "answered": "2025-06-26"
+    },
+    {
+      "number": "BKS.IV.1431.307.2025",
+      "received": "2025-06-25",
+      "summary": "Aktualne zestawienie liczby uczniów w szkołach podstawowych. Proszę też o podanie liczby obcokrajowców w poszczególnych szkołach.",
+      "initials": "Pracownik 2",
+      "status": "e_odpowiedz_wyslana",
+      "departments": [
+        "WE"
+      ],
+      "notes": "Ewa Góra",
+      "answered": "2025-07-08"
+    },
+    {
+      "number": "BKS.IV.1431.15.2026",
+      "received": "2026-09-12",
+      "summary": "Zapytanie o rzeźbę Ludmiły Stehnovej która została usunięta z wyspy Ronda Grunwaldzkiego.",
+      "initials": "Pracownik 2",
+      "status": "e_odpowiedz_wyslana",
+      "departments": [],
+      "notes": "Jacek Rzeźbiarz",
+      "answered": "2026-01-14"
+    },
+    {
+      "number": "BKS.IV.1431.16.2026",
+      "received": "2026-01-09",
+      "summary": "Pytanie o liczbę punktów sprzedaży alkoholu powstałych od objęcia funkcji prezydenta przez Rafała Bruskiego do dzisiaj.",
+      "initials": "Pracownik 1",
+      "status": "e_odpowiedz_wyslana",
+      "departments": [
+        "WSO"
+      ],
+      "notes": "Jerzy Dociekliwy",
+      "answered": "2026-01-20"
+    },
+    {
+      "number": "BKS.IV.1431.17.2026",
+      "received": "2026-01-14",
+      "summary": "Proszę o udostępnienie informacji publicznej dot.realizacji umowy nr 102/TT/2019 z Jakotako spółką z o.o. zgodnie z załączonymi wnioskami.",
+      "initials": "Pracownik 2",
+      "status": "e_odpowiedz_wyslana",
+      "departments": [
+        "ZDMiKP"
+      ],
+      "notes": "abcxyz@jahu.komm",
+      "answered": "2026-01-15"
+    },
+    {
+      "number": "BKS.IV.1431.18.2026",
+      "received": "2026-01-15",
+      "summary": "Liczba mieszkańców wskazanych ulic według opłat za gospodarowanie odpadami komunalnymi.",
+      "initials": "Pracownik 1",
+      "status": "e_odpowiedz_wyslana",
+      "departments": [
+        "WGO"
+      ],
+      "notes": "Ksiądz",
+      "answered": "2026-01-26"
+    },
+    {
+      "number": "BKS.IV.1431.509.2026",
+      "received": "2026-08-05",
+      "summary": "Dokumentacja dotycząca basenu Astorii: projekt zagospodarowania terenu; projekt zagospodarowania zieleni; wizualizacje; zestawienie parametrów technicznych budynku.",
+      "initials": "Pracownik 2",
+      "status": "e_odpowiedz_wyslana",
+      "departments": [
+        "WAB"
+      ],
+      "notes": "z arkusza: 19.08.2026/18.09.2026 - doprecyzowanie wniosku Ewa Górna",
+      "answered": "2026-09-14",
+      "extension_days": 30
+    },
+    {
+      "number": "BKS.IV.1431.543.2026",
+      "received": "2026-08-14",
+      "summary": "Opieka nad bezdomnymi zwierzętami i ich wyłapywanie.",
+      "initials": "Pracownik 2",
+      "status": "e_odpowiedz_wyslana",
+      "departments": [
+        "WGK",
+        "SCHRONISKO"
+      ],
+      "notes": "Stowarzyszenie Obrony Zwierzątek",
+      "answered": "2026-09-22"
+    },
+    {
+      "number": "BKS.IV.1431.590.2026",
+      "received": "2026-09-07",
+      "summary": "Kompleks Astoria.",
+      "initials": "Pracownik 2",
+      "status": "e_odpowiedz_wyslana",
+      "departments": [
+        "WIM"
+      ],
+      "notes": "Budowlanka S.A.",
+      "answered": "2026-09-29"
+    },
+    {
+      "number": "BKS.IV.1431.599.2026",
+      "received": "2026-09-08",
+      "summary": "Edytowalne zestawienie liczby uczniów oraz uczniów cudzoziemców w poszczególnych szkołach podstawowych w Bydgoszczy - stan na koniec czerwca 2026 oraz stan na wrzesień 2026.",
+      "initials": "Pracownik 2",
+      "status": "e_odpowiedz_wyslana",
+      "departments": [
+        "WE"
+      ],
+      "notes": "Ewa Góra",
+      "answered": "2026-09-18"
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+# Osoby pełniące funkcje publiczne (art. 5 ust. 2 UDIP): wykryte → status „review” (urzędnik decyduje), nie „suggested”.
+# Uzupełnij z BIP UMB (prezydent, zastępcy, sekretarz, skarbnik, radni, dyrektorzy wydziałów i jednostek).
+# Źródło: treść próbek UMB i regulamin zadania (21.11.2026).
+Rafał Bruski
+Łukasz Krupa
+Piotr Tomaszewski

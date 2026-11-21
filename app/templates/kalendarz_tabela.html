@@ -1,0 +1,56 @@
+<section id="rejestr">
+<div class="counters">
+  <div class="counter{% if counts.overdue %} hot{% endif %}"><b>{{ counts.overdue }}</b>po terminie</div>
+  <div class="counter{% if counts.today %} hot{% endif %}"><b>{{ counts.today }}</b>termin dziś</div>
+  <div class="counter"><b>{{ counts.tomorrow }}</b>termin jutro</div>
+  <div class="counter"><b>{{ counts.soon }}</b>do 3 dni roboczych</div>
+  <div class="counter"><b>{{ rows|length }}</b>wniosków{% if year %} w {{ year }} r.{% endif %}</div>
+</div>
+<div class="legend">
+  {% for k in legend %}<span><span class="swatch" style="background: var(--u-{{ k }})"></span>{{ urgency_label[k] }}</span>{% endfor %}
+</div>
+{% if rows %}
+<div class="table-wrap">
+<table class="register">
+  <thead><tr>
+    <th class="num">L.p.</th><th>Numer sprawy</th><th>Wnioskodawca</th><th>Przedmiot zapytania</th><th>Data wpływu</th>
+    <th>Termin odpowiedzi</th><th>Pozostało dni rob.</th><th>Data odpowiedzi</th>
+    <th>Osoba</th><th>Status, kwerenda</th><th>Wydziały</th>
+  </tr></thead>
+  <tbody>
+  {% for r in rows %}
+  <tr class="u-{{ r.urgency }}" id="sprawa-{{ r.id }}">
+    <td class="num">{{ r.lp }}</td>
+    <td class="nowrap"><a href="/sprawy/{{ r.id }}">{{ r.number }}</a>{% if r.is_demo %}<div><span class="tag tag-demo">demo</span></div>{% endif %}</td>
+    <td>{{ r.applicant_label }}</td>
+    <td class="subject">{{ r.summary }}</td>
+    <td class="nowrap">{{ r.received|dmy }}</td>
+    <td><span class="nowrap">{{ r.due|dmy }}</span>{% if r.due_safe != r.due %}<div class="nowrap">bezpieczny: {{ r.due_safe|dmy }}</div>{% endif %}{% for w in r.warnings %}<div>{{ w }}</div>{% endfor %}</td>
+    <td>{% if r.working_days_left != "" %}{{ r.working_days_left }}{% endif %}<div>{{ r.urgency_label }}</div></td>
+    <td class="nowrap">{{ r.answered|dmy }}</td>
+    <td>{{ r.initials }}</td>
+    <td>
+      <form method="post" action="/sprawy/{{ r.id }}/status" hx-post="/sprawy/{{ r.id }}/status" hx-target="#rejestr" hx-swap="outerHTML" hx-trigger="change">
+        <input type="hidden" name="rok" value="{{ year or 'wszystkie' }}">
+        <select name="status" aria-label="Status sprawy {{ r.number }}">
+          {% for k, v in statuses.items() %}<option value="{{ k }}"{% if k == r.status %} selected{% endif %}>{{ v }}</option>{% endfor %}
+        </select>
+        {% if r.extension %}<div>Kwerenda: {{ r.extension }}</div>{% endif %}
+        {% if r.status == "c_kwerenda" %}
+        <div class="field-inline small" style="margin-top: 4px"><label for="ext-{{ r.id }}">Przedłużenie, dni</label>
+          <input id="ext-{{ r.id }}" name="extension_days" type="number" min="0" max="366" style="width: 72px" value="{{ r.extension_days if r.extension_days is not none else '' }}"></div>
+        {% endif %}
+        <noscript><button type="submit" class="btn-small">Zapisz</button></noscript>
+      </form>
+      {% if r.last %}<div class="small muted">{{ r.last.at|dmy }} {{ r.last.at[11:16] }}, {{ r.last.by }}</div>{% endif %}
+    </td>
+    <td>{{ r.departments }}</td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% else %}
+<p class="panel">Brak wniosków{% if year %} z {{ year }} r.{% endif %}. Dodaj wniosek, zaimportuj arkusz albo wczytaj sprawy demo.</p>
+{% endif %}
+</section>

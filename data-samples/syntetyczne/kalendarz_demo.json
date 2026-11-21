@@ -1,0 +1,117 @@
+{
+  "today": "2026-11-22",
+  "requests": [
+    {
+      "number": "BKS.IV.1431.100.2026",
+      "received": "2026-11-06",
+      "summary": "Remont ulicy",
+      "initials": "AK",
+      "status": "b_zapytania_wyslane",
+      "departments": [
+        "ZDMiKP"
+      ],
+      "channel": "ePUAP"
+    },
+    {
+      "number": "BKS.IV.1431.101.2026",
+      "received": "2026-11-20",
+      "summary": "Oświetlenie uliczne",
+      "initials": "MW",
+      "status": "d_odpowiedz_przygotowana",
+      "departments": [
+        "ZDMiKP"
+      ],
+      "channel": "ePUAP"
+    },
+    {
+      "number": "BKS.IV.1431.102.2026",
+      "received": "2026-11-09",
+      "summary": "Wycinka drzew",
+      "initials": "JN",
+      "status": "b_zapytania_wyslane",
+      "departments": [
+        "WGK"
+      ],
+      "channel": "ePUAP"
+    },
+    {
+      "number": "BKS.IV.1431.103.2026",
+      "received": "2026-11-10",
+      "summary": "Liczba uczniów i nauczycieli",
+      "initials": "AK",
+      "status": "a_brak_dzialan",
+      "departments": [
+        "WE"
+      ],
+      "channel": "papier"
+    },
+    {
+      "number": "BKS.IV.1431.104.2026",
+      "received": "2026-11-17",
+      "summary": "Wydatki na promocję i sponsoring",
+      "initials": "PZ",
+      "status": "a_brak_dzialan",
+      "departments": [
+        "BP"
+      ],
+      "channel": "ePUAP"
+    },
+    {
+      "number": "BKS.IV.1431.105.2026",
+      "received": "2026-11-19",
+      "summary": "Przetarg i umowa",
+      "initials": "MW",
+      "status": "a_brak_dzialan",
+      "departments": [
+        "WZP"
+      ],
+      "channel": "papier"
+    },
+    {
+      "number": "BKS.IV.1431.106.2026",
+      "received": "2026-11-18",
+      "summary": "Odpady komunalne",
+      "initials": "JN",
+      "status": "a_brak_dzialan",
+      "departments": [
+        "WGO"
+      ],
+      "channel": "e-mail"
+    },
+    {
+      "number": "BKS.IV.1431.107.2026",
+      "received": "2026-11-16",
+      "summary": "Pozwolenie na budowę",
+      "initials": "PZ",
+      "status": "a_brak_dzialan",
+      "departments": [
+        "WAB"
+      ],
+      "channel": "ePUAP"
+    },
+    {
+      "number": "BKS.IV.1431.108.2026",
+      "received": "2026-10-30",
+      "summary": "Schronisko dla zwierząt",
+      "initials": "AK",
+      "status": "e_odpowiedz_wyslana",
+      "departments": [
+        "SCHRONISKO"
+      ],
+      "channel": "ePUAP",
+      "answered": "2026-11-11"
+    },
+    {
+      "number": "BKS.IV.1431.109.2026",
+      "received": "2026-10-29",
+      "summary": "Straż miejska interwencje",
+      "initials": "MW",
+      "status": "c_kwerenda",
+      "departments": [
+        "SM"
+      ],
+      "channel": "papier",
+      "extension_days": 30
+    }
+  ]
+}

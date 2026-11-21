@@ -1,0 +1,167 @@
+{
+  "today": "2026-11-22",
+  "file": "Wniosek - BKS.IV.1431.599.2026.docx",
+  "text": "Witam,\nW trybie dostępu do informacji publicznej proszę o edytowalne zestawienie liczby uczniów w poszczególnych szkołach podstawowych w Bydgoszczy - stan na koniec czerwca 2026 oraz stan na wrzesień 2026.\nProszę też przesłanie zestawienia osób-obcokrajowców w poszczególnych szkołach w tych terminach.\n-- \nPozdrawiam | E. Góra",
+  "analysis": {
+    "mode": "udip",
+    "flags": [
+      {
+        "type": "informacja_przetworzona?",
+        "message": "Możliwa informacja przetworzona (art. 3 ust. 1 pkt 1 UDIP): przy dużym nakładzie pracy rozważ wezwanie do wykazania szczególnego interesu publicznego. Decyduje urzędnik/radca prawny."
+      }
+    ],
+    "requested_form": "nie wskazano (art. 14 UDIP: forma zgodna z wnioskiem, gdy możliwa)",
+    "questions": [
+      {
+        "no": 1,
+        "text": "proszę o edytowalne zestawienie liczby uczniów w poszczególnych szkołach podstawowych w Bydgoszczy - stan na koniec czerwca 2026 oraz stan na wrzesień 2026.",
+        "routing": [
+          {
+            "department": "WE",
+            "name": "Wydział Edukacji i Sportu",
+            "score": 2.5,
+            "share": 0.45,
+            "reasons": [
+              "słowa: szkoł",
+              "podobna sprawa BKS.IV.1431.599.2026"
+            ]
+          },
+          {
+            "department": "WOA",
+            "name": "Wydział Organizacyjno-Administracyjny",
+            "score": 1.5,
+            "share": 0.27,
+            "reasons": [
+              "słowa: stan"
+            ]
+          },
+          {
+            "department": "WUK",
+            "name": "Wydział Uprawnień Komunikacyjnych",
+            "score": 1.5,
+            "share": 0.27,
+            "reasons": [
+              "słowa: szkoł"
+            ]
+          }
+        ]
+      },
+      {
+        "no": 2,
+        "text": "Proszę też przesłanie zestawienia osób-obcokrajowców w poszczególnych szkołach w tych terminach.",
+        "routing": [
+          {
+            "department": "WE",
+            "name": "Wydział Edukacji i Sportu",
+            "score": 2.5,
+            "share": 0.45,
+            "reasons": [
+              "słowa: szkoł",
+              "podobna sprawa BKS.IV.1431.599.2026"
+            ]
+          },
+          {
+            "department": "WUK",
+            "name": "Wydział Uprawnień Komunikacyjnych",
+            "score": 1.5,
+            "share": 0.27,
+            "reasons": [
+              "słowa: szkoł"
+            ]
+          },
+          {
+            "department": "BBFO",
+            "name": "Bydgoskie Biuro Finansów Oświaty",
+            "score": 1.5,
+            "share": 0.27,
+            "reasons": [
+              "słowa: szkoł"
+            ]
+          }
+        ]
+      }
+    ],
+    "similar_cases": [
+      {
+        "id": "BKS.IV.1431.307.2025",
+        "date": "2025-06-25",
+        "title": "Aktualne zestawienie liczby uczniów w szkołach podstawowych. Proszę też o podanie liczby obcokrajowców w poszczególnych szkołach.",
+        "score": 18.71,
+        "departments": [
+          "WE"
+        ],
+        "matched_terms": [
+          "poszcz",
+          "szkoł",
+          "uczni",
+          "obcokr",
+          "też",
+          "podsta"
+        ],
+        "response_excerpt": "[Odpowiedź]\nURZĄD MIASTA BYDGOSZCZY\nBiuro Komunikacji Społecznej\nBydgoszcz, dnia 8 lipca 2025 r.\nBKS.IV.1431.307.2025\nW odpowiedzi na wystosowany przez Pana wniosek o udostępnienie informacji publicznej\nw zakresie aktualnego zestawienia liczby uczniów w szkołach podstawowych, w tym podanie\nliczby ob",
+        "older_than_window": true
+      }
+    ],
+    "departments_overall": [
+      {
+        "department": "WE",
+        "name": "Wydział Edukacji i Sportu",
+        "score": 2.5,
+        "share": 0.29,
+        "reasons": [
+          "słowa: szkoł",
+          "podobna sprawa BKS.IV.1431.307.2025"
+        ]
+      },
+      {
+        "department": "WOA",
+        "name": "Wydział Organizacyjno-Administracyjny",
+        "score": 1.5,
+        "share": 0.18,
+        "reasons": [
+          "słowa: stan"
+        ]
+      },
+      {
+        "department": "WUK",
+        "name": "Wydział Uprawnień Komunikacyjnych",
+        "score": 1.5,
+        "share": 0.18,
+        "reasons": [
+          "słowa: szkoł"
+        ]
+      },
+      {
+        "department": "BZS",
+        "name": "Biuro ds. Zdrowia i Polityki Społecznej",
+        "score": 1.5,
+        "share": 0.18,
+        "reasons": [
+          "słowa: dostęp"
+        ]
+      },
+      {
+        "department": "BBFO",
+        "name": "Bydgoskie Biuro Finansów Oświaty",
+        "score": 1.5,
+        "share": 0.18,
+        "reasons": [
+          "słowa: szkoł"
+        ]
+      }
+    ],
+    "routing_plan": [
+      {
+        "department": "WE",
+        "name": "Wydział Edukacji i Sportu",
+        "questions": [
+          1,
+          2
+        ]
+      }
+    ],
+    "disclaimer": "Propozycja narzędzia. Kwalifikację trybu i wybór wydziału zatwierdza urzędnik.",
+    "llm_used": false,
+    "provider": "rules"
+  }
+}

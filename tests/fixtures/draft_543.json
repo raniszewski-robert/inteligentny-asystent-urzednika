@@ -1,0 +1,70 @@
+{
+  "today": "2026-11-22",
+  "request": "BKS Urząd Miasta Bydgoszczy\n\nOd:\nWysłano:\nDo:\n\nDW:\nTemat:\n\nProśba o rejestrację w SIDAS.\nZ poważaniem\n\nKierownik Referatu Komunikacji Społecznej\nBiuro Komunikacji Spotecznej\n\nMiasto Bydgoszcz\n\nul. Jezuicka 1, 85-102 Bydgoszcz\n\nWniosek o udostępnienie informacji publicznej\n\nStowarzyszenie „ organizacja pożytku publicznego, której statutowym\ncelem działania jest ochrona zwierząt, zwraca się z uprzejmą prośbą o udzielenie informacji publicznej na\ntemat sposobu i skutków wykonywania zadania „opieka nad bezdomnymi zwierzętami i ich wyłapywanie\",\nprzewidzianego ustawą o ochronie zwierząt.\n\nny o przysłanie pocztą elektroniczną na adres (uwaga: adres bez\npolskich znaków diakrytycznych) krótkiej informacji:\n\n1. z kim (imię, nazwisko lub nazwa, adres) gmina miała obowiązujące w 2025 r. umowy albo komu (imię,\nnazwisko lub nazwa, adres) udzielała doraźnych zleceń wyłapywania/odławiania bezdomnych zwierząt?\n2. z kim (imię, nazwisko lub nazwa, adres) gmina miała obowiązujące w 2025 r. umowy albo komu (imię,\nnazwisko lub nazwa, adres) udzielała doraźnych zleceń zapewniania opieki bezdomnym zwierzętom?\n\n3. ilu bezdomnym zwierzętom (z podziałem na psy i koty) zapewniono opiekę na koszt gminy w 2025 r.?\n(nie licząc zwierząt, którymi zajęto się w latach poprzednich).\n\n4. jaki był w 2025 r. faktycznie poniesiony koszt realizacji całego zadania przewidzianego ustawą o\nochronie zwierząt (wyłapywanie/odławianie, opieka, usługi weterynaryjne, dokarmianie, inne)?\n\n5. ponadto prosimy o udostępnienie treści i postaci unowy/umów (wraz z załącznikami) o zapewnianie\nopieki bezdomnym zwierzętom w 2025 r.\n\nUprzejmie proszę o potwierdzenie otrzymania niniejszego wniosku.\nZ poważaniem",
+  "answers": [
+    [
+      "SCHRONISKO.txt",
+      "Bydgoszcz, 2026-09-15\nSCHRONISKO.0012.31.2026\n\nBiuro Komunikacji Społecznej\nw miejscu\n\nW odpowiedzi na prośbę o przygotowanie informacji uprzejmie informuję:\nOpiekę nad domowymi zwierzętami bezdomnymi sprawuje Schronisko dla Zwierząt w Bydgoszczy, które jest jednostką budżetową Miasta Bydgoszczy. Miasto nie zawierało umów z podmiotami zewnętrznymi w zakresie opieki nad domowymi zwierzętami bezdomnymi. Schronisko zapewniło opiekę w 2025 r. 839 psom oraz 560 kotom. Budżet schroniska w 2025 r. wyniósł 3.143.761,14 zł. W 2025 r. realizowana była Umowa 1/2022/SZ zawarta między Schroniskiem a Kliniką Weterynaryjną.\n\nSprawę prowadzi: Joanna Mazur, tel. 52 58 99 100\n"
+    ],
+    [
+      "WGK.txt",
+      "Bydgoszcz, 2026-09-16\nWGK.1431.77.2026\n\nBiuro Komunikacji Społecznej\nw miejscu\n\nUprzejmie informuję, że wyłapywanie bezdomnych zwierząt w 2025 r. realizowało Schronisko dla Zwierząt w Bydgoszczy; Wydział nie udzielał w tym zakresie zleceń podmiotom zewnętrznym.\n\nSprawę prowadzi: Tomasz Kamiński\n"
+    ]
+  ],
+  "received": "2026-08-14",
+  "number": "BKS.IV.1431.543.2026",
+  "draft": {
+    "text": "Bydgoszcz, dnia 22 listopada 2026 r.\nBKS.IV.1431.543.2026\n\n[adresat – uzupełnij z rejestru]\n\nSzanowni Państwo,\nw odpowiedzi na wystosowany przez Państwa wniosek o udostępnienie informacji publicznej w zakresie sposobu i skutków wykonywania zadania „opieka nad bezdomnymi zwierzętami i ich wyłapywanie\", przewidzianego ustawą o ochronie zwierząt, na podstawie materiału przygotowanego przez jednostki merytoryczne, tj. Schronisko dla Zwierząt w Bydgoszczy oraz Wydział Zieleni i Gospodarki Komunalnej Urzędu Miasta Bydgoszczy informuję, co następuje.\nAd 1\nWyłapywanie bezdomnych zwierząt w 2025 r. realizowało Schronisko dla Zwierząt w Bydgoszczy; Wydział nie udzielał w tym zakresie zleceń podmiotom zewnętrznym.\nAd 2\nOpiekę nad domowymi zwierzętami bezdomnymi sprawuje Schronisko dla Zwierząt w Bydgoszczy, które jest jednostką budżetową Miasta Bydgoszczy.\nAd 3\nSchronisko zapewniło opiekę w 2025 r. 839 psom oraz 560 kotom.\nAd 4\nBudżet schroniska w 2025 r. wyniósł 3.143.761,14 zł. W 2025 r. realizowana była Umowa 1/2022/SZ zawarta między Schroniskiem a Kliniką Weterynaryjną.\nAd 5\nMiasto nie zawierało umów z podmiotami zewnętrznymi w zakresie opieki nad domowymi zwierzętami bezdomnymi.\n\nŁączę wyrazy szacunku,\n\n[podpis]\nBiuro Komunikacji Społecznej\nUrząd Miasta Bydgoszczy\ne-mail: bip@um.bydgoszcz.pl\n\nPodstawa prawna: art. 10 ust. 1 i art. 13 ust. 1 ustawy z dnia 6 września 2001 r. o dostępie do informacji publicznej.",
+    "spans": [],
+    "report": {
+      "type": "udostepnienie",
+      "mode_requested": "template",
+      "mode_used": "template",
+      "questions": 5,
+      "gaps": [],
+      "uncertain_assignment": [
+        {
+          "sentence": "Opiekę nad domowymi zwierzętami bezdomnymi sprawuje Schronisko dla Zwierząt w Bydgoszczy, które jest jednostką budżetową",
+          "assigned_to": 2,
+          "source": "SCHRONISKO.txt",
+          "candidates": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        {
+          "question": 2,
+          "expected_department": [
+            "WGK",
+            "WMG"
+          ],
+          "answer_from": [
+            "SCHRONISKO"
+          ],
+          "note": "pytanie wygląda na właściwość innej komórki – czy brakuje jej odpowiedzi?"
+        }
+      ],
+      "number_check": [],
+      "warnings": [],
+      "sources": [
+        "SCHRONISKO.txt",
+        "WGK.txt"
+      ],
+      "departments": [
+        "SCHRONISKO",
+        "WGK"
+      ],
+      "salutation": "Szanowni Państwo,",
+      "internal_notes": [
+        "Dz.U. cytuj tak jak BKS w piśmie 509.2026 („Dz. U. z 2022 r. poz. 902, z 2025 r. poz. 1844”), jeśli w ogóle."
+      ],
+      "number_check_template": [],
+      "omitted_numbers_template": [],
+      "anonymization_suggestions": 0
+    },
+    "html": "<!DOCTYPE html><html lang=\"pl\"><head><meta charset=\"utf-8\"><title>Projekt odpowiedzi BKS.IV.1431.543.2026</title>\n<style>body{font-family:Georgia,serif;max-width:820px;margin:24px auto;line-height:1.5}pre{white-space:pre-wrap;font-family:inherit}mark{padding:0 2px}</style></head>\n<body><h1>Projekt odpowiedzi BKS.IV.1431.543.2026</h1><p><mark style=\"background:#adb5bd;color:#000\">szary</mark> propozycja ·\n<mark style=\"background:#fff;outline:2px dashed #e8590c\">ramka</mark> do decyzji urzędnika · <mark style=\"background:#000;color:#000\">czarny</mark> zaakceptowane</p>\n<pre>Bydgoszcz, dnia 22 listopada 2026 r.\nBKS.IV.1431.543.2026\n\n[adresat – uzupełnij z rejestru]\n\nSzanowni Państwo,\nw odpowiedzi na wystosowany przez Państwa wniosek o udostępnienie informacji publicznej w zakresie sposobu i skutków wykonywania zadania „opieka nad bezdomnymi zwierzętami i ich wyłapywanie&quot;, przewidzianego ustawą o ochronie zwierząt, na podstawie materiału przygotowanego przez jednostki merytoryczne, tj. Schronisko dla Zwierząt w Bydgoszczy oraz Wydział Zieleni i Gospodarki Komunalnej Urzędu Miasta Bydgoszczy informuję, co następuje.\nAd 1\nWyłapywanie bezdomnych zwierząt w 2025 r. realizowało Schronisko dla Zwierząt w Bydgoszczy; Wydział nie udzielał w tym zakresie zleceń podmiotom zewnętrznym.\nAd 2\nOpiekę nad domowymi zwierzętami bezdomnymi sprawuje Schronisko dla Zwierząt w Bydgoszczy, które jest jednostką budżetową Miasta Bydgoszczy.\nAd 3\nSchronisko zapewniło opiekę w 2025 r. 839 psom oraz 560 kotom.\nAd 4\nBudżet schroniska w 2025 r. wyniósł 3.143.761,14 zł. W 2025 r. realizowana była Umowa 1/2022/SZ zawarta między Schroniskiem a Kliniką Weterynaryjną.\nAd 5\nMiasto nie zawierało umów z podmiotami zewnętrznymi w zakresie opieki nad domowymi zwierzętami bezdomnymi.\n\nŁączę wyrazy szacunku,\n\n[podpis]\nBiuro Komunikacji Społecznej\nUrząd Miasta Bydgoszczy\ne-mail: bip@um.bydgoszcz.pl\n\nPodstawa prawna: art. 10 ust. 1 i art. 13 ust. 1 ustawy z dnia 6 września 2001 r. o dostępie do informacji publicznej.</pre></body></html>"
+  }
+}

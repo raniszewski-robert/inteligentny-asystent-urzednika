@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Ustawienia</h1>
+{% if saved %}<p class="note note-ok">Zapisano wybór modelu.</p>{% endif %}
+
+<div class="cols">
+<div>
+  <form class="panel" method="post" action="/ustawienia">
+    <h2>Model językowy</h2>
+    <p class="muted">Reguły działają zawsze, także bez internetu. Model tylko proponuje: streszczenie, uzasadnienie wydziału, akapity „Ad”, fragmenty do anonimizacji. Propozycje sprawdzają reguły, zatwierdza urzędnik.</p>
+    <fieldset>
+      <legend>Dostawca</legend>
+      {% for value, label in choices %}
+      <div class="field-inline"><input type="radio" id="pv-{{ loop.index }}" name="provider" value="{{ value }}"{% if value == choice %} checked{% endif %}><label for="pv-{{ loop.index }}">{{ label }}</label></div>
+      {% endfor %}
+    </fieldset>
+    <button type="submit" class="btn-primary">Zapisz</button>
+  </form>
+</div>
+<div>
+  <section class="panel" id="stan-modelu">
+    <h2>Stan</h2>
+    <p id="tryb">Tryb pracy: <b>{{ mode.label }}</b>. Dane nie opuszczają tego komputera.</p>
+    {% if offline %}<p class="small muted">UDIP_OFFLINE=1: połączenia poza ten komputer są zablokowane.</p>{% endif %}
+    {% if llm_on %}
+    <p class="note note-ok">Model dostępny: <b>{{ model_id }}</b>.</p>
+    {% else %}
+    <p class="note note-warn">Model niedostępny – wyniki z reguł.
+      {% if choice == "openai_compat" %}Brak konfiguracji serwera lokalnego (LLM_BASE_URL i LLM_MODEL w pliku .env).{% elif choice == "rules" %}Wybrano tylko reguły.{% endif %}</p>
+    {% endif %}
+    <table>
+      <tbody>
+        <tr><th scope="row">Wywołania modelu</th><td>{{ usage.calls }}</td></tr>
+        <tr><th scope="row">W tym z pamięci podręcznej</th><td>{{ usage.cached }}</td></tr>
+        <tr><th scope="row">Tokeny wejścia / wyjścia</th><td>{{ usage.input_tokens }} / {{ usage.output_tokens }}</td></tr>
+        <tr><th scope="row">Koszt zewnętrznych API</th><td>0,00 USD (praca wyłącznie lokalna)</td></tr>
+      </tbody>
+    </table>
+    <p class="muted small">Aplikacja nie korzysta z zewnętrznych API. Działa wyłącznie na regułach lub z lokalnym modelem Bielik (Ollama) w sieci Urzędu.</p>
+  </section>
+</div>
+</div>
+{% endblock %}

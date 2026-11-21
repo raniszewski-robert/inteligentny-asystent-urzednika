@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ law.title }}</h1>
+<p class="muted">{{ law.filename }}</p>
+<section class="panel">
+  {% for c in chunks %}<div class="pre law-part" id="p{{ c.para }}">{{ c.response_text }}</div>{% endfor %}
+</section>
+{% endblock %}

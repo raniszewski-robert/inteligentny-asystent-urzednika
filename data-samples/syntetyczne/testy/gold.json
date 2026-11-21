@@ -1,0 +1,209 @@
+[
+  {
+    "file": "wniosek_01.txt",
+    "departments": [
+      "ZDMiKP",
+      "WZP"
+    ],
+    "relevant_archive_ids_last_year": [
+      "UDIP-2026-081",
+      "UDIP-2026-017",
+      "UDIP-2026-065",
+      "UDIP-2026-033",
+      "UDIP-2026-001",
+      "UDIP-2026-049"
+    ],
+    "topic": "remont ulicy",
+    "answer_file": "odp_wydzialu_01.txt"
+  },
+  {
+    "file": "wniosek_02.txt",
+    "departments": [
+      "ZDMiKP"
+    ],
+    "relevant_archive_ids_last_year": [
+      "UDIP-2026-034"
+    ],
+    "topic": "oświetlenie uliczne",
+    "answer_file": "odp_wydzialu_02.txt"
+  },
+  {
+    "file": "wniosek_03.txt",
+    "departments": [
+      "WGK"
+    ],
+    "relevant_archive_ids_last_year": [
+      "UDIP-2026-067",
+      "UDIP-2026-051",
+      "UDIP-2026-019"
+    ],
+    "topic": "wycinka drzew",
+    "answer_file": "odp_wydzialu_03.txt"
+  },
+  {
+    "file": "wniosek_04.txt",
+    "departments": [
+      "WE"
+    ],
+    "relevant_archive_ids_last_year": [
+      "UDIP-2025-052",
+      "UDIP-2026-084"
+    ],
+    "topic": "liczba uczniów i nauczycieli",
+    "answer_file": "odp_wydzialu_04.txt"
+  },
+  {
+    "file": "wniosek_05.txt",
+    "departments": [
+      "BP",
+      "SM"
+    ],
+    "relevant_archive_ids_last_year": [
+      "UDIP-2025-037",
+      "UDIP-2026-069"
+    ],
+    "topic": "wydatki na promocję i sponsoring",
+    "answer_file": "odp_wydzialu_05.txt"
+  },
+  {
+    "file": "wniosek_06.txt",
+    "departments": [
+      "WZP"
+    ],
+    "relevant_archive_ids_last_year": [
+      "UDIP-2026-070",
+      "UDIP-2026-038",
+      "UDIP-2026-086"
+    ],
+    "topic": "przetarg i umowa",
+    "answer_file": "odp_wydzialu_06.txt"
+  },
+  {
+    "file": "wniosek_07.txt",
+    "departments": [
+      "WGO"
+    ],
+    "relevant_archive_ids_last_year": [
+      "UDIP-2025-055",
+      "UDIP-2025-071",
+      "UDIP-2026-087"
+    ],
+    "topic": "odpady komunalne",
+    "answer_file": "odp_wydzialu_07.txt"
+  },
+  {
+    "file": "wniosek_08.txt",
+    "departments": [
+      "WAB"
+    ],
+    "relevant_archive_ids_last_year": [
+      "UDIP-2026-008",
+      "UDIP-2026-072"
+    ],
+    "topic": "pozwolenie na budowę",
+    "answer_file": "odp_wydzialu_08.txt"
+  },
+  {
+    "file": "wniosek_09.txt",
+    "departments": [
+      "SCHRONISKO",
+      "ADM"
+    ],
+    "relevant_archive_ids_last_year": [
+      "UDIP-2026-041",
+      "UDIP-2026-009",
+      "UDIP-2026-057"
+    ],
+    "topic": "schronisko dla zwierząt",
+    "answer_file": "odp_wydzialu_09.txt"
+  },
+  {
+    "file": "wniosek_10.txt",
+    "departments": [
+      "SM"
+    ],
+    "relevant_archive_ids_last_year": [
+      "UDIP-2026-058"
+    ],
+    "topic": "straż miejska interwencje",
+    "answer_file": "odp_wydzialu_10.txt"
+  },
+  {
+    "file": "wniosek_11.txt",
+    "departments": [
+      "BRM"
+    ],
+    "relevant_archive_ids_last_year": [
+      "UDIP-2026-011",
+      "UDIP-2026-027"
+    ],
+    "topic": "diety radnych",
+    "answer_file": "odp_wydzialu_11.txt"
+  },
+  {
+    "file": "wniosek_12.txt",
+    "departments": [
+      "WOA"
+    ],
+    "relevant_archive_ids_last_year": [
+      "UDIP-2025-012",
+      "UDIP-2025-044",
+      "UDIP-2026-028"
+    ],
+    "topic": "zatrudnienie w urzędzie",
+    "answer_file": "odp_wydzialu_12.txt"
+  },
+  {
+    "file": "wniosek_13.txt",
+    "departments": [
+      "WMG",
+      "ZDMiKP"
+    ],
+    "relevant_archive_ids_last_year": [
+      "UDIP-2026-029",
+      "UDIP-2026-013",
+      "UDIP-2026-061"
+    ],
+    "topic": "sprzedaż nieruchomości",
+    "answer_file": "odp_wydzialu_13.txt"
+  },
+  {
+    "file": "wniosek_14.txt",
+    "departments": [
+      "ADM"
+    ],
+    "relevant_archive_ids_last_year": [
+      "UDIP-2025-014",
+      "UDIP-2026-046",
+      "UDIP-2026-062",
+      "UDIP-2026-078"
+    ],
+    "topic": "mieszkania komunalne",
+    "answer_file": "odp_wydzialu_14.txt"
+  },
+  {
+    "file": "wniosek_15.txt",
+    "departments": [
+      "WOS"
+    ],
+    "relevant_archive_ids_last_year": [
+      "UDIP-2026-015",
+      "UDIP-2026-063",
+      "UDIP-2026-079"
+    ],
+    "topic": "jakość powietrza i dotacje",
+    "answer_file": "odp_wydzialu_15.txt"
+  },
+  {
+    "file": "wniosek_16.txt",
+    "departments": [
+      "WI"
+    ],
+    "relevant_archive_ids_last_year": [
+      "UDIP-2026-064",
+      "UDIP-2026-032"
+    ],
+    "topic": "wydatki na informatykę",
+    "answer_file": "odp_wydzialu_16.txt"
+  }
+]
