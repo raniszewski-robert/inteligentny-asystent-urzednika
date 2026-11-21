@@ -45,7 +45,7 @@ powershell -ExecutionPolicy Bypass -File .\run.ps1
 |---|---|
 | `.\run.ps1 -Port 8001` | inny port, gdy 8000 jest zajęty |
 | `.\run.ps1 -NoBrowser` | bez otwierania przeglądarki |
-| `.\run.ps1 -Reseed` albo `.\setup.ps1 -Reseed` | sprawy z arkusza UMB od nowa, z datami demo na dziś (przed pokazem; kasuje historię statusów tych spraw) |
+| `.\run.ps1 -Reseed` albo `.\setup.ps1 -Reseed` | sprawy z arkusza UMB od nowa, z datami demo na dziś (kasuje historię statusów tych spraw) |
 | `.\run.ps1 -Reseed -RealDates` | sprawy z prawdziwymi datami z arkusza (wszystkie są już zamknięte) |
 
 ## Gdy coś nie działa

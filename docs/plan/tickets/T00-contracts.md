@@ -6,7 +6,7 @@
 
 ## Goal
 
-Let five agents start at the same time without touching each other's files.
+Let five lanes start at the same time without touching each other's files.
 
 ## Scope
 

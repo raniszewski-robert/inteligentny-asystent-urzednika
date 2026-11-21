@@ -46,7 +46,7 @@ OSTRZEZENIA:
 
 Prawdziwych pakietów zadań. Jeśli pakiet nazwie sekcję inaczej niż „Karta zadania" albo plik inaczej niż `research/06*.md`, skrypt zgłosi brak w pakiecie i trzeba przeczytać pakiet ręcznie.
 
-## Poprawki po przeglądzie świeżego subagenta (2026-11-17) i ponowne testy
+## Poprawki po przeglądzie (2026-11-17) i ponowne testy
 
 | Problem z przeglądu | Poprawka | Test |
 |---|---|---|

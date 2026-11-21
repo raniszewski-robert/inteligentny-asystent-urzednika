@@ -1,6 +1,6 @@
 # API Claude: wyjście strukturalne, cytowania, cache promptu
 
-Stan dokumentacji: odczyt 2026-11-17. Skilla „claude-api" nie było w sesji, więc przykłady są przepisane z dokumentacji (źródła Z23–Z25 w `prep/_wspolne/research/zrodla.md`). **Przykłady SDK nie zostały uruchomione** (brak klucza w sesji przygotowawczej). Ten sam kształt zapytania HTTP wysyła `scripts/llm_client.py`, sprawdzony na atrapie API (`references/test-run.md`). Przed użyciem sprawdź stronę dokumentacji, bo API się zmienia.
+Stan dokumentacji: odczyt 2026-11-17. Przykłady są przepisane z dokumentacji (źródła Z23–Z25 w `prep/_wspolne/research/zrodla.md`). **Przykłady SDK nie zostały uruchomione** (brak klucza API). Ten sam kształt zapytania HTTP wysyła `scripts/llm_client.py`, sprawdzony na atrapie API (`references/test-run.md`). Przed użyciem sprawdź stronę dokumentacji, bo API się zmienia.
 
 - Wyjście strukturalne: https://platform.claude.com/docs/en/build-with-claude/structured-outputs
 - Cytowania: https://platform.claude.com/docs/en/build-with-claude/citations

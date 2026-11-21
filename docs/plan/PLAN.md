@@ -1,8 +1,8 @@
 # Implementation plan v2: Inteligentny asystent urzędnika (UMB), parallel
 
-Agreed on 21.11.2026; v2 folds in the external review (`docs/plan/review_assessment.md`). Up to **six agents** work at once in separate git worktrees, each in a **lane** that owns its files (CONTRACTS.md §1). Demo runs locally on the team's Windows laptop from D:. Deadline: Sunday 22.11, 11:00; code freeze 09:30.
+Agreed on 21.11.2026; v2 folds in the external review (`docs/plan/review_assessment.md`). Up to **six lanes** run at once in separate git worktrees, each in a **lane** that owns its files (CONTRACTS.md §1). Demo runs locally on the team's Windows laptop from D:. Deadline: Sunday 22.11, 11:00; code freeze 09:30.
 
-**Run it in one session:** paste `docs/plan/ORCHESTRATOR_PROMPT.md` into Claude Code opened in the repo root. Standing rules for every agent: `CLAUDE.md`; lane briefs: `docs/plan/lanes/`.
+**Coordination:** `docs/plan/ORCHESTRATOR_PROMPT.md`. Standing rules: `CLAUDE.md`; lane briefs: `docs/plan/lanes/`.
 
 ## Decisions
 
@@ -56,9 +56,9 @@ Critical path ≈ 11 h of work: T00 → T01 → T02 → T24 → T07 → T08 → 
 5. **Shared LLM budget and cache** via one absolute `UDIP_DATA_DIR`; allocation: C $9, B2/T23 $1, D (vision demo) $1, reserve $4.
 6. **Git server limit:** 2 concurrent transfers per repo; push one at a time, retry once after 5 s on HTTP 429.
 
-## Fewer agents
+## Fewer people
 
-| Agents | Assignment |
+| People | Assignment |
 |---|---|
 | 6 | 0+D, A, E, B1, B2, C |
 | 5 | 0+D, A+E, B1, B2, C |
@@ -78,9 +78,9 @@ GLiNER in T28 → T13 vision (manual transcription stays) → live Bielik mode i
 
 ## Needed from the team
 
-- [ ] `.env` with `ANTHROPIC_API_KEY=…` in `Hacknation 2026 - UMB\_dla_claude\` (T10).
+- [ ] `.env` with `ANTHROPIC_API_KEY=…` at the repo root (T10).
 - [ ] Confirm Python 3.11+ and Git on Windows (T09).
-- [ ] For T28: download from dane.gov.pl the lists of first names and surnames from the PESEL register (CSV) into `_dla_claude\`, or allow `dane.gov.pl`.
+- [ ] For T28: download from dane.gov.pl the lists of first names and surnames from the PESEL register (CSV) into the UMB materials folder, or allow `dane.gov.pl`.
 - [ ] For T16: allow `huggingface.co`, `hf.co`, `cdn-lfs.huggingface.co`, `cdn-lfs.hf.co`, `cas-bridge.xethub.hf.co`, or install Ollama on the laptop with `OLLAMA_MODELS` on D:.
 
 ## Tickets

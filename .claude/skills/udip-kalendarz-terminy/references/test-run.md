@@ -51,7 +51,7 @@ Zaimportowano 10 wniosków.
 
 ```
 $ python3 .claude/skills/udip-kalendarz-terminy/scripts/import_xlsx.py data-partner/umb/kalendarium_umb.xlsx --out /tmp/demo.json --demo-today 2026-11-23 >/dev/null && python3 .claude/skills/udip-kalendarz-terminy/scripts/register.py /tmp/demo.json --today 2026-11-23 --print --html /tmp/k.html --csv /tmp/k.csv --ics /tmp/k.ics && wc -c /tmp/k.html /tmp/k.csv /tmp/k.ics && head -4 /tmp/k.ics
-/home/claude/iau/.claude/skills/udip-kalendarz-terminy/scripts/register.py:156: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+.claude/skills/udip-kalendarz-terminy/scripts/register.py:156: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
   stamp = datetime.utcnow().strftime("%Y%m%dT%H%M%SZ")
  1 BKS.IV.1431.293.2025   wpł. 2026-11-06 termin 2026-11-20 [overdue ] b) zapytania wysłane do wydziałów      Opieka i odławianie bezdomnych zwierzat.
  2 BKS.IV.1431.307.2025   wpł. 2026-11-09 termin 2026-11-23 [today   ] d) przygotowana odpowiedź              Aktualne zestawienie liczby uczniów w szkołach pod

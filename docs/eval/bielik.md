@@ -1,10 +1,10 @@
-# Bielik-4.5B-v3.0-Instruct lokalnie przez Ollama (T16): zmierzono
+# Bielik-4.5B-v3.0-Instruct lokalnie przez Ollama
 
-**Stan (2026-11-21):** zmierzono lokalnie na laptopie zespołu (Windows, Ollama, `SpeakLeash/bielik-4.5b-v3.0-instruct:Q8_0`, 5,4 GB, 59% CPU / 41% GPU, kontekst `num_ctx=8192`). Kolumna „Bielik 4.5B” jest wpisana do `docs/eval/RESULTS.md` oraz `docs/eval/chart.png` (szczegóły: `docs/eval/results/openai_compat_bielik.json`).
+Pomiar z 2026-11-21 na laptopie (Windows, Ollama, `SpeakLeash/bielik-4.5b-v3.0-instruct:Q8_0`, 5,4 GB, 59% CPU / 41% GPU, kontekst `num_ctx=8192`). Kolumna „Bielik 4.5B” jest wpisana do `docs/eval/RESULTS.md` oraz `docs/eval/chart.png` (szczegóły: `docs/eval/results/openai_compat_bielik.json`).
 
-Klient jest gotowy: `udip/llm.py` obsługuje dostawcę `openai_compat:<model>` (Ollama przez natywne `/api/chat` z `num_ctx=8192` i gramatyką JSON, pozostałe serwery przez `/v1/chat/completions`) z tym samym schematem JSON, walidacją i pamięcią podręczną co Claude (koszt $0). Ewaluacja: `scripts/eval_llm.py --provider openai_compat:bielik --limit 20`.
+`udip/llm.py` obsługuje dostawcę `openai_compat:<model>` (Ollama przez natywne `/api/chat` z `num_ctx=8192` i gramatyką JSON, pozostałe serwery przez `/v1/chat/completions`) z tym samym schematem JSON, walidacją i pamięcią podręczną co pozostali dostawcy (koszt $0). Ewaluacja: `scripts/eval_llm.py --provider openai_compat:bielik --limit 20`.
 
-Licencja modelu: według karty modelu SpeakLeash – Apache-2.0; sprawdzić na karcie przed dystrybucją wag.
+Licencja modelu: według karty modelu SpeakLeash – Apache-2.0.
 
 ## Windows (komputer Urzędu, wszystko na D:)
 
@@ -14,7 +14,7 @@ setx OLLAMA_MODELS "D:\ollama\models"          # modele na D:, nie na C:
 # zamknij i otwórz PowerShell ponownie, żeby zmienna zadziałała; uruchom ponownie aplikację Ollama
 ollama pull SpeakLeash/bielik-4.5b-v3.0-instruct:Q8_0     # ok. 4,8 GB; Q4_K_M jest mniejszy i szybszy
 ollama run --verbose SpeakLeash/bielik-4.5b-v3.0-instruct:Q8_0 "Napisz jedno zdanie o Bydgoszczy."
-#    ostatnie linie: "eval rate: … tokens/s" – to zapisz w tabeli poniżej
+#    ostatnie linie: "eval rate: … tokens/s" – szybkość generowania
 
 # 2. W pliku .env (ten wskazany przez UDIP_ENV_FILE):
 #    LLM_BASE_URL=http://localhost:11434/v1
@@ -22,12 +22,11 @@ ollama run --verbose SpeakLeash/bielik-4.5b-v3.0-instruct:Q8_0 "Napisz jedno zda
 #    LLM_TIMEOUT=600
 
 # 3. Ewaluacja (venv z UDIP_VENV, katalog repozytorium):
-$env:UDIP_LLM_TAG = "T16"
 python scripts\eval_llm.py --provider openai_compat:bielik --limit 20
 python scripts\eval_llm.py --report            # dopisuje kolumnę Bielik do docs\eval\RESULTS.md i wykres
 ```
 
-Aby aplikacja używała Bielika zamiast Claude: `UDIP_PROVIDER=openai_compat:bielik` w `.env` (wymaga działającej Ollamy;
+Aby aplikacja używała Bielika: `UDIP_PROVIDER=openai_compat:bielik` w `.env` (wymaga działającej Ollamy;
 gdy serwer nie odpowiada, każde wywołanie wraca do reguł).
 
 ## Linux

@@ -6,7 +6,7 @@ Data: 2026-11-17, Python 3.13.18, jsonschema 4.26.0, Linux. Polecenie: `python3 
 
 `selftest.py` importuje `llm_client.py` (testy 1–14 i 18 przez CLI `ask`), uruchamia `injection_suite.py make` i `check` (testy 15–16) oraz `cost_estimate.py` (test 17).
 
-Test uruchamia lokalną atrapę API (serwer HTTP z biblioteki standardowej) odpowiadającą na `/v1/messages` w kształcie API Claude i na `/v1/chat/completions` w kształcie API zgodnego z OpenAI. Klucz API w teście to napis `test-not-a-real-key`. **Prawdziwe API Claude ani lokalny model nie były wywołane** (brak klucza i modelu w sesji przygotowawczej); kształt zapytania jest zgodny z dokumentacją z 2026-11-17 (`references/claude-api.md`).
+Test uruchamia lokalną atrapę API (serwer HTTP z biblioteki standardowej) odpowiadającą na `/v1/messages` w kształcie API Claude i na `/v1/chat/completions` w kształcie API zgodnego z OpenAI. Klucz API w teście to napis `test-not-a-real-key`. **Prawdziwe API Claude ani lokalny model nie były wywołane** (brak klucza i modelu); kształt zapytania jest zgodny z dokumentacją z 2026-11-17 (`references/claude-api.md`).
 
 | Test | Wynik |
 |---|---|

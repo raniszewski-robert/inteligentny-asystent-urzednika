@@ -52,9 +52,9 @@ Rdzeń jest gotowy w `.claude/skills/udip-*`: terminy (art. 13 UDIP + art. 57 KP
 
 1. Daty w próbkach UMB: znak 543.2025 przy wniosku z 2026, wpływ 15.2026 (12.09?) – `data-partner/umb/niespojnosci_arkusza.md`. 1a. Numer Zarządzenia UMB 2024 (plik „535-2024”, OCR „Nr 536”). 2. Zakres zmiany UDIP z Dz.U. 2025 poz. 1844 (BKS cytuje ją w piśmie 509.2026, więc szablony też). 3. Stosowanie art. 57 § 4 KPA do art. 13 UDIP w praktyce BKS. 4. JRWA 1431. 5. Organ odwoławczy (SKO) dla decyzji UMB. 6. Data premiery Bielik-11B-v3.1 (10.11.2026, źródło wtórne). 7. Szybkość Bielika na CPU laptopa demo. 8. Sygnatury z iszd.pl (lista w `research/notatki/prawo_szczegoly.md` § 6).
 
-## Materiały przygotowane przed wydarzeniem i w jego trakcie (do ujawnienia)
+## Materiały przygotowane przed wydarzeniem i w jego trakcie
 
-Pakiet powstał 21.11.2026 w Claude Code: research, skrypty `udip-*`, dane syntetyczne, archiwum UMB. Skille `hn-*` pochodzą z pakietu wspólnego (repo `hacknation-2026-solutions/setup`, `prep/_wspolne`, commit `badfd67`). Regulamin zadania § 4 ust. 1: rozwiązania zewnętrzne wskazać w prezentacji (biblioteki: pdfplumber, pypdf, python-docx, pypdfium2, openpyxl, Tesseract; opcjonalnie Ollama i Bielik).
+Pakiet powstał 21.11.2026: research, skrypty `udip-*`, dane syntetyczne, archiwum UMB. Skille `hn-*` pochodzą z pakietu wspólnego (repo `hacknation-2026-solutions/setup`, `prep/_wspolne`, commit `badfd67`). Regulamin zadania § 4 ust. 1: rozwiązania zewnętrzne wskazać w prezentacji (biblioteki: pdfplumber, pypdf, python-docx, pypdfium2, openpyxl, Tesseract; opcjonalnie Ollama i Bielik).
 
 ## Znane ograniczenia (stan po przeglądzie 21.11)
 

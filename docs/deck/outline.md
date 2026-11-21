@@ -120,6 +120,5 @@ Obraz: `[[SCREEN:/anonimizacja]]` przed i po akceptacji. Źródła: `research/05
 - Model lokalny w urzędzie: **Bielik-11B-v3.1-Instruct** (Apache-2.0, kontekst 32K) przez Ollama albo vLLM na serwerze z GPU 16–24 GB. Laptop bez GPU: Bielik-4.5B-v3.0-Instruct (Q8_0, 5,1 GB). Zapas: PLLuM-12B-instruct-2512 (Apache-2.0). Pomiar Bielika: `[[EVAL]]` albo „nie zmierzono”.
 - Podczas hackathonu model zewnętrzny (Claude) działał tylko na danych testowych, zgodnie z pkt 1 zadania; adres modelu zmienia się jednym ustawieniem (`LLM_BASE_URL`).
 - Narzędzia i licencje: Python 3.11+, FastAPI (MIT), Uvicorn (BSD), Jinja2 (BSD), htmx (0BSD), SQLite, pdfplumber (MIT), pypdf (BSD), pypdfium2 (Apache-2.0/BSD), python-docx (MIT), openpyxl (MIT), Tesseract OCR (Apache-2.0); opcjonalnie Ollama i Bielik. Tylko licencje MIT, BSD, Apache, bo Miasto przejmuje prawa (Regulamin § 4); bez PyMuPDF (AGPL), docxtpl (LGPL), modeli spaCy pl (GPL).
-- Ujawnienie: pakiet badawczy i skrypty powstały 21.11.2026 w Claude Code; lista w README.
 
-Źródła: `research/04` (model lokalny), `LICENSES-THIRD-PARTY.md`, `requirements.txt`, `README.md` (materiały przygotowane przed wydarzeniem).
+Źródła: `research/04` (model lokalny), `LICENSES-THIRD-PARTY.md`, `requirements.txt`, `README.md`.

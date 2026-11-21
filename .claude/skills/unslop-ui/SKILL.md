@@ -22,7 +22,7 @@ Apply these to every sentence you keep or write. Cite them as "unslop 13", so th
 
 !`python3 ${CLAUDE_SKILL_DIR}/scripts/load_unslop.py`
 
-If the line above still shows a command instead of rules (agents other than Claude Code), run `python3 scripts/load_unslop.py` from this skill's folder and apply what it prints.
+If the line above still shows a command instead of rules, run `python3 scripts/load_unslop.py` from this skill's folder and apply what it prints.
 
 Where these and the UI rules disagree, the UI rules win:
 

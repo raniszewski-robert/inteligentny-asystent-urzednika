@@ -48,7 +48,7 @@ Wideo testowe wygenerowane przez ffmpeg (`testsrc`, `sine`).
 | 40 s, H.264, 1280×720, bez dźwięku | UWAGA: brak ścieżki dźwiękowej; kod 0 |
 | Brak pliku | Komunikat o użyciu, kod 2 |
 
-## Poprawki po przeglądzie świeżego subagenta (2026-11-17)
+## Poprawki po przeglądzie (2026-11-17)
 
 | Problem z przeglądu | Poprawka | Test |
 |---|---|---|

@@ -15,4 +15,4 @@
 | Ostatni push nie doszedł | `git status`, GitHub w przeglądarce | `git push`; jeśli konflikt, nie rób rebase pod presją: wypchnij gałąź i wskaż ją w README | 5 min |
 | Platforma zgłoszeń przeciążona przed 11:00 | strona się nie ładuje | Zgłoszenie było gotowe o 10:30 i zapisane. Jeśli nie było: zrzut ekranu z godziną, wiadomość na Discord `#zapytaj-organizatora`, Info Point | — |
 | Wybrano złe zadanie w HackTribe | kontrola o 19:30 | Przed 20:00: popraw. Po 20:00: nie da się; od razu napisz do organizatorów | — |
-| W zgłoszeniu brak ujawnienia materiałów sprzed wydarzenia i narzędzi AI | `preflight.py` (README) | Sekcja „Ujawnienie" z szablonu | 5 min |
+| W zgłoszeniu brak ujawnienia materiałów sprzed wydarzenia | `preflight.py` (README) | Sekcja „Ujawnienie" z szablonu | 5 min |

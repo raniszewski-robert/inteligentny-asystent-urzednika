@@ -1,4 +1,4 @@
-# Report format (end every dispatch with this, nothing else)
+# Report format (end every lane assignment with this, nothing else)
 
 ```
 LANE: <lane id>  PHASE: <phase id>

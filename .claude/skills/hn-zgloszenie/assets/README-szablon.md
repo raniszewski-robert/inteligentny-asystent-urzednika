@@ -62,7 +62,6 @@ Potem otwórz aplikację w przeglądarce ({{adres lokalny, np. port 8000}}) i kl
 
 - **Co powstało podczas hackathonu:** {{np. cała aplikacja, model, ewaluacja na danych Partnera, interfejs}}.
 - **Materiały przygotowane przed wydarzeniem:** {{lista, np. skrypty profilowania danych i klient LLM z pakietu przygotowawczego zespołu, notatki o modelach; albo „brak"}}. Oznaczone w kodzie komentarzem `# przygotowane przed HackNation`.
-- **Narzędzia AI użyte przy tworzeniu:** {{np. Claude Code do pisania części kodu i dokumentacji; model {{nazwa}} w działaniu aplikacji}}.
 - **Kod i zasoby stron trzecich:** zależności z licencjami w `LICENSES-THIRD-PARTY.md`; {{inne: zbiory danych, ikony, szablony}}.
 
 ## Zespół

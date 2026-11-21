@@ -1,7 +1,5 @@
 # Asystent UDIP: opis techniczny
 
-Szczegóły przeniesione z README. Plan i stan prac: [plan/PLAN.md](plan/PLAN.md), interfejsy: [plan/CONTRACTS.md](plan/CONTRACTS.md).
-
 ## Jak to działa
 
 - **Terminy:** 14 dni z art. 13 UDIP, przesunięcie z soboty i święta (art. 57 § 4 KPA), przedłużenie do 2 miesięcy, termin bezpieczny (ostatni dzień roboczy przed 14. dniem), Wigilia jako dzień wolny. 18 testów brzegowych.
@@ -20,7 +18,7 @@ Technologia: Python 3.11+, FastAPI, Jinja2, htmx (bez CDN), SQLite; jeden proces
 ## Praca lokalna, bez chmury
 
 - Bez internetu działa całość: kalendarz, wyszukiwanie, wydziały, pisma, anonimizacja (reguły i BM25). `UDIP_OFFLINE=1` blokuje każde połączenie poza komputer urzędu.
-- Zespół zdecydował, że rozwiązanie korzysta tylko z modeli uruchomionych lokalnie; dane wniosków nie opuszczają urzędu. Kod klienta API Anthropic zostaje w repozytorium jako wyłączona opcja i nie był używany w pomiarach.
+- Rozwiązanie korzysta tylko z modeli uruchomionych lokalnie; dane wniosków nie opuszczają urzędu. Klient zewnętrznego API jest w kodzie wyłączoną opcją i nie był używany w pomiarach.
 - Model lokalny w urzędzie: **Bielik-11B-v3.1-Instruct** (Apache-2.0) przez Ollama albo vLLM na serwerze z GPU 16–24 GB. Na laptopie bez GPU: Bielik-4.5B-v3.0-Instruct (Q8_0). Podłączenie: `UDIP_PROVIDER=openai_compat:<model>` i `LLM_BASE_URL` w `.env`.
 
 ## Wyniki
@@ -42,8 +40,8 @@ Reguły są szybsze i dokładniejsze; Bielik dodaje streszczenia do kalendarza i
 
 ## Ograniczenia
 
-- Odpowiedzi wydziałów w sprawie 543.2026 odtworzyliśmy z pisma BKS, bo UMB nie przekazał plików wydziałów.
+- Odpowiedzi wydziałów w przykładowej sprawie 543.2026 są odtworzone z pisma BKS (oryginalne pliki wydziałów nie są dołączone).
 - Przypisanie zdań odpowiedzi do pytań jest leksykalne; niepewne przypisania są na liście, a urzędnik przenosi zdanie jednym wyborem.
 - Arkusz UMB ma same zamknięte sprawy; kolory pilności pokazuje tryb demo z przesuniętymi datami.
-- Słownik nazwisk nie jest pełny: rzadkie nazwisko z rzadkim imieniem bez „Pan/Pani” może zostać pominięte. Listy z rejestru PESEL (dane.gov.pl) nie były osiągalne w czasie budowy.
+- Słownik nazwisk nie jest pełny: rzadkie nazwisko z rzadkim imieniem bez „Pan/Pani” może zostać pominięte. Listę imion z rejestru PESEL (dane.gov.pl) można dodać jako kolejne źródło słownika.
 - Brak logowania i ról (lista urzędników w nagłówku); brak integracji z SIDAS (zgodnie z pkt 11 treści zadania).

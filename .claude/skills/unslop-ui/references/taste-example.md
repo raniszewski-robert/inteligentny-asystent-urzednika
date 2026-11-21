@@ -4,7 +4,7 @@ What this team wants gone from its interface copy. Save it as `.unslop-ui/taste.
 
 ## Bans
 
-Each bullet is one more tell. The first three are also counted by `count_tells.py`, as T1, T2 and T3. The rest are read by the agent.
+Each bullet is one more tell. The first three are also counted by `count_tells.py`, as T1, T2 and T3. The rest are found by reading the copy.
 
 - Exclamation marks
 - Uppercase text, not only eyebrows

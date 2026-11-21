@@ -348,8 +348,8 @@ def report(res_dir: Path, md: Path, png: Path) -> None:
         ("Koszt na wniosek", lambda s: f"${s['cost_per_request_usd']:.4f}"),
         ("Koszt całej ewaluacji", lambda s: f"${s['cost_total_usd']:.2f}"),
     ]
-    lines = ["# Ewaluacja: reguły vs Sonnet 5.5 vs Haiku 5.5 (vs Bielik)", "",
-             f"Wygenerowano {date.today().isoformat()} skryptem `scripts/eval_llm.py` (tor C, T15). Dane: 10 spraw UMB "
+    lines = ["# Ewaluacja: " + " i ".join(res[p]["label"] for p in provs), "",
+             f"Wygenerowano {date.today().isoformat()} skryptem `scripts/eval_llm.py`. Dane: 10 spraw UMB "
              "(`data-partner/umb/`, ręczna złota miara w `docs/eval/umb_gold.json`) + sprawy syntetyczne na wzór UMB "
              "(`data-samples/syntetyczne_umb/`), anonimizacja dodatkowo na `data-samples/syntetyczne/pii/`. "
              "Szczegóły pozycji: `docs/eval/results/*.json`.", "",

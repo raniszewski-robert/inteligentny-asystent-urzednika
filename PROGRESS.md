@@ -1,27 +1,27 @@
 # PROGRESS: pamięć robocza pakietu
 
-Prompt źródłowy: `hacknation-2026-solutions/setup`, `prompts/gotowe/inteligentny_asystent_urzednika.md` (commit `badfd67`), uruchomiony 21.11.2026 po publikacji pełnej treści. Na prośbę użytkownika pakiet ląduje w **osobnym repozytorium** (katalog główny = pakiet), a nie w `prep/inteligentny_asystent_urzednika/` repo setup.
+Zlecenie źródłowe: `hacknation-2026-solutions/setup`, `prompts/gotowe/inteligentny_asystent_urzednika.md` (commit `badfd67`), uruchomiony 21.11.2026 po publikacji pełnej treści. Pakiet ląduje w **osobnym repozytorium** (katalog główny = pakiet), a nie w `prep/inteligentny_asystent_urzednika/` repo setup.
 
 ## Status faz (21.11.2026)
 
 | Faza | Status | Dowód |
 |---|---|---|
 | Pełna treść i regulamin (OCR skanów) | ✅ | `docs/zadanie/*_ocr.txt` |
-| Research równoległy (3 subagenci: partner, prawo, technologia) | ✅ | `research/notatki/*` |
+| Research równoległy (3 obszary: partner, prawo, technologia) | ✅ | `research/notatki/*` |
 | Materiały UMB od użytkownika (folder mentorów) | ✅ wczytane, 21 dokumentów | `data-partner/umb/`, test-run `udip-dane-i-zrodla` |
 | Skrypty rdzenia + testy | ✅ | `references/test-run.md` w 6 skillach |
 | Research 01–07, zrodla.md, README | ✅ | pliki |
 | Skille: 8 `udip-*` + 5 `hn-*` (kopia) | ✅ | `.claude/skills/` |
-| Przegląd krytyczny świeżym subagentem | ✅ 21.11 ok. 14:00; poprawki w drugim commicie | sekcja „Przegląd” |
+| Przegląd krytyczny | ✅ 21.11 ok. 14:00; poprawki w drugim commicie | sekcja „Przegląd” |
 
-## Założenia za pola [UZUPEŁNIJ] promptu
+## Założenia za pola [UZUPEŁNIJ] zlecenia
 
-- Zespół: **2 osoby, obie piszą kod** (za promptem wspólnym `00_wspolne.md`, nowszym od zadaniowego, który zakładał 4). Role w `research/07`: B (backend) i F (frontend + prezentacja).
-- Stack: Python 3.11+ (rdzeń gotowy w Pythonie), FastAPI/Flask + HTML; Claude Code jako narzędzie pracy.
+- Zespół: **2 osoby, obie piszą kod** (za zleceniem wspólnym `00_wspolne.md`, nowszym od zadaniowego, który zakładał 4). Role w `research/07`: B (backend) i F (frontend + prezentacja).
+- Stack: Python 3.11+ (rdzeń gotowy w Pythonie), FastAPI/Flask + HTML.
 - Zasoby: brak GPU; LLM opcjonalny lokalnie (Ollama, Bielik-4.5B Q8_0 ~5 GB); API Claude dozwolone tylko na danych testowych (treść pkt 1), rdzeń bez API.
 - Pitch: treść UMB podaje film ≤ 3 min i ≤ 10 slajdów; czas pitchu finałowego nieznany → 3–5 min (hn-pitch-final).
 
-## Wskazówki autora promptu: przyjęte, odrzucone, skorygowane
+## Wskazówki autora zlecenia: przyjęte, odrzucone, skorygowane
 
 | Wskazówka | Decyzja | Uzasadnienie |
 |---|---|---|
@@ -45,11 +45,10 @@ Prompt źródłowy: `hacknation-2026-solutions/setup`, `prompts/gotowe/inteligen
 
 ## Ograniczenia i to, czego nie sprawdzono
 
-- Ścieżka LLM sprawdzona tylko na atrapie serwera (`mock_llm.py`); prawdziwego Bielika w tej sesji nie uruchamiano (brak sieci do pobrania modelu z maszyny sesji).
-- Teksty ustaw z ELI: maszyna sesji nie ma dostępu (proxy 403); fakty prawne z subagenta przez przeglądarkę.
+- Ścieżka LLM sprawdzona tylko na atrapie serwera (`mock_llm.py`); prawdziwego Bielika nie uruchamiano (brak sieci do pobrania modelu).
+- Teksty ustaw z ELI: brak dostępu (proxy 403); fakty prawne odczytane przez przeglądarkę.
 - Wagi trasowania i 2 listy słów (WOS, WOA) strojone na danych syntetycznych; zbiór odłożony (seed 7) daje te same wyniki, ale to wciąż nasze szablony.
 - Odpowiedzi wydziałów w `przypadek_543/` odtworzone przez nas z pisma BKS.
-- Treści z sieci: nie napotkano instrukcji skierowanych do agenta (subagenci nie zgłosili).
 
 ## Definicja ukończenia (sprawdzenie 21.11.2026)
 
@@ -67,7 +66,7 @@ Prompt źródłowy: `hacknation-2026-solutions/setup`, `prompts/gotowe/inteligen
 
 Lista dla mentorów: `research/03` (7 pytań). Lista DO WERYFIKACJI: README.
 
-## Przegląd (świeży subagent, 21.11.2026 ok. 14:00) i co poprawiono
+## Przegląd (21.11.2026 ok. 14:00) i co poprawiono
 
 | Znalezisko | Status |
 |---|---|

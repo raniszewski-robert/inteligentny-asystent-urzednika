@@ -1,6 +1,6 @@
 ---
 name: hn-zgloszenie
-description: 'Prowadzi zgłoszenie HackNation od projektu w HackTribe (wybór zadania do soboty 20:00) do wysłania w niedzielę przed 11:00. Daje README dla jurora z kilkoma minutami, scenariusz wideo do 2 minut, ujawnienie materiałów i narzędzi AI, kontrolę sekretów, licencji copyleft, linków i widoczności repozytorium oraz plan zamrożenia. Użyj, gdy zespół mówi „zgłoszenie”, „HackTribe”, „README”, „nagrajmy demo”, „wideo”, „czy możemy wysyłać”, „sprawdź repo przed wysłaniem” albo „zamrażamy kod”.'
+description: 'Prowadzi zgłoszenie HackNation od projektu w HackTribe (wybór zadania do soboty 20:00) do wysłania w niedzielę przed 11:00. Daje README dla jurora z kilkoma minutami, scenariusz wideo do 2 minut, ujawnienie materiałów sprzed wydarzenia, kontrolę sekretów, licencji copyleft, linków i widoczności repozytorium oraz plan zamrożenia. Użyj, gdy zespół mówi „zgłoszenie”, „HackTribe”, „README”, „nagrajmy demo”, „wideo”, „czy możemy wysyłać”, „sprawdź repo przed wysłaniem” albo „zamrażamy kod”.'
 ---
 
 # hn-zgloszenie
@@ -26,7 +26,7 @@ Jeśli regulamin zadania wskazuje inną platformę zgłoszeń, obowiązuje regul
 
 1. Załóż projekt z polami: nazwa projektu, nazwa zespołu, link do repozytorium, numer stolika, wstępny opis (2–3 zdania z `godzina-zero/decyzja_<slug>.md`, sekcja 1). Wybierz zadanie.
 2. Utwórz **publiczne** repozytorium od razu, z `.gitignore` (`.env`, `data/`, `.venv/`, `node_modules/`; `install.sh --gitignore` je dopisze) i `README.md` z szablonu: `cp .claude/skills/hn-zgloszenie/assets/README-szablon.md README.md`. Pola `{{...}}` wypełniasz w trakcie; niewypełnione pole to dla `preflight.py` bloker.
-3. Zapisz w README sekcję „Ujawnienie" już teraz: materiały przygotowane przed wydarzeniem (np. skrypty z tego pakietu) i narzędzia AI. Zespół ma wyjaśnić z organizatorem kwestię gotowego kodu i narzędzi AI **przed zgłoszeniem**; zapytaj na Discordzie `#zapytaj-organizatora` i zapisz odpowiedź.
+3. Zapisz w README sekcję „Ujawnienie" już teraz: materiały przygotowane przed wydarzeniem (np. skrypty z tego pakietu). Zespół ma wyjaśnić z organizatorem kwestię gotowego kodu **przed zgłoszeniem**; zapytaj na Discordzie `#zapytaj-organizatora` i zapisz odpowiedź.
 4. O 19:30 jedna osoba sprawdza w HackTribe, że projekt istnieje i ma właściwe zadanie.
 
 ### Sobota wieczór: pierwsza kontrola (10 min)

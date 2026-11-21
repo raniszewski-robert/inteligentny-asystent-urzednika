@@ -60,4 +60,4 @@ Generacja 2512 (grudzień 2025) [✔ Z17]:
 | Identyfikatory modeli | `claude-haiku-5-5`, `claude-sonnet-5-5`, `claude-opus-5-5`, `claude-fable-5-2` (lista modeli obsługujących wyjście strukturalne i cytowania) | [✔] | Z23, Z24 |
 | Ceny za milion tokenów (wejście / wyjście) | Haiku 5.5: 0,10 / 0,50 USD dla promptów do 100 tys. tokenów, powyżej 0,50 / 2,50; Sonnet 5.5: 2 / 10; Opus 5.5: 4 / 20. Fable 5.2: 8 / 40 według README repozytorium. **Sprawdź cennik przed liczeniem budżetu** | [~] | Z26 |
 
-Przykłady kodu w `hn-llm-w-produkcie/references/claude-api.md` są przepisane z dokumentacji z tego dnia. Nie zostały uruchomione, bo sesja nie miała klucza API, dlatego są w `references/`, a nie w `scripts/`.
+Przykłady kodu w `hn-llm-w-produkcie/references/claude-api.md` są przepisane z dokumentacji z tego dnia. Nie zostały uruchomione, bo nie było klucza API, dlatego są w `references/`, a nie w `scripts/`.

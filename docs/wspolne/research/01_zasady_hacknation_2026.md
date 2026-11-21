@@ -1,6 +1,6 @@
 # Zasady HackNation 2026: stan na 2026-11-17
 
-Pytanie, na które odpowiada ten plik: **co dokładnie obowiązuje 21–22.11 i czym to się różni od kontekstu z promptu?**
+Pytanie, na które odpowiada ten plik: **co dokładnie obowiązuje 21–22.11 i czym to się różni od kontekstu ze zlecenia?**
 
 Oznaczenia pewności: [✔] źródło pierwotne odczytane 2026-11-17, [~] źródło wtórne lub niepełne, [?] hipoteza. Numery źródeł: `zrodla.md`.
 
@@ -50,7 +50,7 @@ Miejsce: Bydgoskie Centrum Targowo-Wystawiennicze, ul. Gdańska 187, Bydgoszcz [
 | Na miejscu: Wi-Fi, internet przewodowy RJ45, zasilanie, stół i krzesło, 5 posiłków, strefa odpoczynku, prysznice. GPU i klucze API nie są wymienione. Sprzęt i adaptery przywozi zespół | [✔] | Z2, Z4 §3.6 |
 | Główny kanał to Discord; pytania do organizatorów na `#zapytaj-organizatora`; na miejscu Info Point | [✔] | Z2 |
 | Mentorzy są w Strefie Mentorów i na Discordzie | [✔] | Z2 |
-| FAQ ma pytanie o pseudokody i projekty UI przygotowane przed hackathonem. Treści odpowiedzi nie udało się odczytać automatycznie (sekcje są zwinięte). Kontekst promptu podaje, że są dozwolone pod warunkiem ujawnienia lub zacytowania | [~] | Z3, kontekst promptu z 2026-11-15 |
+| FAQ ma pytanie o pseudokody i projekty UI przygotowane przed hackathonem. Treści odpowiedzi nie udało się odczytać automatycznie (sekcje są zwinięte). Kontekst zlecenia podaje, że są dozwolone pod warunkiem ujawnienia lub zacytowania | [~] | Z3, kontekst zlecenia z 2026-11-15 |
 
 ## 3. Zadania na stronie (12, stan 2026-11-17) [✔ Z1, Z5]
 
@@ -66,12 +66,12 @@ Miejsce: Bydgoskie Centrum Targowo-Wystawiennicze, ul. Gdańska 187, Bydgoszcz [
 | OSINTOWY ŁAPACZ CYFROWYCH ŚLADÓW | Ministerstwo Finansów, KAS | brak | planowany |
 | PRAWDOWID | MSZ | brak | planowany |
 | ZATRZYMAJ WODĘ, CHROŃ PLONY | KOWR | brak | planowany |
-| **CYFROWY ASYSTENT OCEN OKRESOWYCH** | KPRM, Służba Cywilna | brak | **nie ma promptu ani pliku w `tasks/`** |
-| **#INVESTWATCH – NA STRAŻY INWESTORÓW!** | Urząd KNF | brak | **nie ma promptu ani pliku w `tasks/`** |
+| **CYFROWY ASYSTENT OCEN OKRESOWYCH** | KPRM, Służba Cywilna | brak | **nie ma zlecenia ani pliku w `tasks/`** |
+| **#INVESTWATCH – NA STRAŻY INWESTORÓW!** | Urząd KNF | brak | **nie ma zlecenia ani pliku w `tasks/`** |
 
 Strona główna zapowiada „15 wyzwań od 15 partnerów" i łączną pulę 350 000 zł [✔ Z1]. Serwisy partnerskie z października pisały o 17 wyzwaniach od 15 partnerów [~ Z6, Z7, Z8]. Regulamin pozwala zaktualizować listę Konkursów najpóźniej w dniu startu [✔ Z4 §4.2]. Wniosek: 21.11 mogą pojawić się kolejne zadania, dla których nie będzie pakietu.
 
-## 4. Różnice względem kontekstu z promptu (odczyt 2026-11-15)
+## 4. Różnice względem kontekstu ze zlecenia (odczyt 2026-11-15)
 
 1. **Zadań jest 12, nie 10.** Doszły CYFROWY ASYSTENT OCEN OKRESOWYCH (KPRM, Służba Cywilna) i #INVESTWATCH (UKNF). Zapowiadanych jest 15. Dla nowych zadań nie ma pakietów, więc w sobotę zadziała tylko tryb „bez pakietu" skilla `hn-godzina-zero`.
 2. **Łączna pula nagród to 350 000 zł** (kontekst znał tylko trzy pule cząstkowe).
@@ -81,7 +81,7 @@ Strona główna zapowiada „15 wyzwań od 15 partnerów" i łączną pulę 350 
 6. **Rozbieżność co do liczby zadań na zespół.** Przewodnik: najwyżej dwa. Ogłoszenia w serwisach zewnętrznych (testerzy.pl, sjsi.org): „dowolna liczba zadań, do każdego jeden projekt" [~ Z7, Z8]. Przyjmujemy przewodnik jako źródło pierwotne. Jeśli zespół planuje dwa zadania, niech potwierdzi limit na Discordzie.
 7. **W 2025 r. do finału wchodziły trzy zespoły z zadania, w 2026 r. pięć** [~ Z10, Z11; ✔ Z2].
 8. **Regulamin: nagrody są opodatkowane, a wysłanie rozwiązania oznacza akceptację regulaminu zadania.** Regulamin zadania trzeba więc przeczytać przed 20:00, a nie w niedzielę rano.
-9. **Odpowiedzi FAQ nie dało się dziś zweryfikować** (zwinięte sekcje). Zasada o materiałach przygotowanych wcześniej pochodzi z kontekstu promptu i wymaga potwierdzenia na `#zapytaj-organizatora`.
+9. **Odpowiedzi FAQ nie dało się dziś zweryfikować** (zwinięte sekcje). Zasada o materiałach przygotowanych wcześniej pochodzi z kontekstu zlecenia i wymaga potwierdzenia na `#zapytaj-organizatora`.
 
 Bez zmian względem kontekstu: publikacja o 11:00, wybór do 20:00, zgłoszenie do niedzieli 11:00, demo do 2 minut, dwa etapy oceny, pięciu finalistów, wyniki etapu 1 nie przechodzą do finału, brak podanego czasu pitchu, Wi-Fi i RJ45, brak wzmianki o GPU i kluczach API.
 
@@ -90,5 +90,4 @@ Bez zmian względem kontekstu: publikacja o 11:00, wybór do 20:00, zgłoszenie 
 - Adres instancji HackTribe dla HackNation i dokładny formularz zgłoszenia finalnego (pola, limity plików, czy wideo to link, czy plik).
 - Czas i format pitchu w finale.
 - Czy gotowy kod i skrypty przygotowane przed wydarzeniem (w tym skille z tego pakietu) można wykorzystać w rozwiązaniu, i jak je ujawnić.
-- Czy narzędzia AI (Claude Code) trzeba zgłosić i w jakiej formie.
 - Regulaminy poszczególnych zadań: przeniesienie praw, własna platforma zgłoszeń, format danych wynikowych.

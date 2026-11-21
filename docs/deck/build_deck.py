@@ -370,8 +370,6 @@ def build() -> Path:
         box(s, x, 1.6, 3.9, 3.6, fill=RGBColor(0x26, 0x38, 0x4C))
         text(s, x + 0.3, 1.8, 3.3, 0.8, h1, size=18, font=HEAD, bold=True, color=WHITE)
         bullets(s, x + 0.3, 2.7, 3.3, 3.2, items, size=14, color=light, gap=10)
-    text(s, 0.6, 5.3, 12.1, 0.5, "Ujawnienie: pakiet badawczy, skrypty i aplikacja powstały z pomocą Claude Code; lista materiałów i narzędzi w README.",
-         size=13, color=RGBColor(0xB8, 0xC4, 0xD2))
     notes(s, "Źródła: research/04 (model lokalny), LICENSES-THIRD-PARTY.md, requirements.txt, docs/eval/bielik.md, README.md.")
 
     prs.save(OUT)

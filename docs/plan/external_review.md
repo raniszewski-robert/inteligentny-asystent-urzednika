@@ -1,6 +1,6 @@
 # Implementation Handoff — Intelligent Clerk Assistant (HackNation 2026, UMB / BKS)
 
-This document is an actionable execution spec for the implementing agent. Execute tasks strictly in priority order (`P1` → `P8`; `P9` only if ahead of schedule). Do **not** rebuild already-tested deterministic modules unless explicitly specified below.
+This document is an actionable execution spec for the implementation team. Execute tasks strictly in priority order (`P1` → `P8`; `P9` only if ahead of schedule). Do **not** rebuild already-tested deterministic modules unless explicitly specified below.
 
 ---
 

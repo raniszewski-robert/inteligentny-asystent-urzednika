@@ -1,4 +1,4 @@
-# Pliki do pokazu (demo i film)
+# Pliki przykładowe
 
 Wszystkie dane osobowe w tych plikach są fikcyjne. Rafał Bruski (Prezydent Miasta Bydgoszczy) występuje wyłącznie w roli funkcjonariusza publicznego, żeby pokazać, że takich osób narzędzie nie anonimizuje automatycznie (art. 5 ust. 2 UDIP). Pliki odtwarza `python scripts/make_demo_assets.py`.
 

@@ -1,6 +1,6 @@
-# Ewaluacja: reguły vs Sonnet 5.5 vs Haiku 5.5 (vs Bielik)
+# Ewaluacja: reguły i Bielik 4.5B
 
-Wygenerowano 2026-11-21 skryptem `scripts/eval_llm.py` (tor C, T15). Dane: 10 spraw UMB (`data-partner/umb/`, ręczna złota miara w `docs/eval/umb_gold.json`) + sprawy syntetyczne na wzór UMB (`data-samples/syntetyczne_umb/`), anonimizacja dodatkowo na `data-samples/syntetyczne/pii/`. Szczegóły pozycji: `docs/eval/results/*.json`.
+Wygenerowano 2026-11-21 skryptem `scripts/eval_llm.py`. Dane: 10 spraw UMB (`data-partner/umb/`, ręczna złota miara w `docs/eval/umb_gold.json`) + sprawy syntetyczne na wzór UMB (`data-samples/syntetyczne_umb/`), anonimizacja dodatkowo na `data-samples/syntetyczne/pii/`. Szczegóły pozycji: `docs/eval/results/*.json`.
 
 | Miara | Reguły | Bielik 4.5B |
 |---|---|---|
@@ -26,8 +26,6 @@ Wygenerowano 2026-11-21 skryptem `scripts/eval_llm.py` (tor C, T15). Dane: 10 sp
 | Koszt na wniosek | $0.0000 | $0.0000 |
 | Koszt całej ewaluacji | $0.00 | $0.00 |
 
-**Brak wyników:** Sonnet 5.5, Haiku 5.5. Uruchom: `python scripts/eval_llm.py --provider anthropic:sonnet`; `python scripts/eval_llm.py --provider anthropic:haiku`, potem `--report`.
-
 Modele: Reguły = `reguły`, Bielik 4.5B = `SpeakLeash/bielik-4.5b-v3.0-instruct:Q8_0`.
 
 Jak liczone:
@@ -35,6 +33,6 @@ Jak liczone:
 - routing: wydział z pisma BKS na 1. miejscu (top-1) albo w pierwszej trójce (top-3); 15.2026 (podmiot spoza Urzędu) pominięty. Reguły: słowa kluczowe + podobne sprawy z archiwum; LLM: wybór z listy 46 komórek, ranking z pytań;
 - „Ad n”: fakt ze złotej miary (liczba, numer umowy, fraza) obecny w akapicie o właściwym numerze; projekt LLM odrzucony przez kontrolę liczb wraca do szablonu i tak jest liczony;
 - anonimizacja: złoty span pokryty przez dowolną propozycję (recall), propozycja pokrywająca złoty span (precyzja), wyciek = tekst złotego spanu widoczny po przyjęciu wszystkich propozycji. Spany modelu mają zawsze status „do decyzji”;
-- koszt: według cennika z `udip/llm.py` (Sonnet 5.5 $2/$10, Haiku 5.5 $0,10/$0,50 za 1 mln tokenów); powtórne uruchomienie korzysta z pamięci podręcznej i nie kosztuje, ale raport podaje koszt pierwszego wywołania.
+- koszt: według cennika z `udip/llm.py` (modele lokalne: $0); powtórne uruchomienie korzysta z pamięci podręcznej i nie kosztuje, ale raport podaje koszt pierwszego wywołania.
 
 ![Porównanie](chart.png)

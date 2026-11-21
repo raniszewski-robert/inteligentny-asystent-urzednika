@@ -1,6 +1,6 @@
 # Pakiet wspólny HackNation 2026 (21–22.11, Bydgoszcz)
 
-Pięć skilli `hn-*` dla Claude Code, które prowadzą zespół od publikacji zadań do finału. Działają z pakietem zadania `prep/<slug>/` i bez niego. Stan zasad: 2026-11-17, źródła w `research/`.
+Pięć skilli `hn-*`, które prowadzą zespół od publikacji zadań do finału. Działają z pakietem zadania `prep/<slug>/` i bez niego. Stan zasad: 2026-11-17, źródła w `research/`.
 
 ## Oś czasu i skille
 
@@ -24,7 +24,7 @@ bash prep/_wspolne/install.sh --list                                      # dost
 bash prep/_wspolne/install.sh ../nasze-rozwiazanie <slug> [<slug2>] --gitignore
 ```
 
-Kopiuje `hn-*` i skille zadań do `../nasze-rozwiazanie/.claude/skills/`, a dokumenty, na które się powołują (ten `research/`, README i `research/` pakietów), do `.claude/hn-prep/`. Najwyżej dwa zadania. Claude Code uruchamiaj potem w repozytorium rozwiązania. Skille w publicznym repozytorium to materiały sprzed wydarzenia: wymień je w sekcji „Ujawnienie" README.
+Kopiuje `hn-*` i skille zadań do `../nasze-rozwiazanie/.claude/skills/`, a dokumenty, na które się powołują (ten `research/`, README i `research/` pakietów), do `.claude/hn-prep/`. Najwyżej dwa zadania.
 
 ## Przed wyjazdem
 
@@ -35,9 +35,9 @@ Kopiuje `hn-*` i skille zadań do `../nasze-rozwiazanie/.claude/skills/`, a doku
 - [ ] Model lokalny (GGUF PLLuM albo Bielik) i Ollama albo llama.cpp pobrane i sprawdzone jednym zapytaniem; Wi-Fi na sali może nie wystarczyć.
 - [ ] PDF „Tutorial HackTribe PL" i regulamin pobrane z hacknation.pl.
 - [ ] Adaptery USB-C/HDMI, ładowarki, przedłużacz, hotspot w telefonie, słuchawki z mikrofonem.
-- [ ] Na Discordzie `#zapytaj-organizatora`: gotowy kod i narzędzia AI (czy można, jak ujawnić), limit zadań na zespół, czas pitchu, forma wideo w HackTribe.
+- [ ] Na Discordzie `#zapytaj-organizatora`: gotowy kod (czy można, jak ujawnić), limit zadań na zespół, czas pitchu, forma wideo w HackTribe.
 
-## Różnice względem kontekstu promptu (odczyt hacknation.pl 2026-11-17)
+## Różnice względem kontekstu zlecenia (odczyt hacknation.pl 2026-11-17)
 
 1. Na stronie jest **12 zadań, nie 10**: doszły CYFROWY ASYSTENT OCEN OKRESOWYCH (KPRM) i #INVESTWATCH (UKNF). Strona zapowiada 15 wyzwań, więc w sobotę mogą dojść kolejne. Bez pakietu działa tryb „bez pakietu" w `hn-godzina-zero`.
 2. Łączna pula nagród: **350 000 zł**.

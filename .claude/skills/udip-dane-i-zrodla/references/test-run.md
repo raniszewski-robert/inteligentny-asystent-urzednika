@@ -15,10 +15,10 @@ Wynik: OK
 The following objects are still open and will now be closed: [<PdfDocument 0x7f010ee4e5d0 from '/tmp/tmpv0at4pw0/skan.pdf'>, <PdfDocument 0x7f010eece270 from '/tmp/tmpv0at4pw0/a_odpowiedz.pdf'>]
 ```
 
-Próbki UMB (oryginały poza repozytorium, katalog /home/claude/umb_raw podczas sesji):
+Próbki UMB (oryginały poza repozytorium, katalog ~/umb_raw):
 
 ```
-$ for f in /home/claude/umb_raw/txt/*.json; do python3 -c "import json,sys;d=json.load(open(sys.argv[1]));print(f\"{d['file'][:55]:<57} chars={d['chars']:>5} ocr={d.get('ocr')} quality={d['quality']} warning={bool(d['warning'])}\")" "$f"; done
+$ for f in ~/umb_raw/txt/*.json; do python3 -c "import json,sys;d=json.load(open(sys.argv[1]));print(f\"{d['file'][:55]:<57} chars={d['chars']:>5} ocr={d.get('ocr')} quality={d['quality']} warning={bool(d['warning'])}\")" "$f"; done
 Doprecyzowanie - BKS.IV.1431.509.2026.anonymised.pdf      chars= 2278 ocr=False quality=0.88 warning=False
 Kwerenda - BKS.IV.1431.543.2026.anonymised.pdf            chars=  907 ocr=False quality=0.83 warning=False
 Odpowiedź - BKS.IV.1431.15.2026.anonymised.pdf            chars= 1409 ocr=False quality=0.85 warning=False
@@ -59,7 +59,7 @@ Budowlanka S.A.
 ```
 
 ```
-$ cd data-partner/umb && python3 build_archive.py /home/claude/umb_raw/txt kalendarium_umb.xlsx
+$ cd data-partner/umb && python3 build_archive.py ~/umb_raw/txt kalendarium_umb.xlsx
 BKS.IV.1431.293.2025 2025-06-12 udostepnienie ['WGK', 'SCHRONISKO'] Opieka i odławianie bezdomnych zwierzat.
 BKS.IV.1431.307.2025 2025-06-25 udostepnienie ['WE'] Aktualne zestawienie liczby uczniów w szkołach pod
 BKS.IV.1431.15.2026 2026-09-12 odeslanie_art_4_ust_3 ['ZEWN-WKZ'] Zapytanie o rzeźbę Ludmiły Stehnovej która została

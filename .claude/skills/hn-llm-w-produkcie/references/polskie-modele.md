@@ -15,7 +15,7 @@ Bielik 11B v3.1 (10.11.2026) zapowiada lepsze wywoływanie narzędzi i odpowiedz
 
 ## Uruchomienie bez GPU [?]
 
-Poniższe polecenia nie zostały uruchomione w sesji przygotowawczej (brak modelu i limit czasu). Sprawdź je na laptopie przed wyjazdem i zapisz wynik w `references/test-run.md` repozytorium rozwiązania.
+Poniższe polecenia nie zostały uruchomione (brak modelu i limit czasu). Sprawdź je na laptopie przed wyjazdem i zapisz wynik w `references/test-run.md` repozytorium rozwiązania.
 
 **Ollama** (najprostsze; serwer na porcie 11434, endpoint zgodny z API czatu pod `/v1`):
 

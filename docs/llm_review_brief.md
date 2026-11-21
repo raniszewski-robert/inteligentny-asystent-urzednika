@@ -1,6 +1,6 @@
 # Review brief: "Intelligent Clerk Assistant" for public-information requests (HackNation 2026, Bydgoszcz)
 
-You are reviewing a hackathon project mid-build. Please read everything, then give (1) the weakest points of the approach, (2) novel ideas we have not considered, (3) concrete changes ranked by impact on the jury score per hour of work. We have roughly 20 hours left, one builder (an AI coding agent) and one human who runs the demo. Be specific: name the feature, the change and how to verify it. Do not repeat what we already do unless you think it is wrong.
+You are reviewing a hackathon project mid-build. Please read everything, then give (1) the weakest points of the approach, (2) novel ideas we have not considered, (3) concrete changes ranked by impact on the jury score per hour of work. We have roughly 20 hours left, two people, one building and one running the demo. Be specific: name the feature, the change and how to verify it. Do not repeat what we already do unless you think it is wrong.
 
 ## 1. The challenge
 
