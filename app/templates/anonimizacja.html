@@ -37,6 +37,13 @@
 {% if message %}<p class="note note-ok">{{ message }}</p>{% endif %}
 {% if error %}<p class="note note-err">{{ error }}</p>{% endif %}
 {% for w in warnings %}<p class="note note-warn">{{ w }}</p>{% endfor %}
+{% if security_lines %}
+<div class="note note-warn" id="kontrola-bezpieczenstwa">
+  <p><b>Kontrola bezpieczeństwa pliku</b></p>
+  <ul>{% for line in security_lines %}<li>{{ line }}</li>{% endfor %}</ul>
+  <p class="small">Sprawdź wskazane fragmenty i obrazy przed przekazaniem pliku dalej.</p>
+</div>
+{% endif %}
 
 <form method="post" action="{{ action_url }}" id="anon-form">
 <input type="hidden" name="powrot" value="{{ action_url }}">

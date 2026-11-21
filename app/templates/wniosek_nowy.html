@@ -44,7 +44,6 @@
     {% for q in analysis.questions %}
       <li>
         <p>{{ q.text }}</p>
-        {% if q.routing %}
         <fieldset class="routing">
           <legend class="small muted">Wydział</legend>
           {% for r in q.routing %}
@@ -54,10 +53,14 @@
             <span class="small muted">{{ (r.share * 100)|round|int }}%{% if r.reasons %}: {{ r.reasons|join("; ") }}{% endif %}</span>
           </div>
           {% endfor %}
+          <div class="field-inline small">
+            <label for="dep-extra-{{ q.no }}">Inny wydział</label>
+            <select id="dep-extra-{{ q.no }}" name="dep_extra_{{ q.no }}">
+              <option value="">brak</option>
+              {% for dep in departments %}<option value="{{ dep.id }}"{% if dep.id in chosen.get(q.no, []) and dep.id not in (q.routing|map(attribute='department')|list) %} selected{% endif %}>{{ dep.id }} {{ dep.name }}</option>{% endfor %}
+            </select>
+          </div>
         </fieldset>
-        {% else %}
-        <p class="small muted">Brak propozycji wydziału. Wskaż wydział w sprawie.</p>
-        {% endif %}
       </li>
     {% endfor %}
     </ol>

@@ -46,29 +46,7 @@ def _security(doc: dict, text: str) -> dict:
         return security.empty()
 
 
-def _pages(nums) -> str:
-    nums = sorted({n for n in nums if n})
-    return ", ".join(str(n) for n in nums)
-
-
-def security_lines(sec: dict | None) -> list[str]:
-    """Plain-Polish lines for the 'Kontrola bezpieczeństwa pliku' note; [] = nothing to show."""
-    if not sec:
-        return []
-    out = []
-    for h in sec.get("hidden_text") or []:
-        out.append(f"Tekst niewidoczny po otwarciu pliku ({h.get('where')}; {h.get('reason')}): „{h.get('text')}”.")
-    imgs = sec.get("images") or []
-    if imgs:
-        pages = _pages(im.get("page") for im in imgs)
-        hints = sorted({im["hint"] for im in imgs if im.get("hint")})
-        line = f"Obrazy w pliku: {len(imgs)}" + (f" (strony {pages})" if pages else "") + (f", w tym: {', '.join(hints)}" if hints else "")
-        out.append(line + ". Sprawdź, czy zawierają podpis, pieczęć lub dane osobowe.")
-    for i in sec.get("injection") or []:
-        out.append(f"Fragment wygląda na polecenie dla programu: „{i.get('text')}”. Nie jest przekazywany do modelu językowego.")
-    for n in sec.get("notes") or []:
-        out.append(n)
-    return out
+security_lines = services.security_lines
 
 
 def _page(request: Request, **ctx):
@@ -78,7 +56,8 @@ def _page(request: Request, **ctx):
             ctx.setdefault("legal", learning.legal_hits(ctx["text"]))
         except Exception:
             ctx.setdefault("legal", [])
-    return render(request, "wniosek_nowy.html", title="Nowy wniosek", names=services.department_names(), **ctx)
+    return render(request, "wniosek_nowy.html", title="Nowy wniosek", names=services.department_names(),
+                  departments=services.departments(), **ctx)
 
 
 @router.get("/wniosek/nowy")
@@ -121,7 +100,14 @@ def _save(request: Request, f, text: str, doc: dict):
     number = str(f.get("number") or "").strip()
     received = str(f.get("received") or "").strip()
     an = services.run_analysis(text)
-    chosen = {q["no"]: [str(v) for v in f.getlist(f"dep_{q['no']}")] for q in an["questions"]}
+    known = {d["id"] for d in services.departments()}
+    chosen = {}
+    for q in an["questions"]:
+        picked = [str(v) for v in f.getlist(f"dep_{q['no']}") if str(v) in known]
+        extra = str(f.get(f"dep_extra_{q['no']}") or "").strip()
+        if extra in known and extra not in picked:
+            picked.append(extra)
+        chosen[q["no"]] = picked
     form = {k: str(f.get(k) or "").strip() for k in ("number", "received", "initials", "summary", "applicant_label", "status")}
     errors = []
     if not number:

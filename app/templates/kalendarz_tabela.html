@@ -26,7 +26,7 @@
     <td class="subject">{{ r.summary }}</td>
     <td class="nowrap">{{ r.received|dmy }}</td>
     <td><span class="nowrap">{{ r.due|dmy }}</span>{% if r.due_safe != r.due %}<div class="nowrap">bezpieczny: {{ r.due_safe|dmy }}</div>{% endif %}{% for w in r.warnings %}<div>{{ w }}</div>{% endfor %}</td>
-    <td>{% if r.working_days_left != "" %}{{ r.working_days_left }}{% endif %}<div>{{ r.urgency_label }}</div></td>
+    <td>{% if r.working_days_left != "" and not (r.urgency == "overdue" and r.working_days_left == 0) %}{{ r.working_days_left }}{% endif %}<div>{{ r.urgency_label }}</div></td>
     <td class="nowrap">{{ r.answered|dmy }}</td>
     <td>{{ r.initials }}</td>
     <td>

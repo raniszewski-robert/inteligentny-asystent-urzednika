@@ -6,7 +6,7 @@ from fastapi.responses import PlainTextResponse, RedirectResponse, Response
 
 from app import services, store
 from app.common import clerk, render, today
-from udip import db, dispatch
+from udip import db, dispatch, learning, security
 from udip.ingest import IngestError
 from udip.register import STATUSES, URGENCY_LABEL, rows as register_rows
 
@@ -61,12 +61,18 @@ def _page(request: Request, c: dict, **extra):
     row = register_rows([store.to_request(c)], today())[0]
     docs = store.documents(c["id"])
     text, source = _request_text(c)
+    legal = []
+    if text:
+        try:
+            legal = learning.legal_hits(text)
+        except Exception:
+            legal = []
     return render(request, "sprawa.html", title=c["number"], case=c, row=row, statuses=STATUSES, urgency_label=URGENCY_LABEL,
                   questions=_questions(c), analysis=c.get("analysis") or {}, request_docs=[d for d in docs if d["kind"] == "request"],
                   answers=[d for d in docs if d["kind"] == "dept_answer"], other_docs=[d for d in docs if d["kind"] not in ("request", "dept_answer")],
                   history=store.history(c["id"]), drafts=store.drafts(c["id"]), letter_types=services.letter_types(),
                   departments=services.departments(), names=services.department_names(), can_analyze=bool(text),
-                  request_source=source, dispatches=_dispatch_blocks(c), **extra)
+                  request_source=source, dispatches=_dispatch_blocks(c), legal=legal, **extra)
 
 
 @router.get("/sprawy/{case_id}")
@@ -115,7 +121,13 @@ async def upload_answers(request: Request, case_id: int):
         path = services.upload_path(doc["stored"])
         store.add_document(case_id, "dept_answer", doc["file"], doc["text"], department=dep or None,
                            quality=doc.get("quality"), path=str(path) if path else None)
-        report.append({"file": doc["file"], "department": dep, "auto": not chosen, "warning": doc.get("warning")})
+        if dep:
+            db.set_dispatch_answered(case_id, dep)
+        sec = doc.get("security") or {}
+        if security.count(sec):
+            security.log_scan(sec, case_id)
+        report.append({"file": doc["file"], "department": dep, "auto": not chosen, "warning": doc.get("warning"),
+                       "security": services.security_lines(sec)})
     return _page(request, store.get_case(case_id), upload_report=report)
 
 
@@ -124,8 +136,45 @@ def set_document_department(case_id: int, doc_id: int, department: str = Form(""
     """Correct the department of an uploaded answer."""
     _case_or_404(case_id)
     known = {d["id"] for d in services.departments()}
-    store.set_document_department(case_id, doc_id, department if department in known else None)
+    dep = department if department in known else None
+    store.set_document_department(case_id, doc_id, dep)
+    if dep:
+        db.set_dispatch_answered(case_id, dep)
     return RedirectResponse(f"/sprawy/{case_id}#odpowiedzi", status_code=303)
+
+
+@router.post("/sprawy/{case_id}/trasowanie")
+def set_question_department(case_id: int, question_no: int = Form(...), department: str = Form("")):
+    """Change the routed department of one question and log the correction in udip.learning (CONTRACTS §5)."""
+    c = _case_or_404(case_id)
+    an = dict(c.get("analysis") or {})
+    qs = an.get("questions") or []
+    q = next((x for x in qs if int(x["no"]) == question_no), None)
+    if q is None:
+        raise HTTPException(404, "Nie ma takiego pytania w analizie sprawy.")
+    known = {d["id"] for d in services.departments()}
+    dep = department.strip()
+    if dep and dep not in known:
+        raise HTTPException(400, "Nieznany wydział.")
+    chosen = dict(an.get("chosen_departments") or {})
+    chosen[str(question_no)] = [dep] if dep else []
+    an["chosen_departments"] = chosen
+    deps: list[str] = []
+    for item in qs:
+        ids = chosen.get(str(item["no"]))
+        if ids is None:
+            ids = [item["routing"][0]["department"]] if item.get("routing") else []
+        for d in ids:
+            if d not in deps:
+                deps.append(d)
+    store.update_case(case_id, analysis=an, departments=deps)
+    if dep:
+        try:
+            predicted = q["routing"][0]["department"] if q.get("routing") else ""
+            learning.log_routing(q["text"], predicted, dep, case_id)
+        except Exception:
+            pass
+    return RedirectResponse(f"/sprawy/{case_id}", status_code=303)
 
 
 def _dispatch_or_404(case_id: int, dept: str) -> tuple[dict, list[dict]]:

@@ -31,9 +31,14 @@ def add_document(case_id: int, kind: str, filename: str, text: str, department: 
 
 def case_inputs(case: dict) -> dict:
     """What make_draft needs: request text, department answers [(file, text)], number, received."""
-    reqs = documents(case["id"], "request")
+    reqs = [d for d in documents(case["id"], "request") if (d.get("text") or "").strip()]
+    if reqs:
+        req_text = reqs[-1]["text"]
+    else:
+        arch = next((r for r in archive_records() if r["id"] == case.get("number") and (r.get("request_text") or "").strip()), None)
+        req_text = arch["request_text"] if arch else (case.get("summary") or "")
     answers = [(d["filename"] or f"odpowiedz_{d['id']}.txt", d["text"] or "") for d in documents(case["id"], "dept_answer")]
-    return {"request": reqs[0]["text"] if reqs else (case.get("summary") or ""), "answers": answers,
+    return {"request": req_text, "answers": answers,
             "number": case.get("number") or "BKS.IV.1431.___.2026", "received": case.get("received")}
 
 

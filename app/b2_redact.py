@@ -178,11 +178,16 @@ def export_docx(text: str, spans: list[dict], version: str, initials: str = "") 
         Path(name).unlink(missing_ok=True)
 
 
-def audit(text: str, spans: list[dict], version: str) -> dict:
-    """XML-level leak audit of the final DOCX (every part, normalised): {ok, hits, parts, xml_preview}."""
+def audit_bytes(data: bytes, text: str, spans: list[dict], version: str) -> dict:
+    """XML-level leak audit of already-built DOCX bytes: {ok, hits, parts, xml_preview}."""
     from udip import export as ex
     secrets = [text[s["start"]:s["end"]] for s in export_spans(text, spans, version) if s["status"] == "accepted"]
-    return ex.audit_docx(export_docx(text, spans, version), secrets)
+    return ex.audit_docx(data, secrets)
+
+
+def audit(text: str, spans: list[dict], version: str) -> dict:
+    """XML-level leak audit of the final DOCX (every part, normalised): {ok, hits, parts, xml_preview}."""
+    return audit_bytes(export_docx(text, spans, version), text, spans, version)
 
 
 def docx_text(data: bytes) -> str:

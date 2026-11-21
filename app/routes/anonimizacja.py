@@ -16,8 +16,9 @@ from fastapi.responses import RedirectResponse, Response
 
 from app import b2_redact as rd
 from app import b2_store as store
+from app import services
 from app.common import clerk, render
-from udip import config
+from udip import config, security
 from udip.ingest import IngestError, read_any
 
 router = APIRouter()
@@ -107,7 +108,7 @@ def _file(text: str, spans: list[dict], version: str, ext: str, stem: str, initi
     if ext == "docx":
         data = rd.export_docx(text, spans, version, initials)
         check = rd.docx_text(data)
-        if not rd.audit(text, spans, version)["ok"]:
+        if not rd.audit_bytes(data, text, spans, version)["ok"]:
             raise HTTPException(500, "Kontrola XML zatrzymała eksport. Zgłoś to administratorowi.")
     else:
         check = rd.export_text(text, spans, version)
@@ -230,7 +231,8 @@ def _doc_page(request: Request, token: str, doc: dict, **kw):
     spans = _prepare(doc["spans"])
     return _page(request, mode="plik", heading=f"Anonimizacja: {doc['filename']}", base=f"/anonimizacja/{token}", action_url=f"/anonimizacja/{token}",
                  text=doc["text"], spans=spans, finalized=bool(doc.get("finalized")) and not rd.undecided(spans),
-                 versions=["zanonimizowana"], warnings=[doc["warning"]] if doc.get("warning") else [], doc=doc, **kw)
+                 versions=["zanonimizowana"], warnings=[doc["warning"]] if doc.get("warning") else [],
+                 security_lines=doc.get("security_lines") or [], doc=doc, **kw)
 
 
 @router.get("/anonimizacja")
@@ -250,6 +252,7 @@ async def upload(request: Request):
                       status_code=400)
 
     warning = None
+    sec = None
     if isinstance(up, UploadFile) or (hasattr(up, "filename") and hasattr(up, "read")):
         if up.filename:
             ext = Path(up.filename).suffix.lower()
@@ -268,7 +271,7 @@ async def upload(request: Request):
                 return fail(f"Nie udało się odczytać pliku: {e}")
             finally:
                 Path(f.name).unlink(missing_ok=True)  # the upload is not kept, only its text
-            text, name, warning = res["text"], Path(up.filename).name, res.get("warning")
+            text, name, warning, sec = res["text"], Path(up.filename).name, res.get("warning"), res.get("security")
         else:
             text, name = "", ""
     else:
@@ -277,10 +280,17 @@ async def upload(request: Request):
         if not pasted:
             return fail("Wybierz plik albo wklej tekst.")
         text, name = pasted, "tekst wklejony"
+        sec = {**security.empty(), "injection": security.find_injection(text)}
+    if security.count(sec):
+        security.log_scan(sec, None)
+    sec_lines = services.security_lines(sec)
     doc_id = store.new_doc(name, text, _prepare(rd.detect_spans(text, keep)), keep)
-    if warning:
+    if warning or sec_lines:
         doc = store.get_doc(doc_id)
-        doc["warning"] = warning
+        if warning:
+            doc["warning"] = warning
+        if sec_lines:
+            doc["security_lines"] = sec_lines
         store.save_doc(doc_id, doc)
     return RedirectResponse(f"/anonimizacja/{doc_id}", status_code=303)
 

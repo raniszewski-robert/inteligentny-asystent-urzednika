@@ -103,3 +103,28 @@ def detect_department(filename: str, text: str) -> str:
 def letter_types() -> list[tuple[str, str]]:
     from udip.letters import LETTER_TYPES
     return [(k, v.get("label", k)) for k, v in LETTER_TYPES.items() if not k.startswith("_") and isinstance(v, dict)]
+
+
+def _pages(nums) -> str:
+    nums = sorted({n for n in nums if n})
+    return ", ".join(str(n) for n in nums)
+
+
+def security_lines(sec: dict | None) -> list[str]:
+    """Plain-Polish lines for the 'Kontrola bezpieczeństwa pliku' note; [] = nothing to show."""
+    if not sec:
+        return []
+    out = []
+    for h in sec.get("hidden_text") or []:
+        out.append(f"Tekst niewidoczny po otwarciu pliku ({h.get('where')}; {h.get('reason')}): „{h.get('text')}”.")
+    imgs = sec.get("images") or []
+    if imgs:
+        pages = _pages(im.get("page") for im in imgs)
+        hints = sorted({im["hint"] for im in imgs if im.get("hint")})
+        line = f"Obrazy w pliku: {len(imgs)}" + (f" (strony {pages})" if pages else "") + (f", w tym: {', '.join(hints)}" if hints else "")
+        out.append(line + ". Sprawdź, czy zawierają podpis, pieczęć lub dane osobowe.")
+    for i in sec.get("injection") or []:
+        out.append(f"Fragment wygląda na polecenie dla programu: „{i.get('text')}”. Nie jest przekazywany do modelu językowego.")
+    for n in sec.get("notes") or []:
+        out.append(n)
+    return out

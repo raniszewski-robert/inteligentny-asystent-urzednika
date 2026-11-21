@@ -10,7 +10,7 @@
     <div><dt>Data wpływu</dt><dd>{{ case.received|dmy }}</dd></div>
     <div><dt>Termin ustawowy</dt><dd>{{ row.due|dmy }}</dd></div>
     <div><dt>Termin bezpieczny</dt><dd>{{ row.due_safe|dmy }}</dd></div>
-    <div><dt>Pozostało dni rob.</dt><dd>{% if row.working_days_left != "" %}{{ row.working_days_left }}, {% endif %}{{ row.urgency_label }}</dd></div>
+    <div><dt>Pozostało dni rob.</dt><dd>{% if row.working_days_left != "" and not (row.urgency == "overdue" and row.working_days_left == 0) %}{{ row.working_days_left }}, {% endif %}{{ row.urgency_label }}</dd></div>
     <div><dt>Status</dt><dd>{{ row.status_label }}{% if row.extension %} {{ row.extension }}{% endif %}</dd></div>
     <div><dt>Osoba prowadząca</dt><dd>{{ case.initials or "–" }}</dd></div>
     {% if case.answered %}<div><dt>Data odpowiedzi</dt><dd>{{ case.answered|dmy }}</dd></div>{% endif %}
@@ -28,6 +28,16 @@
       <li><p>{{ q.text }}</p>
         <p>{% for d, n in q.departments %}<b>{{ d }}</b> {{ n }}{% if not loop.last %}; {% endif %}{% else %}<span class="muted">wydział nie wskazany</span>{% endfor %}</p>
         {% if q.alternatives %}<p class="small muted">Inne propozycje: {% for r in q.alternatives %}{{ r.department }}{% if not loop.last %}, {% endif %}{% endfor %}</p>{% endif %}
+        <form method="post" action="/sprawy/{{ case.id }}/trasowanie" class="field-inline small">
+          <input type="hidden" name="question_no" value="{{ q.no }}">
+          <label for="q-dep-{{ q.no }}">Zmień wydział</label>
+          <select id="q-dep-{{ q.no }}" name="department" class="dep-select">
+            <option value="">nie wskazano</option>
+            {% set cur = q.departments[0][0] if q.departments else "" %}
+            {% for dep in departments %}<option value="{{ dep.id }}"{% if dep.id == cur %} selected{% endif %}>{{ dep.id }} {{ dep.name }}</option>{% endfor %}
+          </select>
+          <button type="submit" class="btn-small">Zapisz</button>
+        </form>
       </li>
       {% endfor %}
     </ol>
@@ -44,6 +54,11 @@
       <p class="muted">Brak treści wniosku w sprawie.</p>
       {% endif %}
     {% endif %}
+    {% if legal %}
+    <h3>Przepisy z bazy wiedzy</h3>
+    <ul id="przepisy-baza">{% for h in legal %}<li><b>{{ h.ref or "fragment" }}</b> {{ h.law_title }}{% if h.new %} <span class="tag tag-demo">nowo dodany akt prawny</span>{% endif %}
+      <div class="excerpt small">{{ h.text[:300] }}{% if h.text|length > 300 %}…{% endif %}</div></li>{% endfor %}</ul>
+    {% endif %}
   </section>
 
   {% if dispatches %}
@@ -53,7 +68,7 @@
     <div class="dispatch">
       <h3>{{ d.department }} {{ d.name }}</h3>
       <p>Pytania: {% for q in d.questions %}Ad {{ q.no }}{% if not loop.last %}, {% endif %}{% else %}<span class="muted">brak przypisanych pytań</span>{% endfor %}. Termin dla wydziału: {{ d.sub_deadline|dmy }} (termin ustawowy {{ d.legal_due|dmy }}).</p>
-      {% if d.sent %}<p class="note note-ok small">Oznaczono jako wysłane {{ d.sent.sent_at|dmy }}, termin {{ d.sent.sub_deadline|dmy }}.</p>{% endif %}
+      {% if d.sent %}<p class="note note-ok small">Oznaczono jako wysłane {{ d.sent.sent_at|dmy }}, termin {{ d.sent.sub_deadline|dmy }}.{% if d.sent.answered_at %} Odpowiedź wpłynęła {{ d.sent.answered_at|dmy }}.{% endif %}</p>{% endif %}
       <div class="field"><label for="msg-{{ d.department }}">Treść wiadomości do skopiowania</label>
         <textarea id="msg-{{ d.department }}" class="excerpt" rows="8" readonly>{{ d.message }}</textarea></div>
       <form method="post" action="/sprawy/{{ case.id }}/przekazane" class="field-inline">
@@ -95,6 +110,15 @@
     <div class="note {% if upload_report|selectattr('error')|list %}note-warn{% else %}note-ok{% endif %}">
       <ul>{% for u in upload_report %}<li>{{ u.file }}: {% if u.error %}{{ u.error }}{% elif u.department %}wydział {{ u.department }}{% if u.auto %} (rozpoznany){% endif %}{% else %}wydziału nie rozpoznano, wskaż go poniżej{% endif %}{% if u.warning %}. {{ u.warning }}{% endif %}</li>{% endfor %}</ul>
     </div>
+    {% set sec_items = [] %}
+    {% for u in upload_report %}{% for line in u.security or [] %}{% set _ = sec_items.append(u.file ~ ": " ~ line) %}{% endfor %}{% endfor %}
+    {% if sec_items %}
+    <div class="note note-warn" id="kontrola-bezpieczenstwa">
+      <p><b>Kontrola bezpieczeństwa pliku</b></p>
+      <ul>{% for line in sec_items %}<li>{{ line }}</li>{% endfor %}</ul>
+      <p class="small">Sprawdź wskazane fragmenty przed włączeniem odpowiedzi do projektu pisma.</p>
+    </div>
+    {% endif %}
     {% endif %}
     {% if answers %}
     <table class="answers">
