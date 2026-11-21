@@ -57,18 +57,38 @@ def db_path() -> Path:
     return config.data_dir() / "udip.sqlite"
 
 
+_INIT_DONE: set[tuple[str, int, int, int]] = set()
+
+
+def _db_key(p: Path) -> tuple[str, int, int, int] | None:
+    try:
+        st = p.stat()
+    except OSError:
+        return None
+    return (str(p.resolve()), st.st_dev, st.st_ino, st.st_ctime_ns) if st.st_size > 0 else None
+
+
 def connect() -> sqlite3.Connection:
     """New connection to the shared database (schema ensured). Rows are sqlite3.Row; close it after use."""
     p = db_path()
+    key = _db_key(p)
     con = sqlite3.connect(p, timeout=10)
     con.row_factory = sqlite3.Row
     con.execute("PRAGMA busy_timeout=10000")
-    con.executescript(SCHEMA)
+    if key is None or key not in _INIT_DONE:
+        con.executescript(SCHEMA)
+        new_key = _db_key(p)
+        if new_key is not None:
+            _INIT_DONE.add(new_key)
     return con
 
 
 def init() -> None:
     """Create the tables if missing (idempotent)."""
+    p = db_path()
+    key = _db_key(p)
+    if key is not None:
+        _INIT_DONE.discard(key)
     with closing(connect()):
         pass
 

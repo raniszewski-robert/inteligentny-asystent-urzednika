@@ -17,7 +17,7 @@ import re
 from datetime import date, datetime
 from pathlib import Path
 
-from .deadlines import deadline_days, is_working_day, urgency
+from .deadlines import deadline_days, is_working_day, urgency, working_days_left
 
 HEAD = {"lp": "lp", "numer sprawy": "number", "nr wniosku": "number", "wnioskodawca": "applicant", "przedmiot zapytania": "summary",
         "temat": "summary", "data wpływu": "received", "termin odpowiedzi": "due_sheet", "data odpowiedzi": "answered",
@@ -109,14 +109,19 @@ def demo_shift(recs: list[dict], today: date) -> list[dict]:
     for i, r in enumerate(sorted(recs, key=lambda x: x["received"])):
         w = want[i % len(want)]
         pick = None
+        fallback_pick = None
         for back in range(1, 60):
             d = today - timedelta(days=back)
             if d in used or not is_working_day(d):
                 continue
-            if urgency(deadline_days(d), today) == w:
+            due = deadline_days(d)
+            if urgency(due, today) == w:
+                if w == "overdue" and working_days_left(due, today) >= 0:
+                    fallback_pick = fallback_pick or d
+                    continue
                 pick = d
                 break
-        pick = pick or next(today - timedelta(days=b) for b in range(1, 60) if today - timedelta(days=b) not in used and is_working_day(today - timedelta(days=b)))
+        pick = pick or fallback_pick or next(today - timedelta(days=b) for b in range(1, 60) if today - timedelta(days=b) not in used and is_working_day(today - timedelta(days=b)))
         used.add(pick)
         r = {k: v for k, v in r.items() if k not in ("answered", "extension_until", "extension_days")}
         r["received"], r["status"] = pick.isoformat(), status[i % len(status)]

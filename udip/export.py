@@ -28,6 +28,12 @@ def _norm(s: str) -> str:
     return re.sub(r"\s+", "", s)
 
 
+def _norm_words(s: str) -> str:
+    s = unicodedata.normalize("NFKD", s.casefold())
+    s = "".join(c for c in s if not unicodedata.combining(c)).replace("ł", "l")
+    return re.sub(r"\s+", " ", s).strip()
+
+
 def _scrub_core(xml: str) -> str:
     for f in _CORE_FIELDS:
         xml = re.sub(rf"<(\w+:)?{f}(\s[^>]*)?>.*?</(\w+:)?{f}>", "", xml, flags=re.S)
@@ -83,7 +89,17 @@ def harden_docx(docx_bytes: bytes) -> bytes:
 
 def audit_docx(docx_bytes: bytes, secrets: list[str]) -> dict:
     """Search every XML part (text and attributes) for each secret. ok=True means 0 hits."""
-    wanted = [(s, _norm(s)) for s in dict.fromkeys(x.strip() for x in secrets) if len(_norm(s)) >= 3]
+    wanted = []
+    for s in dict.fromkeys(x.strip() for x in secrets):
+        nc = _norm(s)
+        if len(nc) < 3:
+            continue
+        nw = _norm_words(s)
+        # Compact substring matching catches split digits / multi-word secrets; short single words (e.g. "Rak")
+        # use word boundaries so ordinary Polish words ("brak", "listopada") do not block exports.
+        use_compact = any(c.isdigit() for c in nc) or (len(nc) >= 6 and (" " in nw or "-" in nw or "@" in nw))
+        rx = re.compile(r"(?<![a-z0-9])" + re.escape(nw) + r"(?![a-z0-9])")
+        wanted.append((s, nc, rx, use_compact))
     hits, preview, parts = [], "", 0
     with zipfile.ZipFile(io.BytesIO(docx_bytes)) as z:
         for name in z.namelist():
@@ -91,10 +107,12 @@ def audit_docx(docx_bytes: bytes, secrets: list[str]) -> dict:
                 continue
             parts += 1
             raw = z.read(name).decode("utf-8", "replace")
-            text = re.sub(r"<[^>]+>", "", raw)
-            hay = (_norm(text), _norm(raw))
-            for orig, n in wanted:
-                if any(n in h for h in hay):
+            text = re.sub(r"<[^>]+>", "", re.sub(r"</w:p>", "\n", raw))
+            attrs = " ".join(re.findall(r'"([^"]*)"', raw))
+            hay_words = (_norm_words(text), _norm_words(attrs))
+            hay_compact = (_norm(text), _norm(attrs))
+            for orig, nc, rx, use_compact in wanted:
+                if any(rx.search(h) for h in hay_words) or (use_compact and any(nc in h for h in hay_compact)):
                     hits.append({"part": name, "secret": orig})
             if name == "word/document.xml":
                 preview = re.sub(r"\s+", " ", re.sub(r"</w:p>", "\n", raw))

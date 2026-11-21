@@ -367,6 +367,17 @@ def _official(span_text: str, keep: list[str]) -> bool:
     return False
 
 
+def _is_public_addr(text: str) -> bool:
+    t = re.sub(r"\s+", " ", norm(text)).strip(" .,")
+    t_no_ul = re.sub(r"^(?:ul\.|ulica)\s+", "", t)
+    for a in PUBLIC_ADDR:
+        an = re.sub(r"\s+", " ", a).strip(" .,")
+        a_no_ul = re.sub(r"^(?:ul\.|ulica)\s+", "", an)
+        if t == an or t_no_ul == a_no_ul:
+            return True
+    return False
+
+
 def detect_rules(text: str, keep: list[str] | None = None, min_conf: float = 0.5) -> list[Span]:
     """Wykrywanie samymi regułami."""
     names = detect_names(text)
@@ -382,7 +393,7 @@ def detect_rules(text: str, keep: list[str] | None = None, min_conf: float = 0.5
         s.id = f"s{n}"
         if s.confidence < min_conf:
             continue
-        if s.type in ("ADRES", "KOD_MIEJSC") and any(a in norm(s.text) or norm(s.text) in a for a in PUBLIC_ADDR):
+        if s.type in ("ADRES", "KOD_MIEJSC") and _is_public_addr(s.text):
             continue  # adres urzędu / jednostki: jawny
         if s.type == "EMAIL" and norm(s.text).split("@")[-1].endswith(PUBLIC_EMAIL_DOMAINS):
             continue  # służbowa skrzynka instytucji (bip@um.bydgoszcz.pl)

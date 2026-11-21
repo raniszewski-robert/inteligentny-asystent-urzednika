@@ -21,7 +21,7 @@ from pathlib import Path
 import pytest
 
 REPO = Path(__file__).resolve().parents[2]
-BASH = shutil.which("bash")
+BASH = None if sys.platform == "win32" else shutil.which("bash")
 
 STUB_APP = '''from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
