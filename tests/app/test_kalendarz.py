@@ -107,3 +107,34 @@ def test_status_e_calls_archive_hook(fresh_db, monkeypatch):
     c.post(f"/sprawy/{case['id']}/status", data={"status": "d_odpowiedz_przygotowana"}, follow_redirects=False)
     c.post(f"/sprawy/{case['id']}/status", data={"status": "e_odpowiedz_wyslana"}, follow_redirects=False)
     assert calls == [case["id"]]
+
+
+def test_kanban_board_and_table_view_switch(fresh_db):
+    c = _client()
+    r = c.get("/kalendarz?rok=wszystkie")
+    assert r.status_code == 200
+    assert 'data-view="tablica"' in r.text
+    for col_title in ("a) Brak działań", "b) Zapytania w wydziałach", "c) Kwerenda / przedłużenie", "d–e) Gotowe i wysłane"):
+        assert col_title in r.text
+    cards = re.findall(r'<article class="kcard u-\w+" draggable="true" data-case-id="\d+">', r.text)
+    assert len(cards) == 10
+    assert c.get("/static/board.js").status_code == 200
+
+    tab = c.get("/kalendarz?rok=wszystkie&uklad=tabela")
+    assert tab.status_code == 200 and 'data-view="tabela"' in tab.text
+
+    case = next(x for x in store.list_cases() if x["status"] == "a_brak_dzialan")
+    swap_tab = c.post(
+        f"/sprawy/{case['id']}/status",
+        data={"status": "b_zapytania_wyslane", "rok": "wszystkie", "uklad": "tabela"},
+        headers={"HX-Request": "true"},
+    )
+    assert swap_tab.status_code == 200 and 'data-view="tabela"' in swap_tab.text
+
+    swap_board = c.post(
+        f"/sprawy/{case['id']}/status",
+        data={"status": "c_kwerenda", "rok": "wszystkie", "uklad": "tablica"},
+        headers={"HX-Request": "true"},
+    )
+    assert swap_board.status_code == 200 and 'data-view="tablica"' in swap_board.text
+

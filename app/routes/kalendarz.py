@@ -18,6 +18,26 @@ router = APIRouter()
 
 LEGEND = ["overdue", "today", "tomorrow", "soon", "ok", "done"]
 
+URGENCY_SHORT = {
+    "overdue": "Po terminie",
+    "today": "Termin dziś",
+    "tomorrow": "Jutro",
+    "soon": "Do 3 dni",
+    "ok": "W terminie",
+    "done": "Zakończony",
+}
+
+BOARD_STAGES = [
+    ("a", "a) Brak działań", ("a_brak_dzialan",), "a_brak_dzialan"),
+    ("b", "b) Zapytania w wydziałach", ("b_zapytania_wyslane",), "b_zapytania_wyslane"),
+    ("c", "c) Kwerenda / przedłużenie", ("c_kwerenda",), "c_kwerenda"),
+    ("de", "d–e) Gotowe i wysłane", ("d_odpowiedz_przygotowana", "e_odpowiedz_wyslana"), "d_odpowiedz_przygotowana"),
+]
+
+
+def _uklad(uklad: str | None) -> str:
+    return "tabela" if uklad == "tabela" else "tablica"
+
 
 def _year(rok: str | None) -> int | None:
     if rok is None or rok == "":
@@ -30,7 +50,7 @@ def _year(rok: str | None) -> int | None:
         return None
 
 
-def register(year: int | None) -> dict:
+def register(year: int | None, uklad: str = "tablica") -> dict:
     cases = store.list_cases(year)
     by_number = {c["number"]: c for c in cases}
     rs = register_rows([store.to_request(c) for c in cases], today(), None)
@@ -42,18 +62,30 @@ def register(year: int | None) -> dict:
         r["is_demo"] = bool(c.get("is_demo"))
         r["extension_days"] = c.get("extension_days")
         r["last"] = last.get(c["id"])
+        r["urgency_short"] = URGENCY_SHORT.get(r["urgency"], r["urgency_label"])
+        r["dept_list"] = [d.strip() for d in (r.get("departments") or "").split(",") if d.strip()]
     counts = {k: sum(1 for r in rs if r["urgency"] == k) for k in URGENCY_LABEL}
-    return {"rows": rs, "counts": counts, "year": year, "statuses": STATUSES, "urgency_label": URGENCY_LABEL,
-            "legend": LEGEND, "any_demo": any(r["is_demo"] for r in rs) or any(c.get("is_demo") for c in store.list_cases())}
+    board_columns = [
+        {
+            "key": key,
+            "title": title,
+            "drop_status": drop_status,
+            "cards": [r for r in rs if r["status"] in statuses],
+        }
+        for key, title, statuses, drop_status in BOARD_STAGES
+    ]
+    return {"rows": rs, "counts": counts, "year": year, "uklad": _uklad(uklad), "board_columns": board_columns,
+            "statuses": STATUSES, "urgency_label": URGENCY_LABEL, "legend": LEGEND,
+            "any_demo": any(r["is_demo"] for r in rs) or any(c.get("is_demo") for c in store.list_cases())}
 
 
-def _page(request: Request, year: int | None, **extra):
-    return render(request, "kalendarz.html", title="Kalendarz", years=store.years(), **register(year), **extra)
+def _page(request: Request, year: int | None, uklad: str | None = None, **extra):
+    return render(request, "kalendarz.html", title="Kalendarz", years=store.years(), **register(year, _uklad(uklad)), **extra)
 
 
 @router.get("/kalendarz")
-def kalendarz(request: Request, rok: str | None = None):
-    return _page(request, _year(rok))
+def kalendarz(request: Request, rok: str | None = None, uklad: str | None = None):
+    return _page(request, _year(rok), uklad=uklad)
 
 
 def _archive_sent_letter(case_id: int) -> bool:
@@ -68,7 +100,8 @@ def _archive_sent_letter(case_id: int) -> bool:
 
 @router.post("/sprawy/{case_id}/status")
 def change_status(request: Request, case_id: int, status: str = Form(...), extension_days: str = Form(""),
-                  note: str = Form(""), rok: str = Form(""), widok: str = Form("kalendarz")):
+                  note: str = Form(""), rok: str = Form(""), widok: str = Form("kalendarz"),
+                  uklad: str = Form("tablica")):
     if store.get_case(case_id) is None:
         raise HTTPException(404)
     if status not in STATUSES:
@@ -87,8 +120,11 @@ def change_status(request: Request, case_id: int, status: str = Form(...), exten
     elif ext is not None and status == "c_kwerenda":
         store.update_case(case_id, extension_days=ext)
     if is_htmx(request) and widok == "kalendarz":
-        return render(request, "kalendarz_tabela.html", **register(_year(rok or "wszystkie")))
-    back = f"/sprawy/{case_id}" if widok == "sprawa" else f"/kalendarz?rok={rok or ''}"
+        return render(request, "kalendarz_tabela.html", **register(_year(rok or "wszystkie"), uklad=_uklad(uklad)))
+    if widok == "sprawa":
+        back = f"/sprawy/{case_id}"
+    else:
+        back = f"/kalendarz?rok={rok or ''}" + ("&uklad=tabela" if _uklad(uklad) == "tabela" else "")
     if is_htmx(request):
         return Response(status_code=204, headers={"HX-Redirect": back})
     return RedirectResponse(back, status_code=303)
