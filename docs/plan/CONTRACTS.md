@@ -136,7 +136,8 @@ Helpers in `udip/db.py`: `connect, init, list_cases, get_case, create_case, set_
 
 | Route | Template | Ticket |
 |---|---|---|
-| `GET /` → `/kalendarz`, `POST /kalendarz/import`, `POST /sprawy/{id}/status`, `GET /kalendarz.csv` | `kalendarz.html` | T04 |
+| `GET /` → `/biurko`, `GET /biurko?teczka={id}&wersja=bip|wysylka` | `biurko.html` | Biurko |
+| `POST /kalendarz/import`, `POST /sprawy/{id}/status`, `GET /kalendarz.csv` | `kalendarz.html` | T04 |
 | `GET/POST /wniosek/nowy`, `GET /wniosek/{doc_id}/strona/{n}.png`, `POST /wniosek/{doc_id}/odczyt-ai` | `wniosek_nowy.html` | T05 |
 | `GET /sprawy/{id}`, `POST /sprawy/{id}/odpowiedzi`, `POST /sprawy/{id}/trasowanie`, `GET /sprawy/{id}/przekazanie/{dept}` (+ `.docx`), `POST /sprawy/{id}/przekazane` | `sprawa.html` | T06 |
 | `GET/POST /sprawy/{id}/projekt`, `POST /sprawy/{id}/projekt/przypisz` | `projekt.html` | T07 |

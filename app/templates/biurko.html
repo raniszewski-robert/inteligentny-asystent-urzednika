@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block page_class %} page-wide{% endblock %}
+{% block content %}
+<div class="desk">
+  <section class="desk-stack" aria-labelledby="h-biurko">
+    <div class="desk-head">
+      <h1 id="h-biurko">Na biurku</h1>
+      <span class="desk-day">{{ day_line }}</span>
+    </div>
+
+    {% for f in folders %}
+    <article class="folder folder-{{ f.folder }}{% if case and f.id == case.id %} is-open{% endif %}">
+      <a class="folder-tab" href="/sprawy/{{ f.id }}" title="Karta sprawy {{ f.number }}">{{ f.short }}</a>
+      <div class="folder-body">
+        <div class="folder-text">
+          <span class="folder-who">{{ f.applicant_label or "Wnioskodawca w rejestrze" }}</span>
+          <a class="folder-subject" title="{{ f.summary }}" href="/biurko?teczka={{ f.id }}&amp;wersja={{ version }}"{% if case and f.id == case.id %} aria-current="true"{% endif %}>{{ f.summary }}</a>
+          <span class="folder-meta">Termin {{ f.due_short }} · {{ f.depts }}{% if f.initials %} · {{ f.initials }}{% endif %}</span>
+        </div>
+        <div class="stamp stamp-{{ f.urgency }}">{{ f.stamp }}</div>
+      </div>
+    </article>
+    {% else %}
+    <p class="panel">Biurko jest puste: nie ma otwartych spraw. Połóż nowy wniosek albo wczytaj sprawy demo w kalendarzu.</p>
+    {% endfor %}
+    {% if more %}<p class="desk-more"><a href="/kalendarz">Jeszcze {{ more }} w kalendarzu →</a></p>{% endif %}
+
+    <div class="desk-actions">
+      <a class="btn btn-primary" href="/wniosek/nowy">Połóż nowy wniosek</a>
+      <a class="btn" href="/archiwum">Szafa (archiwum)</a>
+    </div>
+  </section>
+
+  <section class="desk-open" aria-labelledby="h-teczka">
+    {% if case %}
+    <div class="desk-open-head">
+      <h2 id="h-teczka">Otwarta teczka: <a href="/sprawy/{{ case.id }}">{{ case.number }}</a></h2>
+      {% if draft %}
+      <div class="seg seg-ink" role="group" aria-label="Wersja pisma">
+        <a class="seg-btn{% if version == 'wysylka' %} on{% endif %}" href="/biurko?teczka={{ case.id }}&amp;wersja=wysylka" aria-pressed="{{ 'true' if version == 'wysylka' else 'false' }}">Do wysyłki</a>
+        <a class="seg-btn{% if version == 'bip' %} on{% endif %}" href="/biurko?teczka={{ case.id }}&amp;wersja=bip" aria-pressed="{{ 'true' if version == 'bip' else 'false' }}">Do BIP</a>
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="desk-paper-row">
+      {% if draft %}
+      <div class="sheet" aria-label="Projekt pisma, wersja {{ draft.version }}">
+        {% if date_line %}<p class="sheet-date">{{ date_line }}</p>{% endif %}
+        <div class="sheet-body">{{ letter }}</div>
+      </div>
+      {% else %}
+      <div class="sheet sheet-empty">
+        <p class="sheet-date">{{ today|pl_long }}</p>
+        <p><strong>{{ case.summary }}</strong></p>
+        <p>Teczka nie ma jeszcze projektu pisma. Projekt powstaje z odpowiedzi wydziałów wgranych na karcie sprawy.</p>
+        <p><a class="btn btn-primary" href="/sprawy/{{ case.id }}">Otwórz kartę sprawy</a></p>
+      </div>
+      {% endif %}
+      {% if notes %}
+      <aside class="margin" aria-label="Uwagi na marginesie">
+        {% for n in notes %}<p class="margin-note tone-{{ n.tone }}">{{ n.text }}</p>{% endfor %}
+      </aside>
+      {% endif %}
+    </div>
+
+    {% if draft %}
+    <div class="desk-actions">
+      <a class="btn btn-primary" href="/sprawy/{{ case.id }}/anonimizacja">Zatwierdź i podpisz</a>
+      <span class="desk-status">{{ undecided_text }}</span>
+    </div>
+    {% endif %}
+    {% else %}
+    <h2 id="h-teczka">Otwarta teczka</h2>
+    <p class="muted">Wybierz teczkę ze stosu po lewej.</p>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

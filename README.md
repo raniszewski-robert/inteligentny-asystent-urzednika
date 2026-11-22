@@ -57,4 +57,4 @@ Próbki w `data-partner/umb/` pochodzą z Urzędu Miasta Bydgoszczy. Dane osobow
 
 ## Licencja
 
-Zależności i dane tylko na licencjach MIT, BSD, Apache-2.0 i 0BSD; font Lato na SIL OFL 1.1, dołączony, żeby działał bez internetu: [LICENSES-THIRD-PARTY.md](LICENSES-THIRD-PARTY.md). Celowo bez PyMuPDF (AGPL), docxtpl (LGPL) i modeli spaCy pl (GPL).
+Zależności i dane tylko na licencjach MIT, BSD, Apache-2.0 i 0BSD; fonty IBM Plex Sans i Source Serif 4 na SIL OFL 1.1, dołączone, żeby działały bez internetu: [LICENSES-THIRD-PARTY.md](LICENSES-THIRD-PARTY.md). Celowo bez PyMuPDF (AGPL), docxtpl (LGPL) i modeli spaCy pl (GPL).

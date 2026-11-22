@@ -42,7 +42,7 @@ ROUTERS = include_routers(app)
 
 @app.get("/", include_in_schema=False)
 def home():
-    return RedirectResponse("/kalendarz", status_code=303)
+    return RedirectResponse("/biurko", status_code=303)
 
 
 def _back(request: Request, fallback: str = "/kalendarz") -> str:

@@ -21,6 +21,7 @@ CLERK_COOKIE = "urzednik"
 DEFAULT_CLERKS = ["Pracownik 1", "Pracownik 2", "Pracownik 3"]
 
 NAV = [  # (path, label) – every top-level screen in CONTRACTS §5
+    ("/biurko", "Biurko"),
     ("/kalendarz", "Kalendarz"),
     ("/wniosek/nowy", "Nowy wniosek"),
     ("/archiwum", "Archiwum"),
