@@ -11,7 +11,15 @@
 <body>
 <header class="top">
   <div class="top-inner">
-    <a class="org" href="/kalendarz">Urząd Miasta Bydgoszczy · Biuro Komunikacji Społecznej</a>
+    <div class="top-left">
+      <a class="brand" href="/kalendarz">
+        <span class="brand-name">Asystent UDIP</span>
+        <span class="org">Urząd Miasta Bydgoszczy · Biuro Komunikacji Społecznej</span>
+      </a>
+      <nav class="nav" aria-label="Główne">
+        {% for path, label in nav %}<a href="{{ path }}"{% if path == active %} aria-current="page"{% endif %}>{{ label }}</a>{% endfor %}
+      </nav>
+    </div>
     <form class="clerk" method="post" action="/urzednik">
       <label for="urzednik">Urzędnik</label>
       <select id="urzednik" name="urzednik" onchange="this.form.submit()">
@@ -20,9 +28,6 @@
       <noscript><button type="submit">Zmień</button></noscript>
     </form>
   </div>
-  <nav class="nav" aria-label="Główne">
-    {% for path, label in nav %}<a href="{{ path }}"{% if path == active %} aria-current="page"{% endif %}>{{ label }}</a>{% endfor %}
-  </nav>
 </header>
 <main class="page{% block page_class %}{% endblock %}">
 {% block content %}{% endblock %}

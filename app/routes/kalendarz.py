@@ -70,7 +70,7 @@ def register(year: int | None, uklad: str = "tablica") -> dict:
             "key": key,
             "title": title,
             "drop_status": drop_status,
-            "items": [r for r in rs if r["status"] in statuses],
+            "cards": [r for r in rs if r["status"] in statuses],
         }
         for key, title, statuses, drop_status in BOARD_STAGES
     ]

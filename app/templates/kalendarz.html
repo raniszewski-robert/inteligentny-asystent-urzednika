@@ -5,6 +5,7 @@
   <h1>Kalendarz wniosków</h1>
   <div class="row">
     <form method="get" action="/kalendarz" class="field-inline">
+      <input type="hidden" name="uklad" id="rok-uklad" value="{{ uklad }}">
       <label for="rok">Rok</label>
       <select id="rok" name="rok" onchange="this.form.submit()">
         <option value="wszystkie"{% if year is none %} selected{% endif %}>wszystkie</option>
@@ -55,4 +56,5 @@
     </form>
   </div>
 </details>
+<script src="/static/board.js" defer></script>
 {% endblock %}

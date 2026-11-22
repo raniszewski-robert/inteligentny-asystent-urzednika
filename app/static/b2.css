@@ -2,7 +2,7 @@
 
 /* Sticky review sidebar on wide viewports */
 @media (min-width: 961px) {
-  .cols > aside { position: sticky; top: var(--s4); }
+  .cols > aside { position: sticky; top: 76px; }
 }
 
 /* Projekt pisma */
