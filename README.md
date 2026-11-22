@@ -18,10 +18,20 @@ Ten sam proces mają inne jednostki samorządu: zmienia się lista komórek (`ud
 
 ## Uruchomienie
 
+Aplikacja działa **lokalnie bez internetu i bez klucza API** (otwiera **http://127.0.0.1:8000**). Szczegółowa instrukcja dla Jurorów: [JAK_URUCHOMIC.md](JAK_URUCHOMIC.md).
+
+**Docker (najprościej – Python 3.12 + Tesseract OCR `pol` w obrazie):**
+
+```bash
+git clone https://github.com/raniszewski-robert/inteligentny-asystent-urzednika
+cd inteligentny-asystent-urzednika
+docker compose up --build
+```
+
 **Windows** (wymagany Python 3.11+ i Git; Tesseract tylko do skanów; szczegóły: [docs/INSTALL_WINDOWS.md](docs/INSTALL_WINDOWS.md)):
 
 ```powershell
-git clone https://github.com/hacknation-2026-solutions/inteligentny-asystent-urzednika
+git clone https://github.com/raniszewski-robert/inteligentny-asystent-urzednika
 cd inteligentny-asystent-urzednika
 powershell -ExecutionPolicy Bypass -File .\setup.ps1
 powershell -ExecutionPolicy Bypass -File .\run.ps1
