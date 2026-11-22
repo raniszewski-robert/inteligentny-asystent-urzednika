@@ -59,7 +59,9 @@ Wygenerowane przez preflight.py.
 | Plik | Projekt | Wersja | Licencja | Kategoria |
 |---|---|---|---|---|
 | `app/static/htmx.min.js` | htmx (https://htmx.org) | 2.0.11 | 0BSD | permisywna |
-| `app/static/fonts/lato-*.woff2`, `lato.css` | Lato, Łukasz Dziedzic (tyPoland), z @fontsource/lato | 5.3.0 | SIL OFL 1.1 (`app/static/fonts/OFL.txt`) | permisywna (licencja fontów) |
+| `app/static/fonts/ibm-plex-sans-*.woff2`, `fonts.css` | IBM Plex Sans, © IBM Corp., z @fontsource/ibm-plex-sans | 5.3.0 | SIL OFL 1.1 (`app/static/fonts/OFL-IBM-Plex-Sans.txt`) | permisywna (licencja fontów) |
+| `app/static/fonts/source-serif-4-*.woff2`, `fonts.css` | Source Serif 4, © Adobe, z @fontsource/source-serif-4 | 5.3.1 | SIL OFL 1.1 (`app/static/fonts/OFL-Source-Serif-4.txt`) | permisywna (licencja fontów) |
+| `app/static/fonts/caveat-*.woff2`, `fonts.css` | Caveat, © The Caveat Project Authors, z @fontsource/caveat | 5.3.0 | SIL OFL 1.1 (`app/static/fonts/OFL-Caveat.txt`) | permisywna (licencja fontów) |
 | `udip/data/names/*.tsv` | słownik imion i nazwisk z Faker 40.63.0 (© Daniele Faraglia) i Mimesis 22.2.0 (© Isaak Uchakaev); formy odmiany z danych fleksyjnych SGJP (© Z. Saloni, W. Gruszczyński, M. Woliński, R. Wołosz, D. Skowrońska) | 21.11.2026 | MIT (Faker, Mimesis), BSD-2-Clause (dane SGJP); opis w `udip/data/names/README.md` | permisywna |
 
 ## Narzędzia systemowe (instalowane osobno, nie wchodzą do kodu)

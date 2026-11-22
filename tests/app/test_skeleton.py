@@ -11,9 +11,9 @@ from app.main import app
 client = TestClient(app)
 
 
-def test_root_redirects_to_calendar():
+def test_root_redirects_to_desk():
     r = client.get("/", follow_redirects=False)
-    assert r.status_code == 303 and r.headers["location"] == "/kalendarz"
+    assert r.status_code == 303 and r.headers["location"] == "/biurko"
 
 
 def test_layout_header_and_nav():
@@ -21,9 +21,9 @@ def test_layout_header_and_nav():
     assert r.status_code == 200
     html = r.text
     assert "Urząd Miasta Bydgoszczy · Biuro Komunikacji Społecznej" in html
-    for path in ["/kalendarz", "/wniosek/nowy", "/archiwum", "/anonimizacja", "/ustawienia"]:
+    for path in ["/biurko", "/kalendarz", "/wniosek/nowy", "/archiwum", "/anonimizacja", "/ustawienia"]:
         assert f'href="{path}"' in html
-    assert [p for p, _ in NAV] == ["/kalendarz", "/wniosek/nowy", "/archiwum", "/anonimizacja", "/ustawienia"]
+    assert [p for p, _ in NAV] == ["/biurko", "/kalendarz", "/wniosek/nowy", "/archiwum", "/anonimizacja", "/ustawienia"]
     assert 'aria-current="page"' in html
 
 
