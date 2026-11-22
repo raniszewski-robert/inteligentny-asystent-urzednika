@@ -1,0 +1,24 @@
+# Kontekst budowania Dockera: bez sekretów, lokalnej bazy, środowisk i materiałów wideo.
+.git/
+.gitignore
+.env
+.env.*
+!.env.example
+.venv/
+.pytest_cache/
+.unslop-ui/
+.cache/
+__pycache__/
+*.pyc
+*.pyo
+*.log
+var/
+tmp/
+wynik/
+video/
+demo-video-kit/
+docs/
+research/
+.claude/
+tests/
+data-partner/umb/oryginaly/

@@ -1,0 +1,27 @@
+services:
+  asystent-udip:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: asystent-udip:latest
+    ports:
+      - "${UDIP_PORT:-8000}:8000"
+    environment:
+      UDIP_DATA_DIR: /data
+      UDIP_PORT: "8000"
+      # Domyślnie aplikacja działa lokalnie bez internetu; gdy Ollama/Bielik nie odpowiada, zostaje przy regułach.
+      # Aby wyłączyć szukanie modelu całkowicie, odkomentuj:
+      # UDIP_PROVIDER: rules
+      # Aby połączyć się z Ollamą działającą na hoście:
+      LLM_BASE_URL: "${LLM_BASE_URL:-http://host.docker.internal:11434/v1}"
+      LLM_MODEL: "${LLM_MODEL:-SpeakLeash/bielik-4.5b-v3.0-instruct:Q8_0}"
+      # UDIP_REAL_DATES: "1"    # prawdziwe daty z arkusza zamiast trybu demo
+      # UDIP_RESEED: "1"        # ponowne wczytanie spraw demo przy starcie
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - udip_data:/data
+    restart: unless-stopped
+
+volumes:
+  udip_data:
