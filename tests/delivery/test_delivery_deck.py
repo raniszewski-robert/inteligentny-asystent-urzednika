@@ -34,12 +34,22 @@ def test_outline_covers_every_item_of_task_section_4():
         assert cited and all(1 <= x <= n for x in cited), r
 
 
+def _spoken_seconds(script_text: str, wpm: float = 130.0) -> float:
+    words = 0
+    for line in script_text.splitlines():
+        if line.startswith(("#", ">")) or not line.strip():
+            continue
+        spoken = re.sub(r"\[[^\]]*\]", " ", line)
+        words += len(re.findall(r"\w+", spoken))
+    return words / wpm * 60.0
+
+
 def test_video_script_fits_limit():
-    r = subprocess.run([sys.executable, str(REPO / ".claude/skills/hn-pitch-final/scripts/pitch_timing.py"),
-                        str(SCRIPT), "--limit", "2:45"], capture_output=True, text=True)
-    assert r.returncode == 0, r.stdout   # spoken text leaves at least 10% margin at 130 words/min
+    text = SCRIPT.read_text(encoding="utf-8")
+    limit = 165.0  # 2:45
+    assert _spoken_seconds(text) <= limit * 0.9, "spoken text should leave at least 10% margin at 130 wpm"
     planned = sum(int(m) * 60 + int(s) for m, s in
-                  re.findall(r"^## \d+\..*\((\d+):(\d\d)\)\s*$", SCRIPT.read_text(encoding="utf-8"), re.M))
+                  re.findall(r"^## \d+\..*\((\d+):(\d\d)\)\s*$", text, re.M))
     assert 0 < planned <= 165, f"scene plan {planned}s exceeds 2:45"
 
 

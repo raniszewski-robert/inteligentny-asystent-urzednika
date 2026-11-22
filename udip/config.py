@@ -10,7 +10,6 @@ from datetime import date
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
-SKILLS = REPO / ".claude" / "skills"
 _loaded: Path | None = None
 
 
