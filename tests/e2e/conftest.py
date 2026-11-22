@@ -9,6 +9,7 @@ import pytest
 os.environ["UDIP_DATA_DIR"] = tempfile.mkdtemp(prefix="udip_e2e_")
 os.environ["UDIP_TODAY"] = "2026-11-22"
 os.environ["UDIP_PROVIDER"] = "rules"
+os.environ["UDIP_JOBS_SYNC"] = "1"
 
 
 @pytest.fixture

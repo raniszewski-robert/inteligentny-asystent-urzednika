@@ -1,0 +1,52 @@
+{# Wynik albo postęp zadania Bielika w tle. Zmienne: model_job, model_elapsed, model_names (app/routes/model.py). #}
+{% set j = model_job %}
+{% set r = j.result or {} %}
+{% if j.status == "running" %}
+<div class="bielik bielik-wait" id="bielik-{{ j.id }}" hx-get="/model/{{ j.id }}" hx-trigger="load delay:3s" hx-swap="outerHTML" role="status" aria-live="polite">
+  <span class="bielik-dot" aria-hidden="true"></span>
+  <span>
+    {% if j.kind == "analiza" %}{{ model_name }} czyta wniosek i dopisze streszczenie, sygnały i uzasadnienia wydziałów.
+    {% elif j.kind == "pytanie" %}{{ model_name }} szuka odpowiedzi we fragmentach poniżej.
+    {% elif "projekt" in j.key %}{{ model_name }} redaguje akapity „Ad”. Po zakończeniu otworzy się nowa wersja pisma.
+    {% else %}{{ model_name }} szuka danych osobowych, które reguły mogły pominąć.{% endif %}
+    <span class="muted small">{{ model_where[:1]|upper }}{{ model_where[1:] }}, {{ model_elapsed }} s. Wyniki reguł są już na stronie – możesz dalej pracować.</span>
+  </span>
+  <noscript><a href="">Odśwież stronę</a></noscript>
+</div>
+{% elif j.status == "error" %}
+<div class="bielik note note-warn" id="bielik-{{ j.id }}" role="status">{{ model_name }} nie odpowiedział ({{ j.error }}). Zostają wyniki reguł.</div>
+{% elif j.kind == "analiza" %}
+  {% if r %}
+  <div class="bielik note note-ok" id="badge-analiza" role="status">
+    <p><b>{{ model_name }} ({{ model_where }}, {{ model_elapsed }} s) dopisał:</b></p>
+    {% if r.summary %}
+    <p>Streszczenie do kalendarza: „{{ r.summary }}”
+      <button type="button" class="btn-small" data-text="{{ r.summary }}" onclick="var t=document.getElementById('summary'); if (t) { t.value=this.dataset.text; t.focus(); }">Wstaw do opisu</button></p>
+    {% endif %}
+    {% for fl in (r.flags or []) if fl.source == "llm" %}<p class="small">⚑ {{ fl.message }}</p>{% endfor %}
+    {% set qs = (r.questions or []) | selectattr("llm_routing") | list %}
+    {% if qs %}
+    <ul class="small">
+      {% for q in qs %}<li>Pytanie {{ q.no }}: {% for x in q.llm_routing %}<b>{{ x.department }}</b> {{ model_names.get(x.department, "") }}{% if x.reason %} – {{ x.reason }}{% endif %}{% if not loop.last %}; {% endif %}{% endfor %}</li>{% endfor %}
+    </ul>
+    {% endif %}
+    <p class="small muted">Podpowiedzi modelu. Wydział i opis zatwierdza urzędnik.</p>
+  </div>
+  {% else %}
+  <div class="bielik note" id="bielik-{{ j.id }}" role="status">{{ model_name }} nie dodał nic ponad reguły.</div>
+  {% endif %}
+{% elif j.kind == "pytanie" %}
+  {% if r.answer %}
+  <div class="bielik answer" id="odpowiedz-bielik" role="status">
+    <p class="answer-text">{{ r.answer }}</p>
+    {% if r.citations %}
+    <p class="small"><b>Źródła:</b> {% for c in r.citations %}<a href="{{ c.url }}">{{ c.label }}</a>{% if not loop.last %} · {% endif %}{% endfor %}</p>
+    {% endif %}
+    <p class="small muted">Odpowiedź modelu {{ model_name }} ({{ model_where }}) z fragmentów archiwum, {{ model_elapsed }} s. Liczby w odpowiedzi sprawdzono ze źródłami. Przed użyciem w piśmie zajrzyj do sprawy.</p>
+  </div>
+  {% else %}
+  <div class="bielik note" id="bielik-{{ j.id }}" role="status">{{ r.message or "{{ model_name }} nie znalazł odpowiedzi w tych fragmentach." }}</div>
+  {% endif %}
+{% else %}
+<div class="bielik note note-ok" id="badge-llm-bg" role="status">{{ r.message or "{{ model_name }} skończył." }}{% if r.target %} <a href="{{ r.target }}">Pokaż</a>{% endif %}</div>
+{% endif %}

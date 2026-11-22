@@ -61,7 +61,13 @@ def budget_usd() -> float:
         return 15.0
 
 
+GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/openai"
+GEMINI_DEFAULT_MODEL = "gemini-flash-latest"
+
+
 def model_for(provider: str) -> str:
+    if provider == "gemini":
+        return os.environ.get("GEMINI_MODEL") or GEMINI_DEFAULT_MODEL
     if provider in MODELS:
         env = "UDIP_MODEL_" + provider.split(":", 1)[1].upper()
         return os.environ.get(env) or MODELS[provider]
@@ -181,6 +187,8 @@ def cost_usd(model: str, input_tokens: int, output_tokens: int, cache_write: int
 def available(provider: str | None = None) -> bool:
     """Anthropic: key present and budget left. openai_compat: a server is configured (LLM_BASE_URL) – no budget, $0."""
     p = provider or "anthropic:sonnet"
+    if p == "gemini":  # Google Gemini API (chmura): klucz w .env, nie w trybie offline
+        return TRANSPORT is not None or (bool(os.environ.get("GEMINI_API_KEY")) and not offline() and not _network_blocked())
     if p.startswith("openai_compat:"):
         return bool(os.environ.get("LLM_BASE_URL")) or TRANSPORT is not None
     if p not in MODELS or _network_blocked():
@@ -204,6 +212,9 @@ def _local_only(p: str) -> bool:
 def mode(provider: str | None = None) -> dict:
     """{id, label, network} for the reports (CONTRACTS §3, v2)."""
     p = provider_for(provider)
+    if p == "gemini":
+        return {"id": "cloud_gemini", "label": f"Chmura – Gemini ({model_for(p)}, dane testowe)",
+                "network": "generativelanguage.googleapis.com"}
     if p.startswith("openai_compat:") and (_local_only(p) or not offline()):
         return {"id": "offline_bielik" if _local_only(p) else "server_model", "label": f"Model lokalny ({p.split(':', 1)[1]})",
                 "network": "localhost" if _local_only(p) else (os.environ.get("LLM_BASE_URL") or "")}
@@ -220,6 +231,8 @@ def provider_for(provider: str | None = None) -> str:
         return p
     if p.startswith("openai_compat:"):
         return p  # local server: failures surface as None per call
+    if p == "gemini":
+        return p if available(p) else "rules"
     if p in MODELS and available():
         return p
     return "rules"
@@ -368,10 +381,21 @@ def _openai_compat_transport(provider, model, system, user, schema, max_tokens, 
                     "input_tokens": data.get("prompt_eval_count", 0),
                     "output_tokens": data.get("eval_count", 0),
                     "stop_reason": data.get("done_reason")}
-    body = {"model": model, "temperature": 0.1, "max_tokens": max_tokens,
-            "messages": messages,
+    return _chat_completions(base, headers, model, messages, schema, max_tokens, timeout)
+
+
+def _chat_completions(base: str, headers: dict, model: str, messages: list, schema: dict, max_tokens: int, timeout: float,
+                      extra: dict | None = None) -> dict:
+    """POST {base}/chat/completions (OpenAI format) with a JSON schema; on 400 retry without extras, then json_object."""
+    import httpx  # BSD-3-Clause
+
+    body = {"model": model, "temperature": 0.1, "max_tokens": max_tokens, "messages": messages, **(extra or {}),
             "response_format": {"type": "json_schema", "json_schema": {"name": "odpowiedz", "schema": api_schema(schema)}}}
     r = httpx.post(base + "/chat/completions", json=body, headers=headers, timeout=timeout)
+    if r.status_code == 400 and extra:  # a server that does not know an extra parameter
+        for k in extra:
+            body.pop(k, None)
+        r = httpx.post(base + "/chat/completions", json=body, headers=headers, timeout=timeout)
     if r.status_code == 400:  # older servers: only json_object
         body["response_format"] = {"type": "json_object"}
         r = httpx.post(base + "/chat/completions", json=body, headers=headers, timeout=timeout)
@@ -382,9 +406,20 @@ def _openai_compat_transport(provider, model, system, user, schema, max_tokens, 
             "output_tokens": u.get("completion_tokens", 0), "stop_reason": data["choices"][0].get("finish_reason")}
 
 
+def _gemini_transport(provider, model, system, user, schema, max_tokens, timeout) -> dict:
+    """Google Gemini through its OpenAI-compatible endpoint; low reasoning effort for speed."""
+    base = (os.environ.get("GEMINI_BASE_URL") or GEMINI_BASE_URL).rstrip("/")
+    headers = {"Authorization": "Bearer " + os.environ.get("GEMINI_API_KEY", "")}
+    sys_msg = system + "\nSchemat JSON odpowiedzi:\n" + json.dumps(schema, ensure_ascii=False)
+    messages = [{"role": "system", "content": sys_msg}, {"role": "user", "content": user}]
+    return _chat_completions(base, headers, model, messages, schema, max_tokens, timeout, extra={"reasoning_effort": "low"})
+
+
 def _transport(provider: str) -> Transport:
     if TRANSPORT is not None:
         return TRANSPORT
+    if provider == "gemini":
+        return _gemini_transport
     return _openai_compat_transport if provider.startswith("openai_compat:") else _anthropic_transport
 
 
@@ -438,7 +473,7 @@ def complete_json(task: str, system: str, user: str, schema: dict, *, provider: 
             _record(task=task, model=model, refused=True)
             LAST["error"] = "budget"
             return None
-    timeout = float(os.environ.get("LLM_TIMEOUT") or (60 if is_paid else 300))
+    timeout = float(os.environ.get("LLM_TIMEOUT") or (60 if is_paid or p == "gemini" else 300))
     t0 = time.monotonic()
     try:
         out = _transport(p)(p, model, system, user, schema, max_tokens, timeout)

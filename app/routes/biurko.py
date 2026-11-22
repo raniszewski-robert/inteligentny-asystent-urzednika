@@ -141,8 +141,10 @@ def biurko(request: Request, teczka: int | None = None, wersja: str = "bip"):
         pick = with_draft[0] if with_draft else (fs[0] if fs else None)
         case = store.get_case(pick["id"]) if pick else None
     draft = b2_store.get_draft(case["id"]) if case else None
-    date_line, body, undecided = "", Markup(""), 0
+    date_line, body, undecided, differs = "", Markup(""), 0, False
     if draft is not None:
+        # wersje różnią się tylko danymi adresata: jawne w piśmie do wysyłki, zaczernione w wersji do BIP
+        differs = any(s.get("addressee") and s.get("status") != "rejected" for s in draft.get("spans") or [])
         answers = [d.get("text") or "" for d in store.documents(case["id"], "dept_answer")]
         date_line, body = letter_html(draft["text"], draft.get("spans") or [], version, answers)
         undecided = len(rd.undecided(draft.get("spans") or []))
@@ -153,7 +155,7 @@ def biurko(request: Request, teczka: int | None = None, wersja: str = "bip"):
         folders=fs,
         day_line=f"{WEEKDAYS[t.weekday()]}, {t.day} {MONTHS[t.month - 1]} {t.year}",
         open_line=f"{open_n} {plural(open_n, 'otwarta teczka', 'otwarte teczki', 'otwartych teczek')}",
-        case=case, draft=draft, version=version, date_line=date_line, letter=body,
+        case=case, draft=draft, version=version if differs else "bip", differs=differs, date_line=date_line, letter=body,
         notes=margin_notes(case, draft) if case else [],
         undecided=undecided,
         undecided_text=(f"{undecided} {plural(undecided, 'fragment czeka', 'fragmenty czekają', 'fragmentów czeka')} na decyzję"

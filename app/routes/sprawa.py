@@ -4,7 +4,8 @@ from __future__ import annotations
 from fastapi import APIRouter, Form, HTTPException, Request
 from fastapi.responses import PlainTextResponse, RedirectResponse, Response
 
-from app import services, store
+from app import jobs, services, store
+from app.routes.model import context as model_context
 from app.common import clerk, render, today
 from udip import db, dispatch, learning, security
 from udip.ingest import IngestError
@@ -72,7 +73,8 @@ def _page(request: Request, c: dict, **extra):
                   answers=[d for d in docs if d["kind"] == "dept_answer"], other_docs=[d for d in docs if d["kind"] not in ("request", "dept_answer")],
                   history=store.history(c["id"]), drafts=store.drafts(c["id"]), letter_types=services.letter_types(),
                   departments=services.departments(), names=services.department_names(), can_analyze=bool(text),
-                  request_source=source, dispatches=_dispatch_blocks(c), legal=legal, **extra)
+                  request_source=source, dispatches=_dispatch_blocks(c), legal=legal,
+                  **(model_context(jobs.running(f"sprawa-analiza:{c['id']}")) | extra))
 
 
 @router.get("/sprawy/{case_id}")
@@ -97,6 +99,7 @@ def analyze_case(request: Request, case_id: int):
             deps += [d for d in ids if d not in deps]
         fields["departments"] = deps
     store.update_case(case_id, **fields)
+    services.start_case_analysis(case_id, text, exclude_id=c["number"])
     return RedirectResponse(f"/sprawy/{case_id}", status_code=303)
 
 

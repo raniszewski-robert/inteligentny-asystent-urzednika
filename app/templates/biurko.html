@@ -34,7 +34,9 @@
     {% if case %}
     <div class="desk-open-head">
       <h2 id="h-teczka">Otwarta teczka: <a href="/sprawy/{{ case.id }}">{{ case.number }}</a></h2>
-      {% if draft %}
+      {% if draft and not differs %}
+      <span class="desk-same" title="Wersje różnią się tylko danymi adresata">Do wysyłki = do BIP: brak danych adresata do ukrycia</span>
+      {% elif draft %}
       <div class="seg seg-ink" role="group" aria-label="Wersja pisma">
         <a class="seg-btn{% if version == 'wysylka' %} on{% endif %}" href="/biurko?teczka={{ case.id }}&amp;wersja=wysylka" aria-pressed="{{ 'true' if version == 'wysylka' else 'false' }}">Do wysyłki</a>
         <a class="seg-btn{% if version == 'bip' %} on{% endif %}" href="/biurko?teczka={{ case.id }}&amp;wersja=bip" aria-pressed="{{ 'true' if version == 'bip' else 'false' }}">Do BIP</a>

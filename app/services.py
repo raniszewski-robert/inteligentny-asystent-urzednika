@@ -39,9 +39,56 @@ def archive() -> Archive:
 
 
 def run_analysis(text: str, exclude_id: str | None = None) -> dict:
-    """Rules; local Bielik only when .env enables it (app.settings). The rule result is always the base."""
+    """Rules only: the page answers at once. Bielik's additions come in the background (start_model_analysis)."""
+    return analyze(text, archive(), departments(), today(), exclude_id=exclude_id, provider="rules")
+
+
+def model_analysis(text: str, exclude_id: str | None = None) -> dict | None:
+    """Rules + Bielik (summary, flags, routing reasons); None when the model is off or added nothing."""
     from app import settings
-    return analyze(text, archive(), departments(), today(), exclude_id=exclude_id, provider=settings.provider_arg())
+    from udip import llm
+    from udip.analyze import _merge_llm, analyze_rules
+    p = settings.effective()
+    if p == "rules":
+        return None
+    res = analyze_rules(text, archive(), departments(), today(), exclude_id=exclude_id)
+    res = _merge_llm(res, text, departments(), llm.provider_for(p))
+    return res if res.get("llm_used") else None
+
+
+def start_model_analysis(text: str, exclude_id: str | None = None) -> str | None:
+    """Background job for the Nowy wniosek page; None when Bielik is off."""
+    from app import jobs, settings
+    if not (text or "").strip() or not settings.llm_on():
+        return None
+    key = "analiza:" + hashlib.sha256(text.encode("utf-8")).hexdigest()[:16]
+    return jobs.submit(key, "analiza", model_analysis, text, exclude_id)
+
+
+def start_case_analysis(case_id: int, text: str, exclude_id: str | None = None) -> str | None:
+    """Background job: Bielik's additions go into the case's stored analysis; the case page reloads when ready."""
+    from app import jobs, settings
+    if not (text or "").strip() or not settings.llm_on():
+        return None
+
+    def work() -> dict | None:
+        res = model_analysis(text, exclude_id)
+        if not res:
+            return {"message": f"{settings.model_name()} nie dodał nic ponad reguły."}
+        c = store.get_case(case_id)
+        if c is None:
+            return None
+        an = dict(c.get("analysis") or {})
+        an.update(summary=res.get("summary", ""), applicant_type=res.get("applicant_type", ""), flags=res.get("flags", []),
+                  llm_used=True, provider=res.get("provider", ""))
+        by_no = {q["no"]: q.get("llm_routing") for q in res.get("questions", [])}
+        for q in an.get("questions") or []:
+            if by_no.get(q.get("no")):
+                q["llm_routing"] = by_no[q["no"]]
+        store.update_case(case_id, analysis=an)
+        return {"message": f"{settings.model_name()} dopisał streszczenie i uzasadnienia wydziałów.", "target": f"/sprawy/{case_id}"}
+
+    return jobs.submit(f"sprawa-analiza:{case_id}", "odswiez", work)
 
 
 def uploads_dir() -> Path:

@@ -16,7 +16,8 @@ from fastapi.responses import RedirectResponse, Response
 
 from app import b2_redact as rd
 from app import b2_store as store
-from app import services
+from app import jobs, services
+from app.routes.model import context as model_context
 from app.common import clerk, render
 from udip import config, security
 from udip.ingest import IngestError, read_any
@@ -77,8 +78,8 @@ def _apply_form(text: str, spans: list[dict], form, action: str, *, letter: bool
             spans = rd.redetect(text, spans, edited, letter=letter, keep=keep)
             text, changed = edited, True
     spans = _prepare(rd.add_manual(text, spans, manual))
-    if action == "model":
-        spans = model_spans(text, spans, keep)
+    if action == "model":  # w tle: start_model_spans() po zapisaniu decyzji
+        pass
     elif action == "akceptuj":
         for s in spans:
             if s["status"] == "suggested":
@@ -139,6 +140,49 @@ def _page(request: Request, *, mode: str, heading: str, base: str, action_url: s
                   manual="\n".join(rd.manual_phrases(spans)), type_label=rd.type_label, status_label=rd.STATUS_LABEL, **extra)
 
 
+def _model_msg(before: int, after: int) -> str:
+    from app import settings
+    n, who = after - before, settings.model_name()
+    return (f"{who} dodał {n} fragm. do decyzji (fioletowa ramka)." if n > 0 else
+            f"{who} nie znalazł nic ponad reguły.")
+
+
+def start_case_model(case_id: int) -> str | None:
+    if not settings_llm_on():
+        return None
+
+    def work() -> dict:
+        draft = store.get_draft(case_id)
+        spans = _prepare(draft["spans"])
+        before = len(spans)
+        spans = model_spans(draft["text"], spans, [])
+        if store.get_draft(case_id)["id"] == draft["id"]:  # nikt w międzyczasie nie zapisał nowej wersji
+            store.set_spans(draft["id"], spans)
+        return {"message": _model_msg(before, len(spans)), "target": f"/sprawy/{case_id}/anonimizacja"}
+
+    return jobs.submit(f"anon:{case_id}", "odswiez", work)
+
+
+def start_doc_model(token: str) -> str | None:
+    if not settings_llm_on():
+        return None
+
+    def work() -> dict:
+        doc = store.get_doc(token)
+        spans = _prepare(doc["spans"])
+        before = len(spans)
+        doc["spans"] = model_spans(doc["text"], spans, doc.get("keep", []))
+        store.save_doc(token, doc)
+        return {"message": _model_msg(before, len(doc["spans"])), "target": f"/anonimizacja/{token}"}
+
+    return jobs.submit(f"anon-doc:{token}", "odswiez", work)
+
+
+def settings_llm_on() -> bool:
+    from app import settings
+    return settings.llm_on()
+
+
 # ---- case mode ----------------------------------------------------------------------------------------------------
 
 def _case_draft(case_id: int) -> tuple[dict, dict]:
@@ -157,11 +201,11 @@ def _case_page(request: Request, case: dict, draft: dict, **kw):
 
 
 @router.get("/sprawy/{case_id}/anonimizacja")
-def case_anon(request: Request, case_id: int, msg: str = ""):
+def case_anon(request: Request, case_id: int, msg: str = "", bielik: str = ""):
     case, draft = _case_draft(case_id)
     if draft is None:
         return RedirectResponse(f"/sprawy/{case_id}/projekt", status_code=303)
-    return _case_page(request, case, draft, message=MESSAGES.get(msg, ""))
+    return _case_page(request, case, draft, message=MESSAGES.get(msg, ""), **model_context(jobs.get(bielik)))
 
 
 MESSAGES = {
@@ -206,6 +250,9 @@ async def case_anon_post(request: Request, case_id: int):
         store.set_spans(draft["id"], spans, finals["do_wysylki"], finals["zanonimizowana"])
         return RedirectResponse(f"{url}?msg=zatwierdzono", status_code=303)
     store.set_spans(draft["id"], spans)
+    if action == "model":
+        jid = start_case_model(case_id)
+        return RedirectResponse(f"{url}?bielik={jid}" if jid else url, status_code=303)
     return RedirectResponse(f"{url}?msg={'nowa' if changed else 'zapamietano' if form.get('pamiec') else 'zapisano'}", status_code=303)
 
 
@@ -296,8 +343,8 @@ async def upload(request: Request):
 
 
 @router.get("/anonimizacja/{token}")
-def doc_anon(request: Request, token: str, msg: str = ""):
-    return _doc_page(request, token, _doc_or_404(token), message=MESSAGES.get(msg, ""))
+def doc_anon(request: Request, token: str, msg: str = "", bielik: str = ""):
+    return _doc_page(request, token, _doc_or_404(token), message=MESSAGES.get(msg, ""), **model_context(jobs.get(bielik)))
 
 
 @router.post("/anonimizacja/{token}")
@@ -323,6 +370,9 @@ async def doc_anon_post(request: Request, token: str):
         store.save_doc(token, doc)
         return RedirectResponse(f"/anonimizacja/{token}?msg=zatwierdzono", status_code=303)
     store.save_doc(token, doc)
+    if action == "model":
+        jid = start_doc_model(token)
+        return RedirectResponse(f"/anonimizacja/{token}?bielik={jid}" if jid else f"/anonimizacja/{token}", status_code=303)
     return RedirectResponse(f"/anonimizacja/{token}?msg={'nowa' if changed else 'zapamietano' if form.get('pamiec') else 'zapisano'}",
                             status_code=303)
 

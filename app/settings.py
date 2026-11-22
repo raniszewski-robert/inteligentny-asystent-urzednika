@@ -1,10 +1,12 @@
-"""Model językowy: domyślnie same reguły. Lokalny Bielik (Ollama, offline) włącza się tylko wpisem w .env.
+"""Model językowy: reguły zawsze, a lokalny Bielik (Ollama, offline) dokłada swoje w tle, gdy działa na komputerze.
 
-Nie ma wyboru w interfejsie. Konfiguracja w .env:
-- UDIP_PROVIDER=openai_compat:bielik – reguły + Bielik; wyniki modelu przechodzą przez te same kontrole co reguły,
-  a gdy serwer modelu nie odpowiada, aplikacja po cichu zostaje przy regułach;
-- LLM_BASE_URL (domyślnie http://localhost:11434/v1, Ollama) i LLM_MODEL – gdzie jest Bielik.
-Każda inna wartość (albo brak) = same reguły; modeli spoza komputera nie da się włączyć.
+Strony nigdy nie czekają na model: odpowiadają wynikiem reguł, a Bielik liczy w tle (app/jobs.py). Jego wyniki
+przechodzą przez te same kontrole co reguły; gdy serwer modelu nie odpowiada, aplikacja po cichu zostaje przy regułach.
+Konfiguracja w .env:
+- LLM_BASE_URL (domyślnie http://localhost:11434/v1, Ollama) i LLM_MODEL – gdzie jest Bielik;
+- UDIP_PROVIDER=rules – same reguły (testy, wyłączenie modelu); UDIP_PROVIDER=openai_compat:<nazwa> – inny model lokalny;
+- UDIP_PROVIDER=gemini + GEMINI_API_KEY (opcjonalnie GEMINI_MODEL) – Google Gemini w chmurze, szybki, tylko na danych
+  testowych (pokaz); bez klucza albo z UDIP_OFFLINE=1 aplikacja zostaje przy regułach.
 """
 from __future__ import annotations
 
@@ -14,7 +16,7 @@ import urllib.request
 
 from udip import llm
 
-DEFAULT_PROVIDER = "rules"
+DEFAULT_PROVIDER = "openai_compat:bielik"
 DEFAULT_BASE_URL = "http://localhost:11434/v1"
 PING_TTL = 30.0   # s: jak długo pamiętamy, czy serwer modelu odpowiada
 PING_TIMEOUT = 0.8
@@ -22,8 +24,10 @@ _ping: dict = {"base": None, "at": 0.0, "up": False}
 
 
 def provider_choice() -> str:
-    """Same reguły, chyba że .env wskazuje model lokalny (UDIP_PROVIDER=openai_compat:<nazwa>)."""
+    """Bielik z regułami; tylko modele lokalne. UDIP_PROVIDER=rules = same reguły."""
     raw = os.environ.get("UDIP_PROVIDER", "").strip()
+    if raw in ("rules", "gemini"):
+        return raw
     return raw if raw.startswith("openai_compat:") else DEFAULT_PROVIDER
 
 
@@ -50,6 +54,8 @@ def _server_up() -> bool:
 def effective() -> str:
     """Dostawca na to wywołanie: Bielik, gdy odpowiada, inaczej reguły."""
     p = provider_choice()
+    if p == "gemini":
+        return "gemini" if llm.available("gemini") else "rules"
     if p == "rules" or not _server_up():
         return "rules"
     os.environ.setdefault("LLM_BASE_URL", base_url())  # udip.llm uznaje model za dostępny, gdy adres jest ustawiony
@@ -63,3 +69,12 @@ def provider_arg() -> str | None:
 
 def llm_on() -> bool:
     return effective() != "rules"
+
+
+def model_name() -> str:
+    """Nazwa modelu na ekranie: Gemini albo Bielik."""
+    return "Gemini" if provider_choice() == "gemini" else "Bielik"
+
+
+def model_where() -> str:
+    return "chmura Google, dane testowe" if provider_choice() == "gemini" else "lokalnie"

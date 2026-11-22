@@ -37,7 +37,7 @@ def test_open_folder_shows_letter_numbers_and_notes(client):
     assert re.search(r'<span class="num-ok"[^>]*>839</span>', r.text)
     assert "liczby zgadzają się z odpowiedzią: SCHRONISKO, WGK" in r.text
     assert f'href="/sprawy/{client.cid}/anonimizacja">Zatwierdź i podpisz' in r.text
-    assert 'aria-pressed="true">Do BIP' in r.text
+    assert "brak danych adresata do ukrycia" in r.text and "Do wysyłki</a>" not in r.text  # no addressee → one version
 
 
 def test_default_folder_is_the_one_with_a_draft(client):
@@ -46,10 +46,28 @@ def test_default_folder_is_the_one_with_a_draft(client):
     assert "Otwarta teczka: " in r.text and 'class="sheet"' in r.text
 
 
-def test_send_version_and_unknown_folder(client):
+def test_send_and_bip_versions_differ_by_addressee(client):
+    from app import b2_store
     client.get(f"/sprawy/{client.cid}/projekt")
-    r = client.get(f"/biurko?teczka={client.cid}&wersja=wysylka")
-    assert 'aria-pressed="true">Do wysyłki' in r.text
+    d = b2_store.get_draft(client.cid)
+    text = d["text"].replace("[adresat – uzupełnij z rejestru]", "Anna Nowak-Kowalska\nul. Słoneczna 7/12\n85-001 Bydgoszcz")
+    assert text != d["text"]
+    r = client.post(f"/sprawy/{client.cid}/projekt", data={"action": "zapisz", "text": text, "base_version": d["version"]})
+    assert r.status_code in (200, 303)
+    d2 = b2_store.get_draft(client.cid)
+    spans = [dict(s, status="accepted") for s in d2["spans"]]
+    assert any(s.get("addressee") for s in spans), "adresat w nagłówku powinien dostać flagę addressee"
+    b2_store.set_spans(d2["id"], spans)
+    send = client.get(f"/biurko?teczka={client.cid}&wersja=wysylka").text
+    bip = client.get(f"/biurko?teczka={client.cid}&wersja=bip").text
+    assert 'aria-pressed="true">Do wysyłki' in send and 'aria-pressed="true">Do BIP' in bip
+    assert "Słoneczna 7/12" in send and '<mark class="sp sp-accepted"' in bip
+    head_send, head_bip = send.split('class="sheet-body"')[1].split("Szanowni")[0], bip.split('class="sheet-body"')[1].split("Szanowni")[0]
+    assert "sp-accepted" not in head_send and "Anna Nowak-Kowalska" in head_send  # do wysyłki: adresat jawny
+    assert "sp-accepted" in head_bip  # do BIP: dane adresata zaczernione
+
+
+def test_unknown_folder(client):
     assert client.get("/biurko?teczka=99999").status_code == 200
 
 
@@ -59,3 +77,16 @@ def test_plural_and_stamp():
     assert stamp({"urgency": "overdue"}) == "Po terminie"
     assert stamp({"urgency": "ok", "working_days_left": 1}) == "1 dzień"
     assert stamp({"urgency": "ok", "working_days_left": 6}) == "6 dni"
+
+
+def test_number_check_ignores_addressee_header(client):
+    from app import b2_store
+    client.get(f"/sprawy/{client.cid}/projekt")
+    d = b2_store.get_draft(client.cid)
+    text = d["text"].replace("[adresat – uzupełnij z rejestru]", "Anna Nowak-Kowalska\nul. Słoneczna 7/12\n85-001 Bydgoszcz")
+    client.post(f"/sprawy/{client.cid}/projekt", data={"action": "zapisz", "text": text, "base_version": d["version"]})
+    assert b2_store.get_draft(client.cid)["report"].get("number_check_edit") == []
+    d2 = b2_store.get_draft(client.cid)
+    bad = d2["text"].replace("839 psom", "939 psom")
+    client.post(f"/sprawy/{client.cid}/projekt", data={"action": "zapisz", "text": bad, "base_version": d2["version"]})
+    assert b2_store.get_draft(client.cid)["report"].get("number_check_edit")  # a changed figure in „Ad” is still caught

@@ -30,6 +30,7 @@
   </div>
 </header>
 <main class="page{% block page_class %}{% endblock %}">
+{% if model_job %}{% include "_bielik.html" %}{% endif %}
 {% block content %}{% endblock %}
 </main>
 <footer class="foot">Narzędzie pomocnicze. Decyzję w sprawie podejmuje urzędnik.</footer>

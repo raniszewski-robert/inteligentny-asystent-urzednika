@@ -1,6 +1,7 @@
 """Archiwum / Baza wiedzy (T17): BM25 search over past cases and uploaded laws/orders, imports that the next search uses."""
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 import tempfile
@@ -11,7 +12,7 @@ from urllib.parse import quote
 from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import RedirectResponse
 
-from app import services, store
+from app import jobs, services, store
 from app.common import render
 from udip import learning
 from udip.ingest import IngestError, guess_date
@@ -84,6 +85,42 @@ def _years() -> list[int]:
     return sorted({int(str(r.get("date"))[:4]) for r in store.archive_records() if str(r.get("date") or "")[:4].isdigit()}, reverse=True)
 
 
+def qa_sources(question: str, k_cases: int = 4, k_laws: int = 2) -> list[dict]:
+    """Fragments for „Zapytaj archiwum”: the best BM25 cases (request + answer) and law paragraphs, numbered S1, S2…"""
+    arch = services.archive()
+    recs = {r.get("id"): r for r in arch.records}
+    out: list[dict] = []
+    for h in arch.search(question, k=k_cases):
+        r = recs.get(h["id"]) or {}
+        text = (f"Wniosek: {(r.get('request_text') or '').strip()[:500]}\n"
+                f"Odpowiedź: {(r.get('response_text') or '').strip()[:1600]}")
+        excerpt = " ".join(((r.get("response_text") or "").strip() or (r.get("request_text") or "")).split())[:420]
+        out.append({"sid": f"S{len(out) + 1}", "kind": "sprawa", "label": f"sprawa {h['id']}" + (f" ({h['date']})" if h.get("date") else ""),
+                    "title": h.get("title") or "", "url": f"/archiwum/sprawa/{quote(str(h['id']), safe='')}", "text": text,
+                    "excerpt": excerpt})
+    for h in search_laws(question, k=k_laws):
+        out.append({"sid": f"S{len(out) + 1}", "kind": "przepis", "label": h["title"], "title": "",
+                    "url": f"/archiwum/przepis/{h['law_id']}#p{h['para']}", "text": (h.get("text") or "")[:1500],
+                    "excerpt": " ".join((h.get("text") or "").split())[:420]})
+    return out
+
+
+def _answer(question: str, sources: list[dict]) -> dict:
+    from app import settings
+    from udip.llm_tasks import chat
+    res = chat.ask(question, sources, provider=settings.effective())
+    return res or {"answer": "", "citations": [], "found": False,
+                   "message": f"{settings.model_name()} nie odpowiedział. Zostają fragmenty poniżej."}
+
+
+def start_question(question: str, sources: list[dict]) -> str | None:
+    from app import settings
+    if not question or not sources or not settings.llm_on():
+        return None
+    key = "pytanie:" + hashlib.sha256(question.strip().lower().encode("utf-8")).hexdigest()[:16]
+    return jobs.submit(key, "pytanie", _answer, question, sources)
+
+
 def _page(request: Request, q: str = "", rok: str = "", wydzial: str = "", **extra):
     year = int(rok) if rok.isdigit() else None
     laws = store.law_records()
@@ -94,8 +131,16 @@ def _page(request: Request, q: str = "", rok: str = "", wydzial: str = "", **ext
 
 
 @router.get("/archiwum")
-def archiwum(request: Request, q: str = "", rok: str = "", wydzial: str = "", dodano: str = ""):
-    return _page(request, q.strip(), rok, wydzial, added=[x for x in dodano.split(",") if x])
+def archiwum(request: Request, q: str = "", rok: str = "", wydzial: str = "", dodano: str = "", pytanie: str = ""):
+    from app import settings
+    pytanie = " ".join(pytanie.split())[:500]
+    extra: dict = {"pytanie": pytanie, "llm_on": settings.llm_on(), "qa_model_name": settings.model_name(),
+                   "qa_model_where": settings.model_where()}
+    if pytanie:
+        sources = qa_sources(pytanie)
+        job = jobs.get(start_question(pytanie, sources))
+        extra.update(qa_sources=sources, qa_job=job, qa_elapsed=jobs.elapsed(job) if job else 0)
+    return _page(request, q.strip(), rok, wydzial, added=[x for x in dodano.split(",") if x], **extra)
 
 
 @router.get("/archiwum/sprawa/{case_id:path}")

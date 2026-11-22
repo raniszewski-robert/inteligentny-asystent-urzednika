@@ -4,7 +4,7 @@
 
 .DESCRIPTION
   1. Sprawdza Pythona >= 3.11 i Git (podaje polecenie winget, jeśli czegoś brakuje).
-  2. Tworzy albo uzupełnia <repo>\.env: UDIP_ENV_FILE, UDIP_VENV, UDIP_DATA_DIR, LLM_BUDGET_USD=15, UDIP_PROVIDER=rules.
+  2. Tworzy albo uzupełnia <repo>\.env: UDIP_ENV_FILE, UDIP_VENV, UDIP_DATA_DIR, LLM_BUDGET_USD=15, UDIP_PROVIDER=openai_compat:bielik.
      Istniejących linii nie zmienia (w szczególności linii z kluczem API); dopisuje tylko brakujące klucze.
   3. Tworzy środowisko Pythona w <repo>\.venv; pamięć podręczna pip i pliki tymczasowe trafiają do <repo>\var.
   4. Instaluje paczki z requirements.txt i wczytuje dane startowe UMB (scripts\seed.py): 10 spraw z arkusza
@@ -168,7 +168,7 @@ $wanted = [ordered]@{
     'UDIP_VENV'      = $Venv
     'UDIP_DATA_DIR'  = $DataDir
     'LLM_BUDGET_USD' = '15'
-    'UDIP_PROVIDER'  = 'rules'
+    'UDIP_PROVIDER'  = 'openai_compat:bielik'
 }
 $tessDefault = 'D:\Tools\Tesseract-OCR\tesseract.exe'
 if (-not $cfg['TESSERACT_CMD'] -and -not (Get-Command tesseract -ErrorAction SilentlyContinue) -and (Test-Path -LiteralPath $tessDefault)) {

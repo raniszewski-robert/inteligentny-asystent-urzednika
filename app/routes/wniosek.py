@@ -6,7 +6,8 @@ from datetime import date
 from fastapi import APIRouter, Request
 from fastapi.responses import RedirectResponse
 
-from app import services, store
+from app import jobs, services, store
+from app.routes.model import context as model_context
 from app.common import clerk, render, today
 from udip import learning, security
 from udip.ingest import IngestError, guess_date
@@ -93,7 +94,8 @@ async def submit(request: Request):
 
     an = services.run_analysis(text)
     return _page(request, text=text, doc=doc, analysis=an, form=_form_defaults(an, text, request),
-                 chosen={q["no"]: [q["routing"][0]["department"]] if q["routing"] else [] for q in an["questions"]})
+                 chosen={q["no"]: [q["routing"][0]["department"]] if q["routing"] else [] for q in an["questions"]},
+                 **model_context(jobs.get(services.start_model_analysis(text))))
 
 
 def _save(request: Request, f, text: str, doc: dict):
@@ -134,6 +136,7 @@ def _save(request: Request, f, text: str, doc: dict):
     if form["status"] != "a_brak_dzialan":
         store.set_status(cid, form["status"], clerk(request), "przy rejestracji wniosku")
     _log_routing(an, chosen, cid)
+    services.start_case_analysis(cid, text)  # Bielik dopisze się do analizy sprawy w tle (z pamięci podręcznej, gdy już liczył)
     sec = _security(doc, text)
     if security.count(sec):
         security.log_scan(sec, cid)

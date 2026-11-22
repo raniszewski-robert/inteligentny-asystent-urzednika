@@ -10,6 +10,7 @@ _TMP = tempfile.mkdtemp(prefix="udip_app_test_")
 os.environ["UDIP_DATA_DIR"] = _TMP
 os.environ["UDIP_TODAY"] = "2026-11-22"
 os.environ["UDIP_PROVIDER"] = "rules"
+os.environ["UDIP_JOBS_SYNC"] = "1"  # Bielik jobs run inline in tests
 
 
 @pytest.fixture

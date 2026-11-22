@@ -11,6 +11,7 @@ def isolate(tmp_path, monkeypatch) -> None:
     monkeypatch.setenv("UDIP_DATA_DIR", str(tmp_path))
     monkeypatch.setenv("UDIP_TODAY", "2026-11-22")
     monkeypatch.setenv("UDIP_PROVIDER", "rules")
+    monkeypatch.setenv("UDIP_JOBS_SYNC", "1")
 
 
 def seed_543() -> int:

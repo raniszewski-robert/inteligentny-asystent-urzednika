@@ -1,4 +1,4 @@
-"""T23: LLM features in the UI. Rules by default; local Bielik only when .env enables it and its server answers.
+"""T23: LLM features in the UI. Rules always; local Bielik in the background when its server answers.
 Rules → no LLM elements; a faked model → badges bound to the real results ($0, offline)."""
 from __future__ import annotations
 
@@ -35,11 +35,10 @@ def test_rules_only_shows_no_llm_elements(client):
     assert 'id="badge-analiza"' not in client.get(f"/sprawy/{client.cid}").text
 
 
-def test_rules_by_default_bielik_only_from_env(client, monkeypatch):
+def test_bielik_by_default_rules_when_server_down(client, monkeypatch):
     from app import settings
     monkeypatch.delenv("UDIP_PROVIDER", raising=False)
-    assert settings.provider_choice() == "rules" and settings.effective() == "rules"
-    monkeypatch.setenv("UDIP_PROVIDER", "openai_compat:bielik")
+    assert settings.provider_choice() == "openai_compat:bielik"
     monkeypatch.setattr(settings, "_server_up", lambda: False)
     assert settings.effective() == "rules" and not settings.llm_on()
     monkeypatch.setattr(settings, "_server_up", lambda: True)
@@ -47,7 +46,7 @@ def test_rules_by_default_bielik_only_from_env(client, monkeypatch):
     assert settings.effective() == "openai_compat:bielik" and settings.llm_on()
     for cloud in ("anthropic:haiku", "anthropic:sonnet"):  # only local models, ever
         monkeypatch.setenv("UDIP_PROVIDER", cloud)
-        assert settings.provider_choice() == "rules"
+        assert settings.provider_choice() == "openai_compat:bielik"
     monkeypatch.setenv("UDIP_PROVIDER", "rules")
     assert settings.effective() == "rules"
 

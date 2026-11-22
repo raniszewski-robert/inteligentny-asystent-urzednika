@@ -2,6 +2,35 @@
 {% block content %}
 <h1>Archiwum i przepisy</h1>
 
+<section class="panel ask" aria-labelledby="h-zapytaj">
+  <h2 id="h-zapytaj">Zapytaj archiwum</h2>
+  <form method="get" action="/archiwum" class="search-row">
+    <div class="field grow"><label for="pytanie">Pytanie</label>
+      <input id="pytanie" name="pytanie" type="search" value="{{ pytanie }}" placeholder="np. co odpowiadaliśmy o opiece nad bezdomnymi zwierzętami w 2025 r.?"></div>
+    <div class="field"><button type="submit" class="btn-primary">Zapytaj</button></div>
+  </form>
+  {% if pytanie %}
+    {% if qa_job %}
+      {% with model_job=qa_job, model_elapsed=qa_elapsed, model_names={}, model_name=qa_model_name, model_where=qa_model_where %}{% include "_bielik.html" %}{% endwith %}
+    {% elif not llm_on %}
+    <p class="small muted">Model językowy jest wyłączony, więc poniżej są same najlepiej pasujące fragmenty z archiwum i przepisów.</p>
+    {% endif %}
+    {% if qa_sources %}
+    <h3>{% if qa_job %}Fragmenty, z których korzysta odpowiedź{% else %}Najlepiej pasujące fragmenty{% endif %}</h3>
+    <ol class="hits qa-sources">
+      {% for s in qa_sources %}
+      <li id="zrodlo-{{ s.sid }}"><b>[{{ s.sid }}]</b> <a href="{{ s.url }}">{{ s.label }}</a>{% if s.title %} – {{ s.title }}{% endif %}
+        <div class="excerpt small">{{ s.excerpt }}{% if s.excerpt|length >= 420 %}…{% endif %}</div></li>
+      {% endfor %}
+    </ol>
+    {% else %}
+    <p>W archiwum i przepisach nie ma fragmentów pasujących do pytania.</p>
+    {% endif %}
+  {% else %}
+  <p class="small muted">Odpowiedź powstaje tylko z fragmentów archiwum i przepisów dodanych w tym urzędzie, z odwołaniem do źródeł{% if llm_on %} ({{ qa_model_name }}, {{ qa_model_where }}){% endif %}.</p>
+  {% endif %}
+</section>
+
 <form class="panel" method="get" action="/archiwum">
   <div class="search-row">
     <div class="field grow"><label for="q">Szukaj w sprawach i przepisach</label><input id="q" name="q" type="search" value="{{ q }}"></div>

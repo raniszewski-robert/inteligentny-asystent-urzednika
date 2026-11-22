@@ -513,6 +513,7 @@ ol.hits > li { margin-bottom: var(--s3); }
 .desk-open-head h2 { margin: 0; font-size: 22px; }
 .desk-open-head h2 a { color: inherit; text-decoration: none; }
 .desk-open-head h2 a:hover { color: var(--link); text-decoration: underline; }
+.desk-same { font-size: 13px; color: var(--muted); border: 1px dashed #a89c87; border-radius: 8px; padding: 7px 12px; }
 .seg.seg-ink { background: transparent; border: 1px solid #a89c87; padding: 0; gap: 0; overflow: hidden; }
 .seg.seg-ink .seg-btn { border-radius: 0; padding: 8px 14px; color: var(--ink); font-weight: 500; }
 .seg.seg-ink .seg-btn.on { background: var(--ink); color: var(--letterhead); box-shadow: none; }
@@ -526,6 +527,11 @@ ol.hits > li { margin-bottom: var(--s3); }
 .sheet-date { margin: 0 0 22px; text-align: right; max-width: none; }
 .sheet-body { white-space: pre-wrap; overflow-wrap: anywhere; }
 .sheet-body mark.sp { cursor: default; padding: 0 2px; }
+.sheet-body mark.sp { color: inherit; border-radius: 2px; }
+.sheet-body mark.sp-suggested { background: #cbc7bf; }
+.sheet-body mark.sp-review { background: #fff6e8; outline: 2px dashed #b45309; outline-offset: 0; }
+.sheet-body mark.sp-accepted { background: var(--ink); color: var(--ink); }
+.sheet-body mark.sp-rejected { background: transparent; }
 .sheet-empty p { max-width: none; }
 .num-ok { border-bottom: 2px solid var(--ok-line); }
 
@@ -546,3 +552,26 @@ ol.hits > li { margin-bottom: var(--s3); }
 @media (prefers-reduced-motion: reduce) {
   .folder-body { transition: none; }
 }
+
+/* ---- Bielik w tle: pasek postępu i wyniki ---------------------------------------------------------------------- */
+.bielik { margin: 0 0 var(--s4); }
+.bielik-wait {
+  display: flex; gap: var(--s3); align-items: flex-start; padding: var(--s3) var(--s4);
+  background: var(--surface); border: 1px dashed var(--line-strong); border-radius: 3px; color: var(--ink);
+}
+.bielik-wait .muted { display: block; }
+.bielik-dot {
+  flex: 0 0 auto; width: 10px; height: 10px; margin-top: 7px; border-radius: 50%; background: var(--link);
+  animation: bielik-pulse 1.2s ease-in-out infinite;
+}
+@keyframes bielik-pulse { 0%, 100% { opacity: 0.25; } 50% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .bielik-dot { animation: none; } }
+.bielik p { max-width: none; }
+.bielik ul { margin: var(--s2) 0; padding-left: var(--s5); }
+.answer {
+  background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--link);
+  padding: var(--s4) var(--s5); border-radius: 3px; box-shadow: var(--shadow-sm);
+}
+.answer-text { font-family: var(--serif); font-size: 1.1rem; line-height: 1.6; margin-bottom: var(--s3); }
+.ask .search-row { margin-bottom: var(--s3); }
+.qa-sources > li { margin-bottom: var(--s3); }
