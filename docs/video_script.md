@@ -62,7 +62,7 @@ Narzędzie uczy się z tego, co wgra urzędnik. Dodaję zarządzenie o informacj
 
 ## 8. Bez internetu i zamknięcie (0:16)
 
-> Klik: wyłączenie Wi-Fi (ikona systemowa w kadrze); odświeżenie `/kalendarz`; `/ustawienia`: dostawca „rules”, licznik wydatków na model 0.
+> Klik: wyłączenie Wi-Fi (ikona systemowa w kadrze); odświeżenie `/biurko` i `/kalendarz`: wszystko działa na regułach, bez internetu.
 > Plansza: „Bielik-11B-v3.1-Instruct, Apache-2.0, lokalnie w urzędzie” i „pomiar: nie zmierzono w czasie hackathonu”; adres repozytorium.
 
 Bez internetu wszystko działa dalej. Docelowo akapity redaguje lokalny model Bielik na serwerze urzędu. Pismo powstaje w kilka minut, a decyzja zawsze należy do urzędnika.
@@ -77,6 +77,6 @@ Bez internetu wszystko działa dalej. Docelowo akapity redaguje lokalny model Bi
 > | 5 | `GET/POST /sprawy/{id}/projekt` | przeniesienie zdania z Ad 2 do Ad 1, wersja 2 |
 > | 6 | `GET/POST /anonimizacja` | `docs/deck/demo_dane_osobowe.docx`, eksport DOCX |
 > | 7 | `GET /archiwum`, `POST /archiwum/przepisy` | Zarządzenie UMB 2024 (PDF) |
-> | 8 | `GET /kalendarz`, `GET /ustawienia` | Wi-Fi wyłączone |
+> | 8 | `GET /biurko`, `GET /kalendarz` | Wi-Fi wyłączone |
 >
 > Wymagania sekcji 4 pkt 4 treści zadania w filmie: wgranie pliku Word (scena 3, 6), przetwarzanie (3–5), projekt odpowiedzi (5). Testy jury z sekcji 6: 1 → scena 3, 2 → 5, 3 → 6, 5 → 2, 6 → 2 i 7.

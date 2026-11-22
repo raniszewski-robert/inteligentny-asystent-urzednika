@@ -21,9 +21,10 @@ def test_layout_header_and_nav():
     assert r.status_code == 200
     html = r.text
     assert "Urząd Miasta Bydgoszczy · Biuro Komunikacji Społecznej" in html
-    for path in ["/biurko", "/kalendarz", "/wniosek/nowy", "/archiwum", "/anonimizacja", "/ustawienia"]:
+    for path in ["/biurko", "/wniosek/nowy", "/archiwum", "/anonimizacja"]:
         assert f'href="{path}"' in html
-    assert [p for p, _ in NAV] == ["/biurko", "/kalendarz", "/wniosek/nowy", "/archiwum", "/anonimizacja", "/ustawienia"]
+    assert [p for p, _ in NAV] == ["/biurko", "/wniosek/nowy", "/archiwum", "/anonimizacja"]
+    assert client.get("/ustawienia").status_code == 404
     assert 'aria-current="page"' in html
 
 

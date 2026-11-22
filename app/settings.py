@@ -1,67 +1,64 @@
-"""App settings kept under UDIP_DATA_DIR (not in .env): the clerk's choice of language model.
+"""Model językowy: domyślnie same reguły. Lokalny Bielik (Ollama, offline) włącza się tylko wpisem w .env.
 
-Default = UDIP_PROVIDER from .env (empty → auto in udip.llm.provider_for). The *effective* provider is what
-udip.llm.provider_for() returns for that choice: "rules" whenever the model cannot be used (no key, budget spent).
+Nie ma wyboru w interfejsie. Konfiguracja w .env:
+- UDIP_PROVIDER=openai_compat:bielik – reguły + Bielik; wyniki modelu przechodzą przez te same kontrole co reguły,
+  a gdy serwer modelu nie odpowiada, aplikacja po cichu zostaje przy regułach;
+- LLM_BASE_URL (domyślnie http://localhost:11434/v1, Ollama) i LLM_MODEL – gdzie jest Bielik.
+Każda inna wartość (albo brak) = same reguły; modeli spoza komputera nie da się włączyć.
 """
 from __future__ import annotations
 
-import json
 import os
-from pathlib import Path
+import time
+import urllib.request
 
-from udip import config, llm
+from udip import llm
 
-CHOICES = [  # (value, label)
-    ("rules", "Tylko reguły (bez modelu językowego)"),
-    ("openai_compat", "Model lokalny – Bielik (Ollama, offline)"),
-]
-
-
-def _file() -> Path:
-    return config.data_dir() / "settings.json"
-
-
-def _read() -> dict:
-    try:
-        return json.loads(_file().read_text(encoding="utf-8"))
-    except (OSError, ValueError):
-        return {}
-
-
-def _local_only(value: str) -> str:
-    value = value.strip()
-    if value == "openai_compat":
-        return "openai_compat:" + (os.environ.get("LLM_MODEL") or "local")
-    if value == "rules" or value.startswith("openai_compat:"):
-        return value
-    return "rules"
+DEFAULT_PROVIDER = "rules"
+DEFAULT_BASE_URL = "http://localhost:11434/v1"
+PING_TTL = 30.0   # s: jak długo pamiętamy, czy serwer modelu odpowiada
+PING_TIMEOUT = 0.8
+_ping: dict = {"base": None, "at": 0.0, "up": False}
 
 
 def provider_choice() -> str:
-    """Stored choice, else UDIP_PROVIDER; only local modes (rules or openai_compat:*) are permitted."""
-    raw = str(_read().get("provider") or os.environ.get("UDIP_PROVIDER", "")).strip()
-    if not raw:
-        return "rules"
-    return _local_only(raw)
+    """Same reguły, chyba że .env wskazuje model lokalny (UDIP_PROVIDER=openai_compat:<nazwa>)."""
+    raw = os.environ.get("UDIP_PROVIDER", "").strip()
+    return raw if raw.startswith("openai_compat:") else DEFAULT_PROVIDER
 
 
-def set_provider(value: str) -> str:
-    value = _local_only(value)
-    data = _read() | {"provider": value}
-    _file().write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
-    return value
+def base_url() -> str:
+    return (os.environ.get("LLM_BASE_URL") or DEFAULT_BASE_URL).rstrip("/")
 
 
-def provider_arg() -> str | None:
-    """What to pass as provider= to udip.analyze / detect / make_draft."""
-    return provider_choice()
+def _server_up() -> bool:
+    """Czy serwer modelu odpowiada (GET /models), z pamięcią na PING_TTL sekund."""
+    if llm.TRANSPORT is not None:  # testy podstawiają własny transport
+        return True
+    base, now = base_url(), time.monotonic()
+    if _ping["base"] == base and now - _ping["at"] < PING_TTL:
+        return _ping["up"]
+    try:
+        with urllib.request.urlopen(base + "/models", timeout=PING_TIMEOUT) as r:  # noqa: S310 – adres z .env, lokalny
+            up = 200 <= r.status < 300
+    except Exception:  # noqa: BLE001 – brak serwera = reguły
+        up = False
+    _ping.update(base=base, at=now, up=up)
+    return up
 
 
 def effective() -> str:
-    p = provider_arg()
-    if p and p.startswith("openai_compat:") and not llm.available(p):
+    """Dostawca na to wywołanie: Bielik, gdy odpowiada, inaczej reguły."""
+    p = provider_choice()
+    if p == "rules" or not _server_up():
         return "rules"
+    os.environ.setdefault("LLM_BASE_URL", base_url())  # udip.llm uznaje model za dostępny, gdy adres jest ustawiony
     return llm.provider_for(p)
+
+
+def provider_arg() -> str | None:
+    """Co przekazać jako provider= do udip.analyze / detect / make_draft."""
+    return effective()
 
 
 def llm_on() -> bool:

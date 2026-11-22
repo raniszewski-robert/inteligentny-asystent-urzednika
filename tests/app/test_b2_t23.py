@@ -1,4 +1,5 @@
-"""T23: LLM features in the UI. Rules only → no LLM elements; a faked model → badges bound to the real results ($0, offline)."""
+"""T23: LLM features in the UI. Rules by default; local Bielik only when .env enables it and its server answers.
+Rules → no LLM elements; a faked model → badges bound to the real results ($0, offline)."""
 from __future__ import annotations
 
 import pytest
@@ -20,30 +21,46 @@ def client(tmp_path, monkeypatch):
 
 @pytest.fixture()
 def model_on(monkeypatch):
+    from app import settings
     monkeypatch.setattr(L, "available", lambda provider=None: True)
+    monkeypatch.setattr(settings, "_server_up", lambda: True)
     monkeypatch.setenv("UDIP_PROVIDER", "openai_compat:bielik")
 
 
 def test_rules_only_shows_no_llm_elements(client):
-    s = client.get("/ustawienia").text
-    assert "Model niedostępny – wyniki z reguł" in s
-    assert "Anthropic" not in s and "Claude" not in s
+    assert client.get("/ustawienia").status_code == 404  # no settings screen: rules + Bielik always
     for url in (f"/sprawy/{client.cid}/projekt", f"/sprawy/{client.cid}/anonimizacja"):
         page = client.get(url).text
         assert 'id="btn-model"' not in page and 'id="badge-llm"' not in page, url
     assert 'id="badge-analiza"' not in client.get(f"/sprawy/{client.cid}").text
 
 
-def test_settings_allows_only_rules_and_local_bielik(client, monkeypatch):
-    monkeypatch.setenv("LLM_BASE_URL", "")
-    monkeypatch.setenv("LLM_MODEL", "")
+def test_rules_by_default_bielik_only_from_env(client, monkeypatch):
     from app import settings
-    r = client.post("/ustawienia", data={"provider": "anthropic:haiku"}, follow_redirects=True)
-    assert "Zapisano wybór modelu" in r.text
+    monkeypatch.delenv("UDIP_PROVIDER", raising=False)
     assert settings.provider_choice() == "rules" and settings.effective() == "rules"
-    r = client.post("/ustawienia", data={"provider": "openai_compat"}, follow_redirects=True)
-    assert "Zapisano wybór modelu" in r.text and "LLM_BASE_URL" in r.text
-    assert settings.provider_choice() == "openai_compat:local" and settings.effective() == "rules"
+    monkeypatch.setenv("UDIP_PROVIDER", "openai_compat:bielik")
+    monkeypatch.setattr(settings, "_server_up", lambda: False)
+    assert settings.effective() == "rules" and not settings.llm_on()
+    monkeypatch.setattr(settings, "_server_up", lambda: True)
+    monkeypatch.setattr(L, "available", lambda provider=None: True)
+    assert settings.effective() == "openai_compat:bielik" and settings.llm_on()
+    for cloud in ("anthropic:haiku", "anthropic:sonnet"):  # only local models, ever
+        monkeypatch.setenv("UDIP_PROVIDER", cloud)
+        assert settings.provider_choice() == "rules"
+    monkeypatch.setenv("UDIP_PROVIDER", "rules")
+    assert settings.effective() == "rules"
+
+
+def test_server_check_is_quick_and_cached(monkeypatch):
+    import time
+    from app import settings
+    monkeypatch.setattr(L, "TRANSPORT", None)
+    monkeypatch.setenv("LLM_BASE_URL", "http://127.0.0.1:9/v1")  # nothing listens on port 9
+    settings._ping.update(base=None, at=0.0, up=False)
+    t0 = time.monotonic()
+    assert settings._server_up() is False and settings._server_up() is False
+    assert time.monotonic() - t0 < 3
 
 
 def test_draft_with_model_badge_ok_and_rejected(client, model_on, monkeypatch):
@@ -82,9 +99,3 @@ def test_analysis_badge_from_real_result(client, model_on, monkeypatch):
     monkeypatch.setattr(routing, "route_llm", lambda q, deps, provider=None: None)
     r = client.post("/wniosek/nowy", data={"akcja": "analizuj", "tekst": "1. Ile kosztowało schronisko w 2025 r.?\n2. Ile psów adoptowano?"})
     assert 'id="badge-analiza"' in r.text and "Koszty schroniska" in r.text
-
-
-def test_settings_shows_mode(client, monkeypatch):
-    monkeypatch.setenv("UDIP_OFFLINE", "1")
-    s = client.get("/ustawienia").text
-    assert 'id="tryb"' in s and "Bez internetu – reguły" in s and "UDIP_OFFLINE=1" in s

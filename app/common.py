@@ -22,11 +22,9 @@ DEFAULT_CLERKS = ["Pracownik 1", "Pracownik 2", "Pracownik 3"]
 
 NAV = [  # (path, label) – every top-level screen in CONTRACTS §5
     ("/biurko", "Biurko"),
-    ("/kalendarz", "Kalendarz"),
     ("/wniosek/nowy", "Nowy wniosek"),
     ("/archiwum", "Archiwum"),
     ("/anonimizacja", "Anonimizacja"),
-    ("/ustawienia", "Ustawienia"),
 ]
 
 MONTHS = ["stycznia", "lutego", "marca", "kwietnia", "maja", "czerwca", "lipca", "sierpnia", "września",
@@ -80,7 +78,7 @@ def render(request: Request, name: str, status_code: int = 200, **ctx):
     path = request.url.path
     base = {
         "nav": NAV,
-        "active": next((p for p, _ in NAV if path == p or path.startswith(p + "/")), ""),
+        "active": "/biurko" if path.startswith("/kalendarz") else next((p for p, _ in NAV if path == p or path.startswith(p + "/")), ""),
         "clerk": clerk(request),
         "clerks": clerks(),
         "today": today(),

@@ -23,7 +23,6 @@ FOLDER = {"overdue": "manila", "today": "manila", "tomorrow": "manila", "soon": 
 WEEKDAYS = ["poniedziałek", "wtorek", "środa", "czwartek", "piątek", "sobota", "niedziela"]
 MONTHS = ["stycznia", "lutego", "marca", "kwietnia", "maja", "czerwca", "lipca", "sierpnia", "września",
           "października", "listopada", "grudnia"]
-MAX_FOLDERS = 6
 
 
 def plural(n: int, one: str, few: str, many: str) -> str:
@@ -151,9 +150,9 @@ def biurko(request: Request, teczka: int | None = None, wersja: str = "bip"):
     open_n = len(fs)
     return render(
         request, "biurko.html", title="Biurko",
-        folders=fs[:MAX_FOLDERS], more=max(0, open_n - MAX_FOLDERS),
-        day_line=f"{WEEKDAYS[t.weekday()]}, {t.day} {MONTHS[t.month - 1]} {t.year} · {open_n} "
-                 f"{plural(open_n, 'otwarta teczka', 'otwarte teczki', 'otwartych teczek')}",
+        folders=fs,
+        day_line=f"{WEEKDAYS[t.weekday()]}, {t.day} {MONTHS[t.month - 1]} {t.year}",
+        open_line=f"{open_n} {plural(open_n, 'otwarta teczka', 'otwarte teczki', 'otwartych teczek')}",
         case=case, draft=draft, version=version, date_line=date_line, letter=body,
         notes=margin_notes(case, draft) if case else [],
         undecided=undecided,

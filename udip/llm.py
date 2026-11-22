@@ -202,7 +202,7 @@ def _local_only(p: str) -> bool:
 
 
 def mode(provider: str | None = None) -> dict:
-    """{id, label, network} for the Ustawienia screen and the reports (CONTRACTS §3, v2)."""
+    """{id, label, network} for the reports (CONTRACTS §3, v2)."""
     p = provider_for(provider)
     if p.startswith("openai_compat:") and (_local_only(p) or not offline()):
         return {"id": "offline_bielik" if _local_only(p) else "server_model", "label": f"Model lokalny ({p.split(':', 1)[1]})",

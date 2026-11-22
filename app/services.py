@@ -39,7 +39,7 @@ def archive() -> Archive:
 
 
 def run_analysis(text: str, exclude_id: str | None = None) -> dict:
-    """Rules or LLM, as the Ustawienia choice decides (default UDIP_PROVIDER); the rule result is always the base."""
+    """Rules; local Bielik only when .env enables it (app.settings). The rule result is always the base."""
     from app import settings
     return analyze(text, archive(), departments(), today(), exclude_id=exclude_id, provider=settings.provider_arg())
 

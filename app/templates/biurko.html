@@ -1,15 +1,15 @@
 {% extends "base.html" %}
-{% block page_class %} page-wide{% endblock %}
+{% block page_class %} page-desk{% endblock %}
 {% block content %}
 <div class="desk">
   <section class="desk-stack" aria-labelledby="h-biurko">
     <div class="desk-head">
       <h1 id="h-biurko">Na biurku</h1>
-      <span class="desk-day">{{ day_line }}</span>
+      <span class="desk-day">{{ day_line }} · <a href="/kalendarz" title="Kalendarz wniosków: wszystkie sprawy z terminami">{{ open_line }}</a></span>
     </div>
 
     {% for f in folders %}
-    <article class="folder folder-{{ f.folder }}{% if case and f.id == case.id %} is-open{% endif %}">
+    <article class="folder folder-{{ f.folder }}">
       <a class="folder-tab" href="/sprawy/{{ f.id }}" title="Karta sprawy {{ f.number }}">{{ f.short }}</a>
       <div class="folder-body">
         <div class="folder-text">
@@ -23,7 +23,6 @@
     {% else %}
     <p class="panel">Biurko jest puste: nie ma otwartych spraw. Połóż nowy wniosek albo wczytaj sprawy demo w kalendarzu.</p>
     {% endfor %}
-    {% if more %}<p class="desk-more"><a href="/kalendarz">Jeszcze {{ more }} w kalendarzu →</a></p>{% endif %}
 
     <div class="desk-actions">
       <a class="btn btn-primary" href="/wniosek/nowy">Połóż nowy wniosek</a>

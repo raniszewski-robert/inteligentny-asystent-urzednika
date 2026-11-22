@@ -36,7 +36,7 @@ powershell -ExecutionPolicy Bypass -File .\run.ps1
 | `UDIP_VENV` | `<repo>\.venv` |
 | `UDIP_DATA_DIR` | `<repo>\var` (baza, wgrane pliki, eksporty) |
 | `LLM_BUDGET_USD` | `15` |
-| `UDIP_PROVIDER` | `rules` (bez modelu językowego) |
+| `UDIP_PROVIDER` | `rules` (same reguły; `openai_compat:bielik` dokłada lokalnego Bielika, gdy Ollama działa) |
 | `TESSERACT_CMD` | `D:\Tools\Tesseract-OCR\tesseract.exe`, jeśli tam jest |
 
 ## Opcje

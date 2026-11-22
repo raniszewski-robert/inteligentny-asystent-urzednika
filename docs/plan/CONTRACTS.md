@@ -143,7 +143,6 @@ Helpers in `udip/db.py`: `connect, init, list_cases, get_case, create_case, set_
 | `GET/POST /sprawy/{id}/projekt`, `POST /sprawy/{id}/projekt/przypisz` | `projekt.html` | T07 |
 | `GET/POST /sprawy/{id}/anonimizacja`, `GET /sprawy/{id}/eksport/{send\|bip}.{docx\|txt}`, `GET/POST /anonimizacja`, `POST /pamiec` | `anonimizacja.html` | T08 |
 | `GET /archiwum`, `POST /archiwum/import`, `POST /archiwum/przepisy`, `POST /archiwum/pamiec/reset` | `archiwum.html` | T17 |
-| `GET/POST /ustawienia` (mode, usage; days off section from T04) | `ustawienia.html` | T23 |
 
 ## 6. Environment and shared resources
 
@@ -171,7 +170,7 @@ The v1 build follows the v1 contract; where v2 differs, v2 is the target and the
 - LLM tasks as v1 split functions: `llm_tasks.analysis.analyze_llm`, `routing.route_llm`, `drafting.paragraphs_llm`, `anonymization.spans_llm` (each `provider=`), `udip.llm.provider_for()`, `usage()`, `set_transport()` (tests). v2 `call1`/`call2`/`vision`/`mode()` wrap or replace them (T10–T13).
 - `analyze()` result has `llm_used`, `provider`; per-question `llm_routing`. `make_draft(..., provider=None)`; `draft.check_numbers`/`omitted_numbers` ignore `Ad N` headings.
 - `udip.db` v1 schema + `seed(demo_today=None)`, `case_by_number`, `update_case`, `history`, `documents`, `get_draft`, `set_draft_finals`, `delete_case`, `set_status(..., at=None)`. `anonymize.flatten`, `analyze_rules`, `detect_rules`, `config.today()`.
-- Routes as listed in v1 §5 plus: `/anonimizacja/{token}` standalone session with `/anonimizacja/{token}/eksport/zanonimizowana.{docx,txt}`, `POST /sprawy/{id}/analiza`, export names `do_wysylki`/`zanonimizowana` (v2 names `send`/`bip`), `/ustawienia` provider choice stored in `UDIP_DATA_DIR/settings.json`.
+- Routes as listed in v1 §5 plus: `/anonimizacja/{token}` standalone session with `/anonimizacja/{token}/eksport/zanonimizowana.{docx,txt}`, `POST /sprawy/{id}/analiza`, export names `do_wysylki`/`zanonimizowana` (v2 names `send`/`bip`); no settings screen: rules by default, local Bielik only via `UDIP_PROVIDER=openai_compat:bielik` in `.env` (`app/settings.py`).
 - Exports fail closed (409 while any span is undecided) and every DOCX/TXT is checked for accepted span text before download.
 - T26 (lane E, merged 21.11 16:48): `udip.security.scan(path, text=None)`, `sanitize_for_llm(text, *, case_id=None, log=True)`, `find_injection`, `count`, `empty`, `log_scan`, `MARKER`; `read_any()` returns `security`; every `llm_tasks` prompt passes through `sanitize_for_llm`; `db.log_security_event(case_id, kind, detail, raw)`, `db.security_events(case_id=None)`, table `security_events`. The scanner only reports; the clerk's text is never altered. Not done: v2 `documents.security` column.
 - T27 (coordinator): `udip.export` (`BLOCK`, `harden_docx`, `audit_docx`, `metryczka`), `write_docx(..., footer="")`, app export audit badge + export gate.
